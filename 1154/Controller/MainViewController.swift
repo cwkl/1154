@@ -13,7 +13,8 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
     @IBOutlet weak var menuView: UIView!
     @IBOutlet weak var container: UIView!
     @IBOutlet weak var submitButton: UIImageView!
-
+    @IBOutlet weak var barCountryItem: UIBarButtonItem!
+    
     
     private var pagerView:PageViewController = PageViewController()
     private var bar = UIView()
@@ -23,7 +24,6 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         
         let bar = UIView()
         menuView.addSubview(bar)
@@ -61,7 +61,98 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
         collectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: .centeredHorizontally)
         
         pagerView.collectionView = self.collectionView
+        
+        barCountryItem.image = UIImage(named: "all")?.withRenderingMode(UIImage.RenderingMode.alwaysOriginal)
     }
+    
+    @IBAction func barItemTouchEvent(_ sender: Any) {
+        let alert: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle:  UIAlertController.Style.actionSheet)
+        
+        let all: UIAlertAction = UIAlertAction(title: "All", style: UIAlertAction.Style.default, handler:{
+            (action: UIAlertAction!) -> Void in
+            self.barCountryItem.image = UIImage(named: "all")?.withRenderingMode(UIImage.RenderingMode.alwaysOriginal)
+            let country = "all"
+            for viewController in self.pagerView.viewControllerList {
+                if let allVC = viewController as? AllTableViewController {
+                    allVC.country = country
+                    allVC.refreshed()
+                }else if let freeVC = viewController as? FreeTableViewController {
+                    freeVC.country = country
+                    freeVC.refreshed()
+                }else if let trevelVC = viewController as? TrevelTableViewController {
+                    trevelVC.country = country
+                    trevelVC.refreshed()
+                }else if let foodVC = viewController as? FoodTableViewController {
+                    foodVC.country = country
+                    foodVC.refreshed()
+                }else if let shoppingVC = viewController as? ShoppingTableViewController {
+                    shoppingVC.country = country
+                    shoppingVC.refreshed()
+                }
+            }
+        })
+        let korea: UIAlertAction = UIAlertAction(title: "Korea", style: UIAlertAction.Style.default, handler:{
+            (action: UIAlertAction!) -> Void in
+            self.barCountryItem.image = UIImage(named: "korea")?.withRenderingMode(UIImage.RenderingMode.alwaysOriginal)
+            let country = "korea"
+            for viewController in self.pagerView.viewControllerList {
+                if let allVC = viewController as? AllTableViewController {
+                    allVC.country = country
+                    allVC.refreshed()
+                }else if let freeVC = viewController as? FreeTableViewController {
+                    freeVC.country = country
+                    freeVC.refreshed()
+                }else if let trevelVC = viewController as? TrevelTableViewController {
+                    trevelVC.country = country
+                    trevelVC.refreshed()
+                }else if let foodVC = viewController as? FoodTableViewController {
+                    foodVC.country = country
+                    foodVC.refreshed()
+                }else if let shoppingVC = viewController as? ShoppingTableViewController {
+                    shoppingVC.country = country
+                    shoppingVC.refreshed()
+                }
+            }
+        })
+        let japan: UIAlertAction = UIAlertAction(title: "Japan", style: UIAlertAction.Style.default, handler:{
+            (action: UIAlertAction!) -> Void in
+            self.barCountryItem.image = UIImage(named: "japan")?.withRenderingMode(UIImage.RenderingMode.alwaysOriginal)
+            let country = "japan"
+            for viewController in self.pagerView.viewControllerList {
+                if let allVC = viewController as? AllTableViewController {
+                    allVC.country = country
+                    allVC.refreshed()
+                }else if let freeVC = viewController as? FreeTableViewController {
+                    freeVC.country = country
+                    freeVC.refreshed()
+                }else if let trevelVC = viewController as? TrevelTableViewController {
+                    trevelVC.country = country
+                    trevelVC.refreshed()
+                }else if let foodVC = viewController as? FoodTableViewController {
+                    foodVC.country = country
+                    foodVC.refreshed()
+                }else if let shoppingVC = viewController as? ShoppingTableViewController {
+                    shoppingVC.country = country
+                    shoppingVC.refreshed()
+                }
+            }
+        })
+        
+        // Cancelボタン
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler:{
+            (action: UIAlertAction!) -> Void in
+            
+        })
+        
+        alert.addAction(all)
+        alert.addAction(korea)
+        alert.addAction(japan)
+        alert.addAction(cancelAction)
+
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
     
     @objc func submitButtonEvent(){
         if let view = self.storyboard?.instantiateViewController(withIdentifier: "submitNav") as? UINavigationController{

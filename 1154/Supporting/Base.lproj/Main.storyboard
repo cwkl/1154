@@ -377,8 +377,15 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="8UO-6i-glz"/>
                     </view>
-                    <navigationItem key="navigationItem" title="HOME" id="vNh-Ha-Iqr"/>
+                    <navigationItem key="navigationItem" title="HOME" id="vNh-Ha-Iqr">
+                        <barButtonItem key="rightBarButtonItem" title="Item" id="2nf-hA-sd1">
+                            <connections>
+                                <action selector="barItemTouchEvent:" destination="7hc-Sh-11h" id="uCt-Fd-6j2"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
+                        <outlet property="barCountryItem" destination="2nf-hA-sd1" id="jyd-He-5ah"/>
                         <outlet property="collectionView" destination="TdZ-nP-Vvm" id="4cT-fU-ah5"/>
                         <outlet property="container" destination="eYn-ge-LQI" id="UWk-34-MM0"/>
                         <outlet property="menuView" destination="3q8-zg-CVs" id="wY1-4R-kma"/>

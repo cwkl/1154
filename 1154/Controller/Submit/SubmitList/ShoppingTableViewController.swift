@@ -14,7 +14,8 @@ class ShoppingTableViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     private var refreshControl : UIRefreshControl?
     var array: [SubmitModel] = []
-    
+    var country = "all"
+
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
@@ -29,7 +30,17 @@ class ShoppingTableViewController: UIViewController {
     }
     
     func tableViewLoad() {
-        Firestore.firestore().collection("submit").whereField("category", isEqualTo: "shopping").order(by: "time", descending: true).getDocuments { (snapshot, error) in
+        var whereField: Query?
+        if country == "all" {
+            whereField = Firestore.firestore().collection("submit").whereField("category", isEqualTo: "shopping")
+        }else if country == "korea"{
+            whereField = Firestore.firestore().collection("submit").whereField("category", isEqualTo: "shopping").whereField("country", isEqualTo: "korea")
+        }else if country == "japan"{
+            whereField = Firestore.firestore().collection("submit").whereField("category", isEqualTo: "shopping").whereField("country", isEqualTo: "japan")
+        }
+        
+        guard let field = whereField else {return}
+        field.order(by: "time", descending: true).getDocuments { (snapshot, error) in
             guard let snapshot = snapshot else{return}
             self.array.removeAll()
             
