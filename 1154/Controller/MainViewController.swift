@@ -125,7 +125,6 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
                 }
             }
             self.pagerView.itemWasPressed(index: index)
-            print("hjih")
         }
     }
 }
