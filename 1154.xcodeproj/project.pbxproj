@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1005382221C73EBA000C8427 /* CollectionViewCellCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1005382121C73EBA000C8427 /* CollectionViewCellCamera.swift */; };
+		1005382421C9DC8D000C8427 /* CollectionViewCellPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1005382321C9DC8D000C8427 /* CollectionViewCellPhoto.swift */; };
+		1005382721CC9434000C8427 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1005382621CC9434000C8427 /* UIImage.swift */; };
 		1023494D21B0DE9E0024AEC0 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1023494C21B0DE9E0024AEC0 /* MainViewController.swift */; };
 		105722E221C0A52900BE540E /* FreeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105722E121C0A52900BE540E /* FreeTableViewController.swift */; };
 		105722E421C0A70200BE540E /* TrevelTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105722E321C0A70200BE540E /* TrevelTableViewController.swift */; };
@@ -28,7 +31,7 @@
 		10CE3A9321BDFD2E003E8EEB /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10CE3A9221BDFD2E003E8EEB /* UserModel.swift */; };
 		10CE3A9A21BE2680003E8EEB /* AllTalbeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10CE3A9921BE2680003E8EEB /* AllTalbeViewController.swift */; };
 		10CE3A9C21BE2833003E8EEB /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10CE3A9B21BE2833003E8EEB /* TableViewCell.swift */; };
-		10DBA1C321B4D9D300ECAA41 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DBA1C221B4D9D300ECAA41 /* CollectionViewCell.swift */; };
+		10DBA1C321B4D9D300ECAA41 /* CollectionViewCellCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DBA1C221B4D9D300ECAA41 /* CollectionViewCellCategory.swift */; };
 		10DBA1C721B4F61D00ECAA41 /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DBA1C621B4F61D00ECAA41 /* PageViewController.swift */; };
 		10DBA20321B8B52000ECAA41 /* SubmitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DBA20221B8B52000ECAA41 /* SubmitViewController.swift */; };
 		31ECA6E5A0E9F5ECA833C1CA /* Pods_1154Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC20E466F0B38E336A57D57F /* Pods_1154Tests.framework */; };
@@ -54,6 +57,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1005382121C73EBA000C8427 /* CollectionViewCellCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCellCamera.swift; sourceTree = "<group>"; };
+		1005382321C9DC8D000C8427 /* CollectionViewCellPhoto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCellPhoto.swift; sourceTree = "<group>"; };
+		1005382621CC9434000C8427 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		1023494C21B0DE9E0024AEC0 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		105722E121C0A52900BE540E /* FreeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeTableViewController.swift; sourceTree = "<group>"; };
 		105722E321C0A70200BE540E /* TrevelTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrevelTableViewController.swift; sourceTree = "<group>"; };
@@ -81,7 +87,7 @@
 		10CE3A9221BDFD2E003E8EEB /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		10CE3A9921BE2680003E8EEB /* AllTalbeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllTalbeViewController.swift; sourceTree = "<group>"; };
 		10CE3A9B21BE2833003E8EEB /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
-		10DBA1C221B4D9D300ECAA41 /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
+		10DBA1C221B4D9D300ECAA41 /* CollectionViewCellCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCellCategory.swift; sourceTree = "<group>"; };
 		10DBA1C621B4F61D00ECAA41 /* PageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageViewController.swift; sourceTree = "<group>"; };
 		10DBA20221B8B52000ECAA41 /* SubmitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitViewController.swift; sourceTree = "<group>"; };
 		13C4CF936152A1F6E981FED4 /* Pods-1154.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-1154.debug.xcconfig"; path = "Pods/Target Support Files/Pods-1154/Pods-1154.debug.xcconfig"; sourceTree = "<group>"; };
@@ -136,6 +142,14 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		1005382521CC9418000C8427 /* extension */ = {
+			isa = PBXGroup;
+			children = (
+				1005382621CC9434000C8427 /* UIImage.swift */,
+			);
+			path = extension;
+			sourceTree = "<group>";
+		};
 		105722E921C0AB4D00BE540E /* SubmitList */ = {
 			isa = PBXGroup;
 			children = (
@@ -174,6 +188,7 @@
 		10C76C7521ABB6DA003F0DA2 /* 1154 */ = {
 			isa = PBXGroup;
 			children = (
+				1005382521CC9418000C8427 /* extension */,
 				10CE3A8D21BA4204003E8EEB /* Supporting */,
 				10C76C8221ABB6DC003F0DA2 /* Info.plist */,
 				109A4D7621C34E12003A3597 /* GoogleService-Info.plist */,
@@ -210,8 +225,10 @@
 				10C76CA821ABCFFE003F0DA2 /* LoginViewController.swift */,
 				10C76CAA21ACCCE2003F0DA2 /* SignupViewController.swift */,
 				1023494C21B0DE9E0024AEC0 /* MainViewController.swift */,
-				10DBA1C221B4D9D300ECAA41 /* CollectionViewCell.swift */,
+				10DBA1C221B4D9D300ECAA41 /* CollectionViewCellCategory.swift */,
 				10DBA1C621B4F61D00ECAA41 /* PageViewController.swift */,
+				1005382321C9DC8D000C8427 /* CollectionViewCellPhoto.swift */,
+				1005382121C73EBA000C8427 /* CollectionViewCellCamera.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -498,6 +515,7 @@
 				"${BUILT_PRODUCTS_DIR}/BoringSSL/openssl.framework",
 				"${BUILT_PRODUCTS_DIR}/CodableFirebase/CodableFirebase.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/Gallery/Gallery.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
@@ -513,6 +531,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/openssl.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CodableFirebase.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Gallery.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
@@ -534,18 +553,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				10CE3A9C21BE2833003E8EEB /* TableViewCell.swift in Sources */,
+				1005382721CC9434000C8427 /* UIImage.swift in Sources */,
+				1005382221C73EBA000C8427 /* CollectionViewCellCamera.swift in Sources */,
 				10DBA20321B8B52000ECAA41 /* SubmitViewController.swift in Sources */,
 				10CE3A9121BA424F003E8EEB /* SubmitModel.swift in Sources */,
 				10C76CA921ABCFFE003F0DA2 /* LoginViewController.swift in Sources */,
 				10DBA1C721B4F61D00ECAA41 /* PageViewController.swift in Sources */,
 				105722E821C0AB4100BE540E /* ShoppingTableViewController.swift in Sources */,
 				10C76C7921ABB6DA003F0DA2 /* ViewController.swift in Sources */,
-				10DBA1C321B4D9D300ECAA41 /* CollectionViewCell.swift in Sources */,
+				10DBA1C321B4D9D300ECAA41 /* CollectionViewCellCategory.swift in Sources */,
 				105722E621C0A71200BE540E /* FoodTableViewController.swift in Sources */,
 				105722E421C0A70200BE540E /* TrevelTableViewController.swift in Sources */,
 				10C76CAB21ACCCE2003F0DA2 /* SignupViewController.swift in Sources */,
 				10C76C7721ABB6DA003F0DA2 /* AppDelegate.swift in Sources */,
 				10CE3A8B21BA1F15003E8EEB /* PlaceHolderTextView.swift in Sources */,
+				1005382421C9DC8D000C8427 /* CollectionViewCellPhoto.swift in Sources */,
 				10CE3A9A21BE2680003E8EEB /* AllTalbeViewController.swift in Sources */,
 				1023494D21B0DE9E0024AEC0 /* MainViewController.swift in Sources */,
 				10CE3A9321BDFD2E003E8EEB /* UserModel.swift in Sources */,

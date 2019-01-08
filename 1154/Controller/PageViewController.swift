@@ -22,14 +22,29 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource, 
         
         let page1 = storyBoard.instantiateViewController(withIdentifier: "page1")
         page1.view.tag = 0
+        if let all = page1 as? AllTableViewController {
+            all.pagerView = self
+        }
         let page2 = storyBoard.instantiateViewController(withIdentifier: "page2")
         page2.view.tag = 1
+        if let free = page2 as? FreeTableViewController {
+            free.pagerView = self
+        }
         let page3 = storyBoard.instantiateViewController(withIdentifier: "page3")
         page3.view.tag = 2
+        if let trevel = page3 as? TrevelTableViewController {
+            trevel.pagerView = self
+        }
         let page4 = storyBoard.instantiateViewController(withIdentifier: "page4")
         page4.view.tag = 3
+        if let food = page4 as? FoodTableViewController {
+            food.pagerView = self
+        }
         let page5 = storyBoard.instantiateViewController(withIdentifier: "page5")
         page5.view.tag = 4
+        if let shopping = page5 as? ShoppingTableViewController {
+            shopping.pagerView = self
+        }
         
         return [page1, page2, page3, page4, page5]
         
@@ -88,7 +103,7 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource, 
         pageIndex = pageViewController.viewControllers!.first!.view.tag
         
         for visibleCell in collectionView.visibleCells {
-            if let visibleCell = visibleCell as? CollectionViewCell {
+            if let visibleCell = visibleCell as? CollectionViewCellCategory {
                 if visibleCell.indexPath?.item == pageIndex {
                     visibleCell.cellLabel.textColor = UIColor(red: 19/255, green: 69/255, blue: 99/255, alpha: 1.0) /* #134563 */
                 } else {
