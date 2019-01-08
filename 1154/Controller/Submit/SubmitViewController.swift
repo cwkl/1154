@@ -7,11 +7,14 @@
 //
 
 import UIKit
-import FirebaseFirestore
+import FirebaseStorage
 import CodableFirebase
 import FirebaseAuth
+import FirebaseFirestore
+import Photos
+import Gallery
 
-class SubmitViewController: UIViewController {
+class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, GalleryControllerDelegate {
     @IBOutlet weak var categoryK: UIView!
     @IBOutlet weak var categoryJ: UIView!
     @IBOutlet weak var categoryFree: UIView!
@@ -19,13 +22,24 @@ class SubmitViewController: UIViewController {
     @IBOutlet weak var categoryFood: UIView!
     @IBOutlet weak var categoryShopping: UIView!
     @IBOutlet weak var submitTitle: UITextField!
+    @IBOutlet weak var submitMiddleView: UIView!
     @IBOutlet weak var submitContent: PlaceHolderTextView!
-    @IBOutlet weak var submitContentBottom: NSLayoutConstraint!
+    @IBOutlet weak var submitPhotoCollectionView: UICollectionView!
+    @IBOutlet weak var submitViewBottom: NSLayoutConstraint!
+    @IBOutlet weak var submitCameraCollectionView: UICollectionView!
+    @IBOutlet weak var submitScrollView: UIScrollView!
+    @IBOutlet weak var submitPhotoView: UIView!
+    
     private let changedColor = UIColor(red: 94/255, green: 94/255, blue: 94/255, alpha: 1.0)
     private let baseColor = UIColor(red: 235/255, green: 235/255, blue: 235/255, alpha: 1.0)
     private var country: String = ""
     private var category: String = ""
     private var isLoading : Bool = false
+    private var images = [UIImage]()
+    private var image: UIImage?
+    private var selectedImage = [UIImage]()
+    private var selectedIndex = [Int]()
+    private var count: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,19 +56,183 @@ class SubmitViewController: UIViewController {
         submitTitle.setValue(baseColor, forKeyPath: "_placeholderLabel.textColor")
         submitTitle.becomeFirstResponder()
         submitTitle.layer.borderColor = baseColor.cgColor
-        submitContent.layer.cornerRadius = 5
-        submitContent.layer.borderWidth = 1
-        submitContent.layer.borderColor = baseColor.cgColor
-        submitContent.placeHolder = "Content"
+        submitMiddleView.layer.cornerRadius = 5
+        submitMiddleView.layer.borderWidth = 1
+        submitMiddleView.layer.borderColor = baseColor.cgColor
+        submitContent.placeHolder = " Content"
+        
+        submitScrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 60, right: 0)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         
+        submitPhotoCollectionView.delegate = self
+        submitPhotoCollectionView.dataSource = self
+        submitCameraCollectionView.delegate = self
+        submitCameraCollectionView.dataSource = self
+        
+        fetchPhotos()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if collectionView.tag == 0 {
+            return selectedImage.count
+        }else {
+            return images.count + 1
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if collectionView.tag == 0 {
+        let photoCell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCell", for: indexPath) as! CollectionViewCellPhoto
+            print(selectedImage)
+            if !selectedImage.isEmpty{
+                photoCell.imageView.image = selectedImage[indexPath.row]
+                photoCell.imageView.layer.masksToBounds = true
+                photoCell.imageView.contentMode = .scaleAspectFill
+                photoCell.cancelButton.tag = indexPath.item
+            }else{
+            }
+            return photoCell
+        }else {
+        let cameraCell = collectionView.dequeueReusableCell(withReuseIdentifier: "CameraCell", for: indexPath) as! CollectionViewCellCamera
+            if indexPath.row == 0 {
+                cameraCell.imageView.image = UIImage(named: "camera")
+                cameraCell.imageView.contentMode = .center
+            }else{
+                cameraCell.imageView.image = images[indexPath.row - 1]
+                cameraCell.imageView.contentMode = .scaleAspectFill
+                cameraCell.imageView.layer.masksToBounds = true
+            }
+            cameraCell.indexPath = indexPath
+            return cameraCell
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.allowsMultipleSelection = true
+        if collectionView.tag == 0 {
+
+        }else if collectionView.tag == 1{
+            if indexPath.row == 0 {
+                camera()
+                collectionView.deselectItem(at: indexPath, animated: false)
+            }else{
+                if selectedImage.count < 4{
+                    image = images[indexPath.row - 1]
+                    guard let image = self.image else{return}
+                    submitPhotoView.isHidden = false
+                    selectedImage.append(image)
+                    selectedIndex.append(indexPath.row)
+                    submitPhotoCollectionView.reloadData()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        let bottom = self.submitScrollView.contentSize.height - self.submitScrollView.frame.height + 60
+                        if bottom > 0{
+                            let bottomOffset = CGPoint(x: 0, y: bottom)
+                            self.submitScrollView.setContentOffset(bottomOffset, animated: true)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        if collectionView.tag == 1 {
+            for (index, item) in selectedIndex.enumerated(){
+                if item == indexPath.row{
+                    selectedIndex.remove(at: index)
+                    selectedImage.remove(at: index)
+                    submitPhotoCollectionView.reloadData()
+                    if selectedImage.isEmpty{
+                        submitPhotoView.isHidden = true
+                    }
+                }
+            }
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        if indexPath.item == 0{
+            return true
+        }else if selectedImage.count > 3 {
+            return false
+        }else{
+            return true
+        }
+    }
+    
+    @IBAction func submitPhotoCancel(_ sender: Any) {
+        if let button = sender as? UIButton {
+            selectedImage.remove(at: button.tag)
+            let index = IndexPath(item: selectedIndex[button.tag], section: 0)
+            print(index)
+            selectedIndex.remove(at: button.tag)
+            
+            
+            submitCameraCollectionView.deselectItem(at: index, animated: false)
+            submitPhotoCollectionView.reloadData()
+            if selectedImage.isEmpty{
+                submitPhotoView.isHidden = true
+            }
+        }
+    }
+
+    func camera(){
+        selectedImage.removeAll()
+        selectedIndex.removeAll()
+        let gallery = GalleryController()
+        gallery.delegate = self
+        Gallery.Config.tabsToShow = [.imageTab, .cameraTab]
+        Gallery.Config.Camera.imageLimit = 4
+        present(gallery, animated: true, completion: nil)
+    }
+    
+    func galleryController(_ controller: GalleryController, didSelectImages images: [Image]) {
+        selectedImage.removeAll()
+        Image.resolve(images: images) { (uiImages) in
+            for uiImage in uiImages {
+                guard let uiImage = uiImage else { return }
+                
+                self.selectedImage.append(uiImage)
+            }
+            self.submitPhotoView.isHidden = false
+            self.submitPhotoCollectionView.reloadData()
+            controller.dismiss(animated: true, completion: nil)
+            self.submitTitle.becomeFirstResponder()
+        }
+        selectedIndex.removeAll()
+        for index in 0...self.images.count + 1 {
+            self.submitCameraCollectionView.deselectItem(at: IndexPath(item: index, section: 0), animated: false)
+        }
+        for image in images{
+            self.selectedIndex.append(image.index + 1)
+            if image.index + 1 < self.images.count + 1{
+                self.submitCameraCollectionView.selectItem(at: IndexPath(item: image.index + 1, section: 0), animated: false, scrollPosition: .top)
+            }
+        }
+    }
+    
+    func galleryController(_ controller: GalleryController, didSelectVideo video: Video) {
+        
+    }
+    
+    func galleryController(_ controller: GalleryController, requestLightbox images: [Image]) {
+        
+    }
+    
+    func galleryControllerDidCancel(_ controller: GalleryController) {
+        fetchPhotos()
+        self.submitPhotoCollectionView.reloadData()
+        self.submitCameraCollectionView.reloadData()
+        submitPhotoView.isHidden = true
+        controller.dismiss(animated: true, completion: nil)
+        submitTitle.becomeFirstResponder()
     }
     
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            submitContentBottom.constant = 8
-            submitContentBottom.constant += (keyboardSize.height)
+            submitViewBottom.constant = 8
+            submitViewBottom.constant += (keyboardSize.height)
         }
     }
     
@@ -91,9 +269,41 @@ class SubmitViewController: UIViewController {
         }
     }
     
+    func fetchPhotos () {
+        images.removeAll()
+        let fetchOptions = PHFetchOptions()
+        fetchOptions.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending: false)]
+        fetchOptions.fetchLimit = 10
+        
+        let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: fetchOptions)
+        
+        if fetchResult.count > 0 {
+            let totalImageCountNeeded = 10 // <-- The number of images to fetch
+            fetchPhotoAtIndex(0, totalImageCountNeeded, fetchResult)
+        }
+    }
+
+    func fetchPhotoAtIndex(_ index:Int,_ totalImageCountNeeded: Int, _ fetchResult: PHFetchResult<PHAsset>) {
+        let requestOptions = PHImageRequestOptions()
+        requestOptions.isSynchronous = true
+        
+        PHImageManager.default().requestImage(for: fetchResult.object(at: index) as PHAsset, targetSize: CGSize(width: 1024, height: 768), contentMode: PHImageContentMode.aspectFill, options: requestOptions, resultHandler: { (image, _) in
+            if let image = image {
+                self.images += [image]
+            }
+            
+            if index + 1 < fetchResult.count && self.images.count < totalImageCountNeeded {
+                self.fetchPhotoAtIndex(index + 1, totalImageCountNeeded, fetchResult)
+            } else {
+                self.submitCameraCollectionView?.reloadData()
+            }
+        })
+    }
+    
     @IBAction func backEvent(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
+    
     @IBAction func submitEvent(_ sender: Any) {
         
         let uid = Auth.auth().currentUser?.uid
@@ -103,11 +313,10 @@ class SubmitViewController: UIViewController {
                 self.isLoading = true
                 Firestore.firestore().collection("users").document(uid ?? "").getDocument { (snapshot, error) in
                     if error != nil{
-                         self.isLoading = false
+                        self.isLoading = false
                     }else{
                         guard let snapshot = snapshot, let data = snapshot.data() else { return }
                         do {
-                            
                             let formatter = DateFormatter()
                             formatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
                             let time = formatter.string(from: Date())
@@ -117,25 +326,65 @@ class SubmitViewController: UIViewController {
                             let content = self.submitContent.text ?? ""
                             let id = UUID.init().uuidString
                             let name = userModel?.name
-                            let submit = SubmitModel(id: id, name: name ?? "", title: title, time: time, content: content, country: self.country ?? "", category: self.category ?? "", commentCount: 0, likeCount: 0, viewsCount: 0)
-                            let data = try! FirestoreEncoder().encode(submit)
-                            if !title .isEmpty && !content .isEmpty && self.country != "" && self.category != ""{
-                                Firestore.firestore().collection("submit").document(id).setData(data, completion: { (err) in
-                                    if err != nil{
-                                    }else{
-                                        self.dismiss(animated: true, completion: nil)
-                                        self.isLoading = false
-                                        
+                            
+                            if !title.isEmpty && !content.isEmpty && self.country != "" && self.category != "" {
+                                if !self.selectedImage.isEmpty{
+                                    var imagesDic = [Int: String]()
+                                    print(self.selectedImage.count)
+                                    for (index, item) in self.selectedImage.enumerated(){
+                                        guard let resizeImage = item.resize(size: CGSize(width: 500, height: 500)) else{return}
+                                        guard let imageJPGE = resizeImage.jpegData(compressionQuality: 0.1) else{return}
+                                        let id = UUID.init().uuidString
+                                        Storage.storage().reference().child("submit/images").child(id).putData(imageJPGE, metadata: nil, completion: { (data, err) in
+                                            if err != nil {
+                                            }else{
+                                                Storage.storage().reference().child("submit/images").child(id).downloadURL(completion: { (url, err) in
+                                                    if err != nil{
+                                                    }else{
+                                                        guard let url = url?.absoluteString else{return}
+                                                        imagesDic[index] = url
+                                                        let sortUrls = imagesDic.sorted(by: {$0.0 < $1.0})
+                                                        var imageUrls = [String]()
+                                                        for sortUrl in sortUrls {
+                                                            imageUrls.append(sortUrl.value)
+                                                            if self.selectedImage.count == imageUrls.count{
+                                                                let submit = SubmitModel(id: id, name: name ?? "", title: title, time: time, content: content, country: self.country , category: self.category , imageUrl: imageUrls, commentCount: 0, likeCount: 0, viewsCount: 0)
+                                                                let data = try! FirestoreEncoder().encode(submit)
+                                                                Firestore.firestore().collection("submit").document(id).setData(data, completion: { (err) in
+                                                                    if err != nil{
+                                                                    }else{
+                                                                        self.dismiss(animated: true, completion: nil)
+                                                                        self.isLoading = false
+                                                                    }
+                                                                })
+                                                            }
+                                                        }
+                                                    }
+                                                })
+                                            }
+                                        })
                                     }
-                                })
+                                    
+                                }else {
+                                    let submit = SubmitModel(id: id, name: name ?? "", title: title, time: time, content: content, country: self.country ?? "", category: self.category ?? "", imageUrl: nil, commentCount: 0, likeCount: 0, viewsCount: 0)
+                                    let data = try! FirestoreEncoder().encode(submit)
+                                    Firestore.firestore().collection("submit").document(id).setData(data, completion: { (err) in
+                                        if err != nil{
+                                        }else{
+                                            self.dismiss(animated: true, completion: nil)
+                                            self.isLoading = false
+                                        }
+                                    })
+                                }
+                            }else{
+                                self.isLoading = false
                             }
                         }catch let error {
-                         self.isLoading = false
+                            self.isLoading = false
                         }
                     }
                 }
             }
         }
-        
     }
 }

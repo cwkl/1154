@@ -12,6 +12,8 @@ target '1154' do
   pod 'Firebase/Firestore'
   pod 'Firebase/Auth'
   pod 'CodableFirebase'
+  pod 'Firebase/Storage'
+  pod 'Gallery'  
 
   target '1154Tests' do
     inherit! :search_paths

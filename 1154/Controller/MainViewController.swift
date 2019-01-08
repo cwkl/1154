@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MainViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, CollectionViewCellDeligate {
+class MainViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, CollectionViewCellCategoryDelegate {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var menuView: UIView!
     @IBOutlet weak var container: UIView!
@@ -28,7 +28,7 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
         let bar = UIView()
         menuView.addSubview(bar)
         self.bar = bar
-        bar.backgroundColor = UIColor.red
+        bar.backgroundColor = UIColor(red: 218/255, green: 65/255, blue: 103/255, alpha: 1.0) /* #da4167 */
         bar.translatesAutoresizingMaskIntoConstraints = false
         leftConstraints = bar.leadingAnchor.constraint(equalTo: menuView.leadingAnchor)
         leftConstraints?.isActive = true
@@ -143,13 +143,11 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
             (action: UIAlertAction!) -> Void in
             
         })
-        
+    
         alert.addAction(all)
         alert.addAction(korea)
         alert.addAction(japan)
         alert.addAction(cancelAction)
-
-        
         present(alert, animated: true, completion: nil)
     }
     
@@ -172,7 +170,7 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! CollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! CollectionViewCellCategory
         cell.cellLabel.text = item[indexPath.item]
         cell.indexPath = indexPath
         cell.delegate = self
@@ -181,12 +179,12 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width / CGFloat(item.count), height: collectionView.frame.height)
+        return CGSize(width: UIScreen.main.bounds.width / CGFloat(item.count), height: collectionView.frame.height)
     }
     
     func tapCell(indexPath: IndexPath) {
         for visibleCell in collectionView.visibleCells {
-            if let visibleCell = visibleCell as? CollectionViewCell {
+            if let visibleCell = visibleCell as? CollectionViewCellCategory {
                 visibleCell.tapGesture.isEnabled = false
                 
                 if visibleCell.indexPath?.item == indexPath.item {
@@ -210,7 +208,7 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
                 
                 
                 for visibleCell in self.collectionView.visibleCells {
-                    if let visibleCell = visibleCell as? CollectionViewCell {
+                    if let visibleCell = visibleCell as? CollectionViewCellCategory {
                         visibleCell.tapGesture.isEnabled = true
                     }
                 }

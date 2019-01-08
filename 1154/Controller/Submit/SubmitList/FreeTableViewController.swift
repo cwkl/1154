@@ -13,6 +13,7 @@ import CodableFirebase
 class FreeTableViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     private var refreshControl : UIRefreshControl?
+    var pagerView:PageViewController?
     var array: [SubmitModel] = []
     var country = "all"
     
@@ -65,6 +66,21 @@ class FreeTableViewController: UIViewController {
     
     @objc func refreshed(){
         tableViewLoad()
+        guard let pageView = self.pagerView else { return }
+        for viewController in pageView.viewControllerList {
+            if let allVC = viewController as? AllTableViewController {
+                allVC.refresh()
+            }else if let trevelVC = viewController as? TrevelTableViewController {
+                trevelVC.refresh()
+            }else if let foodVC = viewController as? FoodTableViewController {
+                foodVC.refresh()
+            }else if let shoppingVC = viewController as? ShoppingTableViewController {
+                shoppingVC.refresh()
+            }
+        }
+    }
+    func refresh(){
+        tableViewLoad()
     }
 }
 
@@ -80,6 +96,7 @@ extension FreeTableViewController: UITableViewDelegate, UITableViewDataSource{
         cell?.commentCount.text = String(self.array[indexPath.row].commentCount)
         cell?.likeCount.text = String(self.array[indexPath.row].likeCount)
         cell?.viewsCount.text = String(self.array[indexPath.row].viewsCount)
+        cell?.selectionStyle = .none
         
         return cell!
     }

@@ -17,6 +17,7 @@ struct SubmitModel: Codable {
     let content: String
     let country: String
     let category: String
+    let imageUrl: [String]?
     let commentCount: Int
     let likeCount: Int
     let viewsCount: Int
