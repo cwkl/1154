@@ -84,7 +84,6 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView.tag == 0 {
         let photoCell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCell", for: indexPath) as! CollectionViewCellPhoto
-            print(selectedImage)
             if !selectedImage.isEmpty{
                 photoCell.imageView.image = selectedImage[indexPath.row]
                 photoCell.imageView.layer.masksToBounds = true
@@ -96,8 +95,9 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
         }else {
         let cameraCell = collectionView.dequeueReusableCell(withReuseIdentifier: "CameraCell", for: indexPath) as! CollectionViewCellCamera
             if indexPath.row == 0 {
-                cameraCell.imageView.image = UIImage(named: "camera")
+                cameraCell.imageView.image = UIImage(named: "plus")
                 cameraCell.imageView.contentMode = .center
+                cameraCell.imageView.layer.masksToBounds = true
             }else{
                 cameraCell.imageView.image = images[indexPath.row - 1]
                 cameraCell.imageView.contentMode = .scaleAspectFill
@@ -188,6 +188,7 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
     
     func galleryController(_ controller: GalleryController, didSelectImages images: [Image]) {
+        fetchPhotos()
         selectedImage.removeAll()
         Image.resolve(images: images) { (uiImages) in
             for uiImage in uiImages {
@@ -222,8 +223,6 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
     
     func galleryControllerDidCancel(_ controller: GalleryController) {
         fetchPhotos()
-        self.submitPhotoCollectionView.reloadData()
-        self.submitCameraCollectionView.reloadData()
         submitPhotoView.isHidden = true
         controller.dismiss(animated: true, completion: nil)
         submitTitle.becomeFirstResponder()
