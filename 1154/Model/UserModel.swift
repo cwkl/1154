@@ -12,4 +12,5 @@ struct UserModel: Codable {
     
     let email: String
     let name: String
+    let profileImageUrl: String?
 }

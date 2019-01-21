@@ -14,6 +14,7 @@ target '1154' do
   pod 'CodableFirebase'
   pod 'Firebase/Storage'
   pod 'Gallery'  
+  pod 'Kingfisher', '~> 5.0'
 
   target '1154Tests' do
     inherit! :search_paths

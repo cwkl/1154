@@ -325,6 +325,7 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
                             let content = self.submitContent.text ?? ""
                             let id = UUID.init().uuidString
                             let name = userModel?.name
+                            let profileImageUrl = userModel?.profileImageUrl
                             
                             if !title.isEmpty && !content.isEmpty && self.country != "" && self.category != "" {
                                 if !self.selectedImage.isEmpty{
@@ -347,7 +348,7 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
                                                         for sortUrl in sortUrls {
                                                             imageUrls.append(sortUrl.value)
                                                             if self.selectedImage.count == imageUrls.count{
-                                                                let submit = SubmitModel(id: id, name: name ?? "", title: title, time: time, content: content, country: self.country , category: self.category , imageUrl: imageUrls, commentCount: 0, likeCount: 0, viewsCount: 0)
+                                                                let submit = SubmitModel(profileImageUrl: profileImageUrl ?? "", id: id, name: name ?? "", title: title, time: time, content: content, country: self.country , category: self.category , imageUrl: imageUrls, commentCount: 0, likeCount: 0, viewsCount: 0)
                                                                 let data = try! FirestoreEncoder().encode(submit)
                                                                 Firestore.firestore().collection("submit").document(id).setData(data, completion: { (err) in
                                                                     if err != nil{
@@ -365,7 +366,7 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
                                     }
                                     
                                 }else {
-                                    let submit = SubmitModel(id: id, name: name ?? "", title: title, time: time, content: content, country: self.country ?? "", category: self.category ?? "", imageUrl: nil, commentCount: 0, likeCount: 0, viewsCount: 0)
+                                    let submit = SubmitModel(profileImageUrl: profileImageUrl ?? "", id: id, name: name ?? "", title: title, time: time, content: content, country: self.country ?? "", category: self.category ?? "", imageUrl: nil, commentCount: 0, likeCount: 0, viewsCount: 0)
                                     let data = try! FirestoreEncoder().encode(submit)
                                     Firestore.firestore().collection("submit").document(id).setData(data, completion: { (err) in
                                         if err != nil{
