@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="photoCell" rowHeight="392" id="OjX-2w-Aai" customClass="PhotoCell" customModule="_154" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="373" height="390.5"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="OjX-2w-Aai" id="fgE-9u-YGf">
+                <rect key="frame" x="0.0" y="0.0" width="373" height="390"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="0CR-8z-arT">
+                        <rect key="frame" x="0.0" y="0.0" width="373" height="373"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="0CR-8z-arT" secondAttribute="height" multiplier="1:1" id="rIe-cf-pX6"/>
+                        </constraints>
+                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="Dg1-Kv-iKE">
+                            <size key="itemSize" width="50" height="50"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                    </collectionView>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rTr-zC-req">
+                        <rect key="frame" x="8" y="381" width="357" height="1"/>
+                        <color key="backgroundColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="1" id="gLW-Sf-Klm"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="rTr-zC-req" firstAttribute="top" secondItem="0CR-8z-arT" secondAttribute="bottom" constant="8" id="4Z3-9Z-p6z"/>
+                    <constraint firstItem="0CR-8z-arT" firstAttribute="top" secondItem="fgE-9u-YGf" secondAttribute="top" id="5Mx-x7-dUK"/>
+                    <constraint firstAttribute="trailing" secondItem="0CR-8z-arT" secondAttribute="trailing" id="8DA-G9-jSJ"/>
+                    <constraint firstItem="0CR-8z-arT" firstAttribute="leading" secondItem="fgE-9u-YGf" secondAttribute="leading" id="IOf-rN-nmz"/>
+                    <constraint firstItem="rTr-zC-req" firstAttribute="leading" secondItem="fgE-9u-YGf" secondAttribute="leading" constant="8" id="Nwx-fk-laD"/>
+                    <constraint firstAttribute="trailing" secondItem="rTr-zC-req" secondAttribute="trailing" constant="8" id="sDA-ql-0sp"/>
+                    <constraint firstAttribute="bottom" secondItem="rTr-zC-req" secondAttribute="bottom" constant="8" id="vRJ-1P-d9e"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="photoCollectionView" destination="0CR-8z-arT" id="dMk-l3-joh"/>
+            </connections>
+            <point key="canvasLocation" x="87.200000000000003" y="-65.667166416791616"/>
+        </tableViewCell>
+    </objects>
+</document>

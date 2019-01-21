@@ -30,6 +30,14 @@ class ShoppingTableViewController: UIViewController {
         tableViewLoad()
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let view = self.storyboard?.instantiateViewController(withIdentifier: "SubmitContentViewController") as? SubmitContentViewController{
+            view.model = array[indexPath.row]
+            view.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController(view, animated: true)
+        }
+    }
+    
     func tableViewLoad() {
         var whereField: Query?
         if country == "all" {

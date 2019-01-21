@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="contentCell" rowHeight="259" id="vFj-Iz-X9c" customClass="ContentCell" customModule="_154" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="259"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="vFj-Iz-X9c" id="kZf-fa-hyL">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="258.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AXW-ez-eJS">
+                        <rect key="frame" x="16" y="0.0" width="343" height="242"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <attributedString key="attributedText"/>
+                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                    </textView>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="v1x-4V-fIo">
+                        <rect key="frame" x="0.0" y="250" width="375" height="0.5"/>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="0.5" id="caB-v2-cLr"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="AXW-ez-eJS" firstAttribute="leading" secondItem="kZf-fa-hyL" secondAttribute="leading" constant="16" id="3Ik-Bw-xnB"/>
+                    <constraint firstAttribute="bottom" secondItem="v1x-4V-fIo" secondAttribute="bottom" constant="8" id="8nv-6n-pUj"/>
+                    <constraint firstAttribute="trailing" secondItem="v1x-4V-fIo" secondAttribute="trailing" id="CrN-5R-YUo"/>
+                    <constraint firstItem="AXW-ez-eJS" firstAttribute="top" secondItem="kZf-fa-hyL" secondAttribute="top" id="hUH-yD-L46"/>
+                    <constraint firstItem="v1x-4V-fIo" firstAttribute="leading" secondItem="kZf-fa-hyL" secondAttribute="leading" id="jcX-R4-AKE"/>
+                    <constraint firstAttribute="trailing" secondItem="AXW-ez-eJS" secondAttribute="trailing" constant="16" id="rXD-rB-s7D"/>
+                    <constraint firstItem="v1x-4V-fIo" firstAttribute="top" secondItem="AXW-ez-eJS" secondAttribute="bottom" constant="8" id="wtw-ZN-av0"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="contentTextView" destination="AXW-ez-eJS" id="pJ2-TQ-kCu"/>
+            </connections>
+            <point key="canvasLocation" x="-18.399999999999999" y="36.431784107946029"/>
+        </tableViewCell>
+    </objects>
+</document>
