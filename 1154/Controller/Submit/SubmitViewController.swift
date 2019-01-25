@@ -316,10 +316,7 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
                     }else{
                         guard let snapshot = snapshot, let data = snapshot.data() else { return }
                         do {
-                            let formatter = DateFormatter()
-                            formatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
-                            let time = formatter.string(from: Date())
-                            
+                            let time = SharedFunction.shared.getToday()
                             let userModel = try? FirestoreDecoder().decode(UserModel.self, from: data)
                             let title = self.submitTitle.text ?? ""
                             let content = self.submitContent.text ?? ""

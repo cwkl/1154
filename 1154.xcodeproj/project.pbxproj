@@ -28,6 +28,8 @@
 		105722E621C0A71200BE540E /* FoodTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105722E521C0A71200BE540E /* FoodTableViewController.swift */; };
 		105722E821C0AB4100BE540E /* ShoppingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105722E721C0AB4100BE540E /* ShoppingTableViewController.swift */; };
 		109A4D7721C34E12003A3597 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 109A4D7621C34E12003A3597 /* GoogleService-Info.plist */; };
+		10A7F6F921F6B63E003BD53F /* CommentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A7F6F821F6B63E003BD53F /* CommentModel.swift */; };
+		10A7F6FB21F6DC7D003BD53F /* SharedFunction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A7F6FA21F6DC7D003BD53F /* SharedFunction.swift */; };
 		10C76C7721ABB6DA003F0DA2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C76C7621ABB6DA003F0DA2 /* AppDelegate.swift */; };
 		10C76C7921ABB6DA003F0DA2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C76C7821ABB6DA003F0DA2 /* ViewController.swift */; };
 		10C76C7C21ABB6DA003F0DA2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 10C76C7A21ABB6DA003F0DA2 /* Main.storyboard */; };
@@ -91,6 +93,8 @@
 		105722E521C0A71200BE540E /* FoodTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodTableViewController.swift; sourceTree = "<group>"; };
 		105722E721C0AB4100BE540E /* ShoppingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingTableViewController.swift; sourceTree = "<group>"; };
 		109A4D7621C34E12003A3597 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		10A7F6F821F6B63E003BD53F /* CommentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentModel.swift; sourceTree = "<group>"; };
+		10A7F6FA21F6DC7D003BD53F /* SharedFunction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedFunction.swift; sourceTree = "<group>"; };
 		10C76C7321ABB6DA003F0DA2 /* 1154.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 1154.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		10C76C7621ABB6DA003F0DA2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		10C76C7821ABB6DA003F0DA2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -287,6 +291,7 @@
 				10C76C7A21ABB6DA003F0DA2 /* Main.storyboard */,
 				10C76C7D21ABB6DC003F0DA2 /* Assets.xcassets */,
 				10C76C7F21ABB6DC003F0DA2 /* LaunchScreen.storyboard */,
+				10A7F6FA21F6DC7D003BD53F /* SharedFunction.swift */,
 			);
 			path = Supporting;
 			sourceTree = "<group>";
@@ -304,6 +309,7 @@
 			children = (
 				10CE3A9021BA424F003E8EEB /* SubmitModel.swift */,
 				10CE3A9221BDFD2E003E8EEB /* UserModel.swift */,
+				10A7F6F821F6B63E003BD53F /* CommentModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -619,6 +625,7 @@
 				1005382721CC9434000C8427 /* UIImage.swift in Sources */,
 				1005382221C73EBA000C8427 /* CollectionViewCellCamera.swift in Sources */,
 				10DBA20321B8B52000ECAA41 /* SubmitViewController.swift in Sources */,
+				10A7F6F921F6B63E003BD53F /* CommentModel.swift in Sources */,
 				10CE3A9121BA424F003E8EEB /* SubmitModel.swift in Sources */,
 				10C76CA921ABCFFE003F0DA2 /* LoginViewController.swift in Sources */,
 				10DBA1C721B4F61D00ECAA41 /* PageViewController.swift in Sources */,
@@ -629,6 +636,7 @@
 				103452D321E5A34100DF0242 /* CommentCell.swift in Sources */,
 				10DBA1C321B4D9D300ECAA41 /* CollectionViewCellCategory.swift in Sources */,
 				105722E621C0A71200BE540E /* FoodTableViewController.swift in Sources */,
+				10A7F6FB21F6DC7D003BD53F /* SharedFunction.swift in Sources */,
 				105722E421C0A70200BE540E /* TrevelTableViewController.swift in Sources */,
 				10C76CAB21ACCCE2003F0DA2 /* SignupViewController.swift in Sources */,
 				103452C421E5A17E00DF0242 /* TitleCell.swift in Sources */,

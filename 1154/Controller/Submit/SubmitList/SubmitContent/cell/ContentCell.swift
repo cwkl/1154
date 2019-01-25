@@ -10,10 +10,14 @@ import Foundation
 import UIKit
 
 class ContentCell: UITableViewCell {
-    @IBOutlet weak var contentTextView: UITextView!
+    @IBOutlet weak var contentLabel: UILabel!
+    
     
     override func awakeFromNib() {
-        contentTextView.font = UIFont.systemFont(ofSize: 17)
+        super.awakeFromNib()
+        contentLabel.font = UIFont.systemFont(ofSize: 17)
+        
+        self.selectionStyle = .none
     }
     
 }

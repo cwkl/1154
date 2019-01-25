@@ -20,9 +20,11 @@ class TitleCell: UITableViewCell {
     @IBOutlet weak var viewsCountLabel: UILabel!
     
     override func awakeFromNib() {
+        super.awakeFromNib()
         profileImageView.layer.cornerRadius = 20
         profileImageView.layer.masksToBounds = true
         profileImageView.contentMode = .scaleAspectFill
+        self.selectionStyle = .none
     }
     
     
