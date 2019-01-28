@@ -12,9 +12,11 @@ struct CommentModel: Codable {
     
     let name: String
     let uid: String?
-    let time: String
+    let date: String
     let comment: String
     let commentLikeCount: Int
     let to: String?
     let id: String
+    let isSubComment: Bool
+    let delete: Bool
 }

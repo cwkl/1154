@@ -8,6 +8,11 @@
 
 import Foundation
 import UIKit
+import FirebaseFirestore
+
+protocol CommentCellDelegate {
+    func showDeleteAlert(submitId: String, commentId: String)
+}
 
 class CommentCell: UITableViewCell {
     @IBOutlet weak var profileImageView: UIImageView!
@@ -18,11 +23,23 @@ class CommentCell: UITableViewCell {
     @IBOutlet weak var likeCountLabel: UILabel!
     @IBOutlet weak var likeTextLabel: UILabel!
     @IBOutlet weak var replyButton: UILabel!
+    @IBOutlet weak var deleteButtonView: UIView!
+    @IBOutlet weak var deleteButton: UILabel!
+    var submitId: String?
+    var commentId: String?
+    var commentCellDelegate: CommentCellDelegate?
     
     
     override func awakeFromNib() {
         super.awakeFromNib()
         self.selectionStyle = .none
+        deleteButton.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(deleteEvent(_:)))
+        deleteButton.addGestureRecognizer(tapGesture)
     }
     
+    @objc func deleteEvent(_ sender: UITapGestureRecognizer) {
+        guard let submitId = self.submitId, let commentId = self.commentId else {return}
+        commentCellDelegate?.showDeleteAlert(submitId: submitId, commentId: commentId)
+    }
 }

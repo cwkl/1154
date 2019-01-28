@@ -316,7 +316,7 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
                     }else{
                         guard let snapshot = snapshot, let data = snapshot.data() else { return }
                         do {
-                            let time = SharedFunction.shared.getToday()
+                            let date = SharedFunction.shared.getToday()
                             let userModel = try? FirestoreDecoder().decode(UserModel.self, from: data)
                             let title = self.submitTitle.text ?? ""
                             let content = self.submitContent.text ?? ""
@@ -345,7 +345,7 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
                                                         for sortUrl in sortUrls {
                                                             imageUrls.append(sortUrl.value)
                                                             if self.selectedImage.count == imageUrls.count{
-                                                                let submit = SubmitModel(profileImageUrl: profileImageUrl ?? "", id: id, name: name ?? "", title: title, time: time, content: content, country: self.country , category: self.category , imageUrl: imageUrls, commentCount: 0, likeCount: 0, viewsCount: 0)
+                                                                let submit = SubmitModel(profileImageUrl: profileImageUrl ?? "", id: id, name: name ?? "", title: title, date: date, content: content, country: self.country , category: self.category , imageUrl: imageUrls, commentCount: 0, likeCount: 0, viewsCount: 0)
                                                                 let data = try! FirestoreEncoder().encode(submit)
                                                                 Firestore.firestore().collection("submit").document(id).setData(data, completion: { (err) in
                                                                     if err != nil{
@@ -363,7 +363,7 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
                                     }
                                     
                                 }else {
-                                    let submit = SubmitModel(profileImageUrl: profileImageUrl ?? "", id: id, name: name ?? "", title: title, time: time, content: content, country: self.country ?? "", category: self.category ?? "", imageUrl: nil, commentCount: 0, likeCount: 0, viewsCount: 0)
+                                    let submit = SubmitModel(profileImageUrl: profileImageUrl ?? "", id: id, name: name ?? "", title: title, date: date, content: content, country: self.country ?? "", category: self.category ?? "", imageUrl: nil, commentCount: 0, likeCount: 0, viewsCount: 0)
                                     let data = try! FirestoreEncoder().encode(submit)
                                     Firestore.firestore().collection("submit").document(id).setData(data, completion: { (err) in
                                         if err != nil{

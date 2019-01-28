@@ -25,6 +25,8 @@ class PhotoCell: UITableViewCell, UICollectionViewDelegate, UICollectionViewData
         super.awakeFromNib()
         photoCollectionView.register(UINib(nibName: "photoCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "photoCollectionViewCell")
         
+        photoCollectionView.flashScrollIndicators()
+        photoCollectionView.showsHorizontalScrollIndicator = true
         photoCollectionView.delegate = self
         photoCollectionView.dataSource = self
         

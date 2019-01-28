@@ -140,7 +140,6 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
             }
         })
         
-        // Cancelボタン
         let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler:{
             (action: UIAlertAction!) -> Void in
             
