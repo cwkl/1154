@@ -14,7 +14,7 @@ struct SubmitModel: Codable {
     let id: String
     let name: String
     let title: String
-    let time: String
+    let date: String
     let content: String
     let country: String
     let category: String

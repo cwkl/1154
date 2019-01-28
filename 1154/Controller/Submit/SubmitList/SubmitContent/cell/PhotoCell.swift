@@ -18,14 +18,19 @@ protocol PhotoCellDelegate{
 class PhotoCell: UITableViewCell, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     @IBOutlet weak var photoCollectionView: UICollectionView!
     var imageUrl: [String]?
-    
+
     var photoCellDelegate : PhotoCellDelegate?
     
     override func awakeFromNib() {
+        super.awakeFromNib()
         photoCollectionView.register(UINib(nibName: "photoCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "photoCollectionViewCell")
         
+        photoCollectionView.flashScrollIndicators()
+        photoCollectionView.showsHorizontalScrollIndicator = true
         photoCollectionView.delegate = self
         photoCollectionView.dataSource = self
+        
+        self.selectionStyle = .none
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

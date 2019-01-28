@@ -30,6 +30,10 @@ class TrevelTableViewController: UIViewController {
         tableViewLoad()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        refreshed()
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let view = self.storyboard?.instantiateViewController(withIdentifier: "SubmitContentViewController") as? SubmitContentViewController{
             view.model = array[indexPath.row]
@@ -49,7 +53,7 @@ class TrevelTableViewController: UIViewController {
         }
         
         guard let field = whereField else {return}
-        field.order(by: "time", descending: true).getDocuments { (snapshot, error) in
+        field.order(by: "date", descending: true).getDocuments { (snapshot, error) in
             guard let snapshot = snapshot else{return}
             self.array.removeAll()
             

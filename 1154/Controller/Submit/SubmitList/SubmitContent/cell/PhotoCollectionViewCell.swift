@@ -13,6 +13,7 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var cellImageView: UIImageView!
     
     override func awakeFromNib() {
+        super.awakeFromNib()
         cellImageView.contentMode = .scaleAspectFill
     }
 }

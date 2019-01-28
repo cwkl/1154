@@ -20,6 +20,7 @@ class PhotoZoomCollectionViewCell: UICollectionViewCell, UIScrollViewDelegate {
     
     
     override func awakeFromNib() {
+        super.awakeFromNib()
         imageView.contentMode = .scaleAspectFit
         imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(imageViewTap(_:))))
         imageView.isUserInteractionEnabled = true
