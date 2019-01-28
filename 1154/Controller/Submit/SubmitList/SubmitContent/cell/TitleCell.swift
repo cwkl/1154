@@ -20,9 +20,17 @@ class TitleCell: UITableViewCell {
     @IBOutlet weak var commentsCountLabel: UILabel!
     @IBOutlet weak var likesCountLabel: UILabel!
     @IBOutlet weak var viewsCountLabel: UILabel!
+    var isJudge = false
     var uid: String?
-    var submitId: String?
+    var submitId: String? {
+        didSet{
+            if !isJudge{
+                judgeIsLike()
+            }
+        }
+    }
     var likeArray: [LikeModel] = []
+    var isLike: Bool?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -31,10 +39,10 @@ class TitleCell: UITableViewCell {
         profileImageView.contentMode = .scaleAspectFill
         self.selectionStyle = .none
         
-        
     }
     
     func setLike(){
+        self.likebutton.setImage(UIImage(named: "fillheart"), for: UIControl.State.normal)
         DispatchQueue.global().async {
             guard let uid = self.uid, let id = self.submitId else {return}
             let likeModel = LikeModel(id: uid, date: SharedFunction.shared.getToday())
@@ -43,15 +51,14 @@ class TitleCell: UITableViewCell {
             Firestore.firestore().collection("submit").document(id).collection("likes").document(uid).setData(likeData) { (error) in
                 if error != nil{
                 }else{
-                    self.likebutton.setImage(UIImage(named: "fillheart"), for: UIControl.State.normal)
-                    print("like")
+                    self.isLike = true
                 }
             }
         }
     }
     
-    @IBAction func likeButtonEvent(_ sender: Any) {
-        guard let uid = self.uid, let id = submitId else {return}
+    func judgeIsLike(){
+        guard let uid = self.uid, let id = self.submitId else {return}
         DispatchQueue.global().async {
             Firestore.firestore().collection("submit").document(id).collection("likes").getDocuments { (snapshot, error) in
                 if error != nil{
@@ -59,32 +66,26 @@ class TitleCell: UITableViewCell {
                 }else{
                     guard let snapshot = snapshot else {return}
                     if snapshot.isEmpty{
-                        self.setLike()
+                        self.isLike = false
                     }else{
                         for  document in snapshot.documents{
-                            print("aaaaa")
                             let likeModel = try? FirebaseDecoder().decode(LikeModel.self, from: document.data())
                             guard let model = likeModel else {return}
                             self.likeArray.append(model)
                         }
-                        var isLike = false
+                        self.isLike = false
                         for (index, _) in self.likeArray.enumerated(){
                             if self.likeArray[index].id == uid{
-                                isLike = true
+                                self.isLike = true
                             }
                             DispatchQueue.main.async {
                                 if index + 1 == self.likeArray.count{
+                                    self.isJudge = true
+                                    guard let isLike = self.isLike else {return}
                                     if isLike{
-                                        Firestore.firestore().collection("submit").document(id).collection("likes").document(uid).delete(completion: { (error) in
-                                            if error != nil{
-                                                
-                                            }else{
-                                                self.likebutton.setImage(UIImage(named: "heart2"), for: UIControl.State.normal)
-                                                print("delete success")
-                                            }
-                                        })
+                                        self.likebutton.setImage(UIImage(named: "fillheart"), for: UIControl.State.normal)
                                     }else{
-                                        self.setLike()
+                                        self.likebutton.setImage(UIImage(named: "heart2"), for: UIControl.State.normal)
                                     }
                                 }
                             }
@@ -92,6 +93,21 @@ class TitleCell: UITableViewCell {
                     }
                 }
             }
+        }
+    }
+    
+    @IBAction func likeButtonEvent(_ sender: Any) {
+        guard let isLike = self.isLike, let uid = uid, let id = submitId else {return}
+        if isLike{
+            self.likebutton.setImage(UIImage(named: "heart2"), for: UIControl.State.normal)
+            Firestore.firestore().collection("submit").document(id).collection("likes").document(uid).delete(completion: { (error) in
+                if error != nil{
+                }else{
+                    self.isLike = false
+                }
+            })
+        }else{
+            self.setLike()
         }
     }
 }

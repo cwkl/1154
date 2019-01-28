@@ -61,6 +61,7 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
     private var viewsCount: Int?
     private var likesCount: Int?
     private var commentsCount: Int?
+    private var isFirst = true
     
     
     override func viewDidLoad() {
@@ -95,11 +96,13 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
         userDataLoad()
         commentDataLoad()
         countWatcher()
+        likeWatcher()
         
         let refreshControl = UIRefreshControl()
         tableView.refreshControl = refreshControl
         self.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -125,6 +128,30 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
         }
     }
     
+    func likeWatcher(){
+        DispatchQueue.main.async {
+            guard let id = self.model?.id else {return}
+            Firestore.firestore().collection("submit").document(id).collection("likes").addSnapshotListener({ (snapshot, error) in
+                if error != nil{
+                }else{
+                    var likeArray: [LikeModel] = []
+                    guard let snapshot = snapshot else {return}
+                    for document in snapshot.documents{
+                        guard let data = try? FirebaseDecoder().decode(LikeModel.self, from: document.data()) else {return}
+                        likeArray.append(data)
+                    }
+                    let likeCount = likeArray.count
+                    Firestore.firestore().collection("submit").document(id).updateData(["likeCount" : likeCount], completion: { (error) in
+                        if error != nil{
+                        }else{
+                            self.countRefresh()
+                        }
+                    })
+                }
+            })
+        }
+    }
+    
     func countRefresh(){
         DispatchQueue.main.async {
             guard let id = self.model?.id else {return}
@@ -135,6 +162,9 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
                     do{
                         self.model = try? FirestoreDecoder().decode(SubmitModel.self, from: data)
                         self.tableView.reloadData()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
+                            self.isFirst = false
+                        })
                     }
                 }
             })
@@ -229,18 +259,6 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
         }
     }
     
-    func likeCountUpdate(count: Int){
-        DispatchQueue.main.async {
-            guard let id = self.model?.id else {return}
-            Firestore.firestore().collection("submit").document(id).updateData(["likeCount" : count], completion: { (error) in
-                if error != nil{
-                }else{
-                    self.countRefresh()
-                }
-            })
-        }
-    }
-    
     func commentCountUpdate(count: Int){
         DispatchQueue.main.async {
             guard let id = self.model?.id else {return}
@@ -279,7 +297,7 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
         guard let name = userModel?.name,
             let uid = uid,
             let comment = commentTextField.text else {return}
-
+        self.commentTextField.text = ""
         var to: String? = nil
         let commentId = UUID.init().uuidString
         let commentModel = CommentModel(name: name , uid: uid, date: SharedFunction.shared.getToday(), comment: comment, commentLikeCount: 0, to: to, id: commentId, isSubComment: false, delete: false)
@@ -288,9 +306,7 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
 
         Firestore.firestore().collection("submit").document(id).collection("comment").document(commentId).setData(commentData) { (error) in
             if error != nil{
-
             }else{
-                self.commentTextField.text = ""
                 self.commentDataLoad(completion: {
                         self.scrollToBottom()
                 })
@@ -363,7 +379,11 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
             cell.timeLabel.text = SharedFunction.shared.getCurrentLocaleDateFromString(string: model.date, format: "yyyy.MM.dd  HH:mm")
             cell.commentsCountLabel.text = "\(model.commentCount)"
             cell.likesCountLabel.text = "\(model.likeCount)"
-            cell.viewsCountLabel.text = "\(model.viewsCount)"
+            if isFirst{
+                cell.viewsCountLabel.text = "\(model.viewsCount + 1)"
+            }else{
+                cell.viewsCountLabel.text = "\(model.viewsCount)"
+            }
             cell.uid = self.uid
             cell.submitId = model.id
             return cell
@@ -384,13 +404,6 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
                     cell.commentCellDelegate = self
                     cell.submitId = model.id
                     cell.commentId = commentArray[indexPath.row - 3].id
-                    if uid == commentArray[indexPath.row - 3].uid{
-                        cell.deleteButtonView.isHidden = false
-                        cell.replyButton.isHidden = true
-                    }else{
-                        cell.deleteButtonView.isHidden = true
-                        cell.replyButton.isHidden = false
-                    }
                     
                     if commentArray[indexPath.row - 3].delete{
                         cell.commentLabel.text = "This comment has been deleted."
@@ -402,9 +415,13 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
                     }else{
                         cell.commentLabel.text = commentArray[indexPath.row - 3].comment
                         cell.commentLabel.textColor = UIColor.black
-                        cell.likeButton.isHidden = false
-                        cell.deleteButtonView.isHidden = false
-                        cell.replyButton.isHidden = false
+                        if uid == commentArray[indexPath.row - 3].uid{
+                            cell.deleteButtonView.isHidden = false
+                            cell.replyButton.isHidden = true
+                        }else{
+                            cell.deleteButtonView.isHidden = true
+                            cell.replyButton.isHidden = false
+                        }
                     }
 
                     var date = ""
@@ -470,15 +487,7 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
                     cell.commentCellDelegate = self
                     cell.submitId = model.id
                     cell.commentId = commentArray[indexPath.row - 2].id
-                    
-                    if uid == commentArray[indexPath.row - 2].uid{
-                        cell.deleteButtonView.isHidden = false
-                        cell.replyButton.isHidden = true
-                    }else{
-                        cell.deleteButtonView.isHidden = true
-                        cell.replyButton.isHidden = false
-                    }
-                    
+
                     if commentArray[indexPath.row - 2].delete{
                         cell.commentLabel.text = "This comment has been deleted."
                         cell.commentLabel.textColor = UIColor.lightGray
@@ -489,9 +498,13 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
                     }else{
                         cell.commentLabel.text = commentArray[indexPath.row - 2].comment
                         cell.commentLabel.textColor = UIColor.black
-                        cell.likeButton.isHidden = false
-                        cell.deleteButtonView.isHidden = false
-                        cell.replyButton.isHidden = false
+                        if uid == commentArray[indexPath.row - 2].uid{
+                            cell.deleteButtonView.isHidden = false
+                            cell.replyButton.isHidden = true
+                        }else{
+                            cell.deleteButtonView.isHidden = true
+                            cell.replyButton.isHidden = false
+                        }
                     }
                     
                     var date = ""
