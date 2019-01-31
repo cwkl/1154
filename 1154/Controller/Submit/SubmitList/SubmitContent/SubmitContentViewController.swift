@@ -37,13 +37,20 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
     }
     
     
-    func showDeleteAlert(submitId: String, commentId: String) {
+    func showDeleteAlert(submitId: String, commentId: String, parentId: String, isSubComment: Bool) {
         let alert: UIAlertController = UIAlertController(title: "", message: "Do you want to delete this comment?", preferredStyle:  UIAlertController.Style.alert)
         
         let defaultAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler:{
             (action: UIAlertAction!) -> Void in
             DispatchQueue.global().async {
-                Firestore.firestore().collection("submit").document(submitId).collection("comment").document(commentId).updateData(["delete" : true]) { (error) in
+                var reference: DocumentReference?
+                if isSubComment{
+                   reference = Firestore.firestore().collection("submit").document(submitId).collection("comment").document(parentId).collection("subComment").document(commentId)
+                }else{
+                    reference = Firestore.firestore().collection("submit").document(submitId).collection("comment").document(commentId)
+                }
+                guard let documentReference = reference else {return}
+                documentReference.updateData(["delete" : true]) { (error) in
                     if error != nil{
                         print(error)
                     }else{
@@ -92,7 +99,7 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
     private var commentsCount: Int?
     private var cellHeight = [IndexPath: CGFloat]()
     private var isViews = true
-    private var to: String?
+    private var to = ""
     private var parentId: String?
     private var isSubComment = false
     private var isPost = false
@@ -154,7 +161,7 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
     
     @objc func replyingBarCancelEvent(){
         isSubComment = false
-        to = nil
+        to = ""
         parentId = nil
         commentMention.text = ""
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
@@ -347,7 +354,9 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
                     guard let snapshot = snapshot else {return}
                     
                     var count = 0
-                    
+                    if snapshot.isEmpty{
+                        self.tableView.dataSource = self
+                    }
                     for document in snapshot.documents{
                         guard let model = try? FirestoreDecoder().decode(CommentModel.self, from: document.data()) else {return}
                         self.mainCommentArray.append(model)
@@ -566,6 +575,11 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
             }else{
                 
             }
+            if model.uid == self.uid{
+                cell.likebutton.isHidden = true
+            }else{
+                cell.likebutton.isHidden = false
+            }
             cell.nameLabel.text = model.name
             cell.titleLabel.text = model.title
             cell.timeLabel.text = SharedFunction.shared.getCurrentLocaleDateFromString(string: model.date, format: "yyyy.MM.dd  HH:mm")
@@ -600,10 +614,23 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
                         cell.isLiked = commentArray[indexPath.row - 3].isLike
                         cell.commentId = commentArray[indexPath.row - 3].id
                         
+                        if commentArray[indexPath.row - 3].isSubComment{
+                            cell.mainViewLeading.constant = +30
+                            cell.mentionLabel.isHidden = false
+                            if commentArray[indexPath.row - 3].to == ""{
+                                cell.mentionLabel.isHidden = true
+                            }else{
+                                cell.mentionLabel.text = "@\(commentArray[indexPath.row - 3].to)"
+                            }
+                        }else{
+                            cell.mainViewLeading.constant = 0
+                            cell.mentionLabel.isHidden = true
+                        }
+                        
                         if commentArray[indexPath.row - 3].delete{
                             cell.commentLabel.text = "This comment has been deleted."
                             cell.commentLabel.textColor = UIColor.lightGray
-                            
+                            cell.mentionLabel.isHidden = true
                             cell.likeButtonView.isHidden = true
                             cell.deleteButtonView.isHidden = true
                             cell.replyButtonView.isHidden = true
@@ -625,42 +652,7 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
                             if span > 2592000{
                                 date = SharedFunction.shared.getCurrentLocaleDateFromString(string: commentArray[indexPath.row - 3].date, format: "yyyy.MM.dd  HH:mm")
                             }else{
-                                if 1 <= span / 604800{
-                                    let spanToWeek = Int(span / 604800)
-                                    if spanToWeek > 1{
-                                        date = "\(spanToWeek) weeks ago"
-                                    }else{
-                                        date = "\(spanToWeek) week ago"
-                                    }
-                                }else if 1 <= span / 86400{
-                                    let spanToDay = Int(span / 86400)
-                                    if spanToDay > 1{
-                                        date = "\(spanToDay) days ago"
-                                    }else{
-                                        date = "\(spanToDay) day ago"
-                                    }
-                                }else if 1 <= span / 3600{
-                                    let spanToHour = Int(span / 3600)
-                                    if spanToHour > 1{
-                                        date = "\(spanToHour) hours ago"
-                                    }else{
-                                        date = "\(spanToHour) hour ago"
-                                    }
-                                }else if 1 <= span / 60{
-                                    let spanToMin = Int(span / 60)
-                                    if spanToMin > 1{
-                                        date = "\(spanToMin) minutes ago"
-                                    }else{
-                                        date = "\(spanToMin) minute ago"
-                                    }
-                                }else if span < 60{
-                                    let spanToSec = Int(span)
-                                    if spanToSec > 1{
-                                        date = "\(spanToSec) seconds ago"
-                                    }else if spanToSec <= 1{
-                                        date = "1 second ago"
-                                    }
-                                }
+                                date = spanCalc(span: span)
                             }
                         }
                         
@@ -693,10 +685,23 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
                         cell.isLiked = commentArray[indexPath.row - 2].isLike
                         cell.commentId = commentArray[indexPath.row - 2].id
                         
+                        if commentArray[indexPath.row - 2].isSubComment{
+                            cell.mainViewLeading.constant = +30
+                            cell.mentionLabel.isHidden = false
+                            if commentArray[indexPath.row - 2].to == ""{
+                                cell.mentionLabel.isHidden = true
+                            }else{
+                                cell.mentionLabel.text = "@\(commentArray[indexPath.row - 2].to)"
+                            }
+                        }else{
+                            cell.mainViewLeading.constant = 0
+                            cell.mentionLabel.isHidden = true
+                        }
+                        
                         if commentArray[indexPath.row - 2].delete{
                             cell.commentLabel.text = "This comment has been deleted."
                             cell.commentLabel.textColor = UIColor.lightGray
-                            
+                            cell.mentionLabel.isHidden = true
                             cell.likeButtonView.isHidden = true
                             cell.deleteButtonView.isHidden = true
                             cell.replyButtonView.isHidden = true
@@ -718,42 +723,7 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
                             if span > 2592000{
                                 date = SharedFunction.shared.getCurrentLocaleDateFromString(string: commentArray[indexPath.row - 2].date, format: "yyyy.MM.dd  HH:mm")
                             }else{
-                                if 1 <= span / 604800{
-                                    let spanToWeek = Int(span / 604800)
-                                    if spanToWeek > 1{
-                                        date = "\(spanToWeek) weeks ago"
-                                    }else{
-                                        date = "\(spanToWeek) week ago"
-                                    }
-                                }else if 1 <= span / 86400{
-                                    let spanToDay = Int(span / 86400)
-                                    if spanToDay > 1{
-                                        date = "\(spanToDay) days ago"
-                                    }else{
-                                        date = "\(spanToDay) day ago"
-                                    }
-                                }else if 1 <= span / 3600{
-                                    let spanToHour = Int(span / 3600)
-                                    if spanToHour > 1{
-                                        date = "\(spanToHour) hours ago"
-                                    }else{
-                                        date = "\(spanToHour) hour ago"
-                                    }
-                                }else if 1 <= span / 60{
-                                    let spanToMin = Int(span / 60)
-                                    if spanToMin > 1{
-                                        date = "\(spanToMin) minutes ago"
-                                    }else{
-                                        date = "\(spanToMin) minute ago"
-                                    }
-                                }else if span < 60{
-                                    let spanToSec = Int(span)
-                                    if spanToSec > 1{
-                                        date = "\(spanToSec) seconds ago"
-                                    }else if spanToSec <= 1{
-                                        date = "1 second ago"
-                                    }
-                                }
+                                date = spanCalc(span: span)
                             }
                         }
                         
@@ -775,5 +745,45 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
         if let commentCell = cell as? CommentCell {
             commentCell.listener?.remove()
         }
+    }
+    
+    func spanCalc(span: TimeInterval) -> String{
+        if 1 <= span / 604800{
+            let spanToWeek = Int(span / 604800)
+            if spanToWeek > 1{
+                return "\(spanToWeek) weeks ago"
+            }else{
+                return "\(spanToWeek) week ago"
+            }
+        }else if 1 <= span / 86400{
+            let spanToDay = Int(span / 86400)
+            if spanToDay > 1{
+                return "\(spanToDay) days ago"
+            }else{
+                return "\(spanToDay) day ago"
+            }
+        }else if 1 <= span / 3600{
+            let spanToHour = Int(span / 3600)
+            if spanToHour > 1{
+                return "\(spanToHour) hours ago"
+            }else{
+                return "\(spanToHour) hour ago"
+            }
+        }else if 1 <= span / 60{
+            let spanToMin = Int(span / 60)
+            if spanToMin > 1{
+                return "\(spanToMin) minutes ago"
+            }else{
+                return "\(spanToMin) minute ago"
+            }
+        }else if span < 60{
+            let spanToSec = Int(span)
+            if spanToSec > 1{
+                return "\(spanToSec) seconds ago"
+            }else if spanToSec <= 1{
+                return "1 second ago"
+            }
+        }
+        return ""
     }
 }

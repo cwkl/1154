@@ -15,7 +15,7 @@ struct CommentModel: Codable {
     let date: String
     let comment: String
     let commentLikeCount: Int
-    let to: String?
+    let to: String
     let id: String
     let isSubComment: Bool
     let delete: Bool
