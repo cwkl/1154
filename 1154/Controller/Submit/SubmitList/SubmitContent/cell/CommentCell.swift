@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import FirebaseFirestore
 import CodableFirebase
+import FirebaseAuth
 
 protocol CommentCellDelegate {
     func showDeleteAlert(submitId: String, commentId: String)
@@ -29,15 +30,16 @@ class CommentCell: UITableViewCell {
     @IBOutlet weak var replyButtonView: UIView!
     @IBOutlet weak var deleteButtonView: UIView!
     
+    private let uid = Auth.auth().currentUser?.uid
     private var isLike: Bool?
     private var isJudge = false
     private var likeArray: [LikeModel] = []
     var commentCellDelegate: CommentCellDelegate?
     var submitId: String?
-    var uid: String?
+    var commentUid: String?
     var name: String?
     var indexPath: Int?
-    var parentIsSubComment: Bool?
+    var isSubComment: Bool?
     var parentId: String?
     var isLiked: Bool?{
         didSet{
@@ -76,8 +78,16 @@ class CommentCell: UITableViewCell {
     
     func judgeLike(){
         DispatchQueue.global().async {
-            guard let submitId = self.submitId, let uid = self.uid, let commentId = self.commentId else {return}
-            Firestore.firestore().collection("submit").document(submitId).collection("comment").document(commentId).collection("like").getDocuments(completion: { (snapshot, error) in
+            guard let submitId = self.submitId, let commentId = self.commentId, let isSubcomment = self.isSubComment else {return}
+            var reference: CollectionReference?
+            if isSubcomment{
+                guard let parentId = self.parentId else {return}
+                reference = Firestore.firestore().collection("submit").document(submitId).collection("comment").document(parentId).collection("subComment").document(commentId).collection("like")
+            }else{
+                reference = Firestore.firestore().collection("submit").document(submitId).collection("comment").document(commentId).collection("like")
+            }
+            guard let collectionReference = reference else {return}
+            collectionReference.getDocuments(completion: { (snapshot, error) in
                 if error != nil{
                 }else{
                     guard let snapshot = snapshot else {return}
@@ -92,7 +102,7 @@ class CommentCell: UITableViewCell {
                         
                         self.isLike = false
                         for (index, _) in self.likeArray.enumerated(){
-                            if self.likeArray[index].id == uid{
+                            if self.likeArray[index].id == self.uid{
                                 self.isLike = true
                             }
                             DispatchQueue.main.async {
@@ -115,8 +125,16 @@ class CommentCell: UITableViewCell {
     
     func commentLikeObserver(){
         DispatchQueue.global().async {
-            guard let submitId = self.submitId, let commentId = self.commentId, let uid = self.uid, let indexPath = self.indexPath else {return}
-            self.listener = Firestore.firestore().collection("submit").document(submitId).collection("comment").document(commentId).collection("like").addSnapshotListener({ (snapshot, error) in
+            guard let submitId = self.submitId, let commentId = self.commentId, let indexPath = self.indexPath, let isSubComment = self.isSubComment else {return}
+            var reference: DocumentReference?
+            if isSubComment{
+                guard let parentId = self.parentId else {return}
+                reference = Firestore.firestore().collection("submit").document(submitId).collection("comment").document(parentId).collection("subComment").document(commentId)
+            }else{
+                reference = Firestore.firestore().collection("submit").document(submitId).collection("comment").document(commentId)
+            }
+            guard let documentReference = reference else {return}
+            self.listener = documentReference.collection("like").addSnapshotListener({ (snapshot, error) in
                 if error != nil{
                 }else{
                     guard let snapshot = snapshot else {return}
@@ -124,7 +142,7 @@ class CommentCell: UITableViewCell {
                     var isLike = false
                     for document in snapshot.documents{
                         guard let likeModel = try? FirebaseDecoder().decode(LikeModel.self, from: document.data()) else {return}
-                        if likeModel.id == uid{
+                        if likeModel.id == self.uid{
                             isLike = true
                             
                         }
@@ -144,7 +162,7 @@ class CommentCell: UITableViewCell {
                     }else{
                         self.likeTextLabel.text = "like"
                     }
-                    Firestore.firestore().collection("submit").document(submitId).collection("comment").document(commentId).updateData(["commentLikeCount" : likeCount], completion: { (error) in
+                    documentReference.updateData(["commentLikeCount" : likeCount], completion: { (error) in
                         if error != nil{
                         }else{
                             
@@ -162,19 +180,31 @@ class CommentCell: UITableViewCell {
     
     @objc func likeButtonEvent(_ sender: UITapGestureRecognizer) {
         DispatchQueue.global().async {
-            guard let submitId = self.submitId,
-                let uid = self.uid,
+            guard let uid = self.uid,
+                let submitId = self.submitId,
                 let commentId = self.commentId,
-                let isLike = self.isLike else {return}
+                let isLike = self.isLike,
+                let isSubComment = self.isSubComment else {return}
             if isLike{
                 DispatchQueue.main.async {
                     self.likeButton.image = UIImage(named: "heart2")
                     self.isLike = false
                 }
-                Firestore.firestore().collection("submit").document(submitId).collection("comment").document(commentId).collection("like").document(uid).delete { (error) in
-                    if error != nil{
-                    }else{
-                        
+                if isSubComment{
+                   guard let parentId = self.parentId else {return}
+                    Firestore.firestore().collection("submit").document(submitId).collection("comment").document(parentId).collection("subComment").document(commentId).collection("like").document(uid).delete { (error) in
+                        if error != nil{
+                            print(error.debugDescription)
+                        }else{
+                            
+                        }
+                    }
+                }else{
+                    Firestore.firestore().collection("submit").document(submitId).collection("comment").document(commentId).collection("like").document(uid).delete { (error) in
+                        if error != nil{
+                        }else{
+                            
+                        }
                     }
                 }
             }else{
@@ -184,10 +214,20 @@ class CommentCell: UITableViewCell {
                 }
                 let likeModel = LikeModel(id: uid, date: SharedFunction.shared.getToday())
                 guard let data = try? FirestoreEncoder().encode(likeModel) else {return}
+                if isSubComment{
+                    guard let parentId = self.parentId else {return}
+                    Firestore.firestore().collection("submit").document(submitId).collection("comment").document(parentId).collection("subComment").document(commentId).collection("like").document(uid).setData(data) { (error) in
+                        if error != nil{
+                        }else{
+                            
+                        }
+                    }
+                }else{
                 Firestore.firestore().collection("submit").document(submitId).collection("comment").document(commentId).collection("like").document(uid).setData(data) { (error) in
-                    if error != nil{
-                    }else{
-                        
+                        if error != nil{
+                        }else{
+                            
+                        }
                     }
                 }
             }
@@ -196,11 +236,12 @@ class CommentCell: UITableViewCell {
     
     @objc func replyButtonEvent(_ sender: UITapGestureRecognizer){
         guard let name = self.name ,
-            let uid = self.uid,
+            let uid = self.commentUid,
             let commentId = self.commentId,
-            let parentIsSubComment = self.parentIsSubComment,
-            let parentId = self.parentId else {return}
+            let parentIsSubComment = self.isSubComment else {return}
+        
         if parentIsSubComment{
+            guard let parentId = self.parentId else {return}
             commentCellDelegate?.showReplyingBar(name: name, uid: uid, commentId: parentId)
         }else{
             commentCellDelegate?.showReplyingBar(name: name, uid: uid, commentId: commentId)

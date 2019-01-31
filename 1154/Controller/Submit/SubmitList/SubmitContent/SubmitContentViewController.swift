@@ -592,10 +592,10 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
                         cell.nameLabel.text = commentArray[indexPath.row - 3].name
                         cell.commentCellDelegate = self
                         cell.submitId = model.id
-                        cell.uid = commentArray[indexPath.row - 3].uid
+                        cell.commentUid = commentArray[indexPath.row - 3].uid
                         cell.name = commentArray[indexPath.row - 3].name
                         cell.indexPath = indexPath.row - 3
-                        cell.parentIsSubComment = commentArray[indexPath.row - 3].isSubComment
+                        cell.isSubComment = commentArray[indexPath.row - 3].isSubComment
                         cell.parentId = commentArray[indexPath.row - 3].parentId
                         cell.isLiked = commentArray[indexPath.row - 3].isLike
                         cell.commentId = commentArray[indexPath.row - 3].id
@@ -685,10 +685,10 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
                         cell.nameLabel.text = commentArray[indexPath.row - 2].name
                         cell.commentCellDelegate = self
                         cell.submitId = model.id
-                        cell.uid = commentArray[indexPath.row - 2].uid
+                        cell.commentUid = commentArray[indexPath.row - 2].uid
                         cell.name = commentArray[indexPath.row - 2].name
                         cell.indexPath = indexPath.row - 2
-                        cell.parentIsSubComment = commentArray[indexPath.row - 2].isSubComment
+                        cell.isSubComment = commentArray[indexPath.row - 2].isSubComment
                         cell.parentId = commentArray[indexPath.row - 2].parentId
                         cell.isLiked = commentArray[indexPath.row - 2].isLike
                         cell.commentId = commentArray[indexPath.row - 2].id
