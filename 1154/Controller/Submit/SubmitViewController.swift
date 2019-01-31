@@ -40,6 +40,9 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
     private var selectedImage = [UIImage]()
     private var selectedIndex = [Int]()
     private var count: Int = 0
+    private var uid: String?
+    private var name: String?
+    private var profileImageUrl: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,6 +74,7 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
         submitCameraCollectionView.dataSource = self
         
         fetchPhotos()
+        userDataLoad()
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -305,88 +309,99 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
         }
     }
     
+    func userDataLoad(){
+        uid = Auth.auth().currentUser?.uid
+        
+        if !isLoading{
+            DispatchQueue.global().async {
+                self.isLoading = true
+                guard let id = self.uid else {return}
+                Firestore.firestore().collection("users").document(id).getDocument { (snapshot, error) in
+                    if error != nil{
+                        self.isLoading = false
+                    }else{
+                        guard let snapshot = snapshot, let data = snapshot.data() else { return }
+                        do {
+                            let userModel = try? FirestoreDecoder().decode(UserModel.self, from: data)
+                            self.name = userModel?.name
+                            self.profileImageUrl = userModel?.profileImageUrl
+                            self.isLoading = false
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     @IBAction func backEvent(_ sender: Any) {
         self.submitTitle.resignFirstResponder()
         self.dismiss(animated: true, completion: nil)
     }
     
     @IBAction func submitEvent(_ sender: Any) {
-        
-        let uid = Auth.auth().currentUser?.uid
-        
         if !isLoading{
+            guard let uid = self.uid,
+                let title = self.submitTitle.text,
+                let content = self.submitContent.text,
+                let name = self.name else {return}
+            let profileImageUrl = self.profileImageUrl ?? ""
+            let date = SharedFunction.shared.getToday()
+            let id = UUID.init().uuidString
+            self.isLoading = true
+            
             DispatchQueue.global().async {
-                self.isLoading = true
-                Firestore.firestore().collection("users").document(uid ?? "").getDocument { (snapshot, error) in
-                    if error != nil{
-                        self.isLoading = false
-                    }else{
-                        guard let snapshot = snapshot, let data = snapshot.data() else { return }
-                        do {
-                            let date = SharedFunction.shared.getToday()
-                            let userModel = try? FirestoreDecoder().decode(UserModel.self, from: data)
-                            let title = self.submitTitle.text ?? ""
-                            let content = self.submitContent.text ?? ""
-                            let id = UUID.init().uuidString
-                            let name = userModel?.name
-                            let profileImageUrl = userModel?.profileImageUrl
+                
+                if !title.isEmpty && !content.isEmpty && self.country != "" && self.category != "" {
+                    if !self.selectedImage.isEmpty{
+                        var imagesDic = [Int: String]()
+                        print(self.selectedImage.count)
+                        for (index, item) in self.selectedImage.enumerated(){
+                            guard let resizeImage = item.resize(size: CGSize(width: 500, height: 500)) else{return}
+                            guard let imageJPGE = resizeImage.jpegData(compressionQuality: 0.1) else{return}
                             
-                            if !title.isEmpty && !content.isEmpty && self.country != "" && self.category != "" {
-                                if !self.selectedImage.isEmpty{
-                                    var imagesDic = [Int: String]()
-                                    print(self.selectedImage.count)
-                                    for (index, item) in self.selectedImage.enumerated(){
-                                        guard let resizeImage = item.resize(size: CGSize(width: 500, height: 500)) else{return}
-                                        guard let imageJPGE = resizeImage.jpegData(compressionQuality: 0.1) else{return}
-                                        let id = UUID.init().uuidString
-                                        Storage.storage().reference().child("submit/images").child(id).putData(imageJPGE, metadata: nil, completion: { (data, err) in
-                                            if err != nil {
-                                            }else{
-                                                Storage.storage().reference().child("submit/images").child(id).downloadURL(completion: { (url, err) in
-                                                    if err != nil{
-                                                    }else{
-                                                        guard let url = url?.absoluteString else{return}
-                                                        imagesDic[index] = url
-                                                        let sortUrls = imagesDic.sorted(by: {$0.0 < $1.0})
-                                                        var imageUrls = [String]()
-                                                        for sortUrl in sortUrls {
-                                                            imageUrls.append(sortUrl.value)
-                                                            if self.selectedImage.count == imageUrls.count{
-                                                                let submit = SubmitModel(profileImageUrl: profileImageUrl ?? "", id: id, name: name ?? "", title: title, date: date, content: content, country: self.country , category: self.category , imageUrl: imageUrls, commentCount: 0, likeCount: 0, viewsCount: 0)
-                                                                let data = try! FirestoreEncoder().encode(submit)
-                                                                Firestore.firestore().collection("submit").document(id).setData(data, completion: { (err) in
-                                                                    if err != nil{
-                                                                    }else{
-                                                                        self.dismiss(animated: true, completion: nil)
-                                                                        self.isLoading = false
-                                                                    }
-                                                                })
-                                                            }
-                                                        }
-                                                    }
-                                                })
-                                            }
-                                        })
-                                    }
-                                    
-                                }else {
-                                    let submit = SubmitModel(profileImageUrl: profileImageUrl ?? "", id: id, name: name ?? "", title: title, date: date, content: content, country: self.country ?? "", category: self.category ?? "", imageUrl: nil, commentCount: 0, likeCount: 0, viewsCount: 0)
-                                    let data = try! FirestoreEncoder().encode(submit)
-                                    Firestore.firestore().collection("submit").document(id).setData(data, completion: { (err) in
+                            Storage.storage().reference().child("submit/images").child(id).putData(imageJPGE, metadata: nil, completion: { (data, err) in
+                                if err != nil {
+                                }else{
+                                    Storage.storage().reference().child("submit/images").child(id).downloadURL(completion: { (url, err) in
                                         if err != nil{
                                         }else{
-                                            self.dismiss(animated: true, completion: nil)
-                                            self.isLoading = false
+                                            guard let url = url?.absoluteString else{return}
+                                            imagesDic[index] = url
+                                            let sortUrls = imagesDic.sorted(by: {$0.0 < $1.0})
+                                            var imageUrls = [String]()
+                                            for sortUrl in sortUrls {
+                                                imageUrls.append(sortUrl.value)
+                                                if self.selectedImage.count == imageUrls.count{
+                                                    let submit = SubmitModel(profileImageUrl: profileImageUrl, id: id, uid: uid, name: name, title: title, date: date, content: content, country: self.country , category: self.category , imageUrl: imageUrls, commentCount: 0, likeCount: 0, viewsCount: 0)
+                                                    let data = try! FirestoreEncoder().encode(submit)
+                                                    Firestore.firestore().collection("submit").document(id).setData(data, completion: { (err) in
+                                                        if err != nil{
+                                                        }else{
+                                                            self.dismiss(animated: true, completion: nil)
+                                                            self.isLoading = false
+                                                        }
+                                                    })
+                                                }
+                                            }
                                         }
                                     })
                                 }
+                            })
+                        }
+                        
+                    }else {
+                        let submit = SubmitModel(profileImageUrl: profileImageUrl, id: id, uid: uid, name: name, title: title, date: date, content: content, country: self.country, category: self.category, imageUrl: nil, commentCount: 0, likeCount: 0, viewsCount: 0)
+                        let data = try! FirestoreEncoder().encode(submit)
+                        Firestore.firestore().collection("submit").document(id).setData(data, completion: { (err) in
+                            if err != nil{
                             }else{
+                                self.dismiss(animated: true, completion: nil)
                                 self.isLoading = false
                             }
-                        }catch let error {
-                            self.isLoading = false
-                        }
+                        })
                     }
+                }else{
+                    self.isLoading = false
                 }
             }
         }

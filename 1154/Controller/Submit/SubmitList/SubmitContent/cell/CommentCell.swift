@@ -13,7 +13,7 @@ import CodableFirebase
 import FirebaseAuth
 
 protocol CommentCellDelegate {
-    func showDeleteAlert(submitId: String, commentId: String)
+    func showDeleteAlert(submitId: String, commentId: String, parentId: String, isSubComment: Bool)
     func showReplyingBar(name: String, uid: String, commentId: String)
     func setIsLike(isLike: Bool, indexPath: Int)
 }
@@ -22,6 +22,7 @@ class CommentCell: UITableViewCell {
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
+    @IBOutlet weak var mentionLabel: UILabel!
     @IBOutlet weak var commentLabel: UILabel!
     @IBOutlet weak var likeButton: UIImageView!
     @IBOutlet weak var likeButtonView: UIView!
@@ -29,6 +30,8 @@ class CommentCell: UITableViewCell {
     @IBOutlet weak var likeTextLabel: UILabel!
     @IBOutlet weak var replyButtonView: UIView!
     @IBOutlet weak var deleteButtonView: UIView!
+    @IBOutlet weak var mainViewLeading: NSLayoutConstraint!
+    
     
     private let uid = Auth.auth().currentUser?.uid
     private var isLike: Bool?
@@ -174,8 +177,11 @@ class CommentCell: UITableViewCell {
     }
     
     @objc func deleteEvent(_ sender: UITapGestureRecognizer) {
-        guard let submitId = self.submitId, let commentId = self.commentId else {return}
-        commentCellDelegate?.showDeleteAlert(submitId: submitId, commentId: commentId)
+        guard let submitId = self.submitId,
+            let commentId = self.commentId,
+            let parentId = self.parentId,
+            let isSubComment = self.isSubComment else {return}
+        commentCellDelegate?.showDeleteAlert(submitId: submitId, commentId: commentId, parentId: parentId, isSubComment: isSubComment)
     }
     
     @objc func likeButtonEvent(_ sender: UITapGestureRecognizer) {

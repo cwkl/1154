@@ -12,6 +12,7 @@ struct SubmitModel: Codable {
     
     let profileImageUrl: String?
     let id: String
+    let uid: String
     let name: String
     let title: String
     let date: String
