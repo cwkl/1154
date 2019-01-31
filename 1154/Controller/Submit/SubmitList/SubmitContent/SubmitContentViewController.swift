@@ -14,16 +14,41 @@ import Kingfisher
 
 class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFieldDelegate, CommentCellDelegate{
     
+    func setIsLike(isLike: Bool, indexPath: Int) {
+        if !commentArray.isEmpty {
+            commentArray[indexPath].isLike = isLike
+        }
+    }
+    
+    func showReplyingBar(name: String, uid: String, commentId: String){
+        isSubComment = true
+        self.parentId = commentId
+        if uid == self.uid{
+            replyingBarLabel.text = "Replying to my comment"
+            commentMention.text = ""
+        }else{
+            replyingBarLabel.text = "Replying to \(name)"
+            commentMention.text = "@\(name) "
+            to = name
+        }
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 44, right: 0)
+        replyingBar.isHidden = false
+        commentTextField.becomeFirstResponder()
+    }
+    
+    
     func showDeleteAlert(submitId: String, commentId: String) {
         let alert: UIAlertController = UIAlertController(title: "", message: "Do you want to delete this comment?", preferredStyle:  UIAlertController.Style.alert)
         
         let defaultAction: UIAlertAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler:{
             (action: UIAlertAction!) -> Void in
-        Firestore.firestore().collection("submit").document(submitId).collection("comment").document(commentId).updateData(["delete" : true]) { (error) in
-                if error != nil{
-                    print(error)
-                }else{
-                    self.commentDataLoad()
+            DispatchQueue.global().async {
+                Firestore.firestore().collection("submit").document(submitId).collection("comment").document(commentId).updateData(["delete" : true]) { (error) in
+                    if error != nil{
+                        print(error)
+                    }else{
+                        self.commentDataLoad()
+                    }
                 }
             }
         })
@@ -37,7 +62,6 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
         present(alert, animated: true, completion: nil)
     }
     
-    
     func showImageDetail(imageDetailView: UIViewController) {
         self.present(imageDetailView, animated: false, completion: nil)
     }
@@ -49,19 +73,36 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
     @IBOutlet weak var commentProfileImageView: UIImageView!
     @IBOutlet weak var commentTextField: UITextField!
     @IBOutlet weak var commentPostButton: UIButton!
+    @IBOutlet weak var replyingBar: UIView!
+    @IBOutlet weak var replyingBarCancel: UIView!
+    @IBOutlet weak var replyingBarLabel: UILabel!
+    @IBOutlet weak var commentMention: UILabel!
     
     private var userModel: UserModel?
     private var submitModel: SubmitModel?
     private var uid: String?
     private var commentArray: [CommentModel] = []
+    private var mainCommentArray: [CommentModel] = []
+    private var subCommentArray: [CommentModel] = []
     private var tap = UITapGestureRecognizer()
     private var spanArray: [TimeInterval] = []
     private var refreshControl : UIRefreshControl?
-    var model: SubmitModel?
     private var viewsCount: Int?
     private var likesCount: Int?
     private var commentsCount: Int?
-    private var isFirst = true
+    private var cellHeight = [IndexPath: CGFloat]()
+    private var isViews = true
+    private var to: String?
+    private var parentId: String?
+    private var isSubComment = false
+    private var isPost = false
+    var model: SubmitModel?{
+        didSet{
+            if isViews{
+                increaseViews()
+            }
+        }
+    }
     
     
     override func viewDidLoad() {
@@ -80,11 +121,16 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
         tableView.register(UINib(nibName: "commentCell", bundle: nil), forCellReuseIdentifier: "commentCell")
         
         tableView.delegate = self
-        tableView.dataSource = self
+        
         tableView.isUserInteractionEnabled = true
+        tableView.rowHeight = UITableView.automaticDimension
         tap = UITapGestureRecognizer(target: self, action: #selector(keyboardHide(_:)))
         tap.isEnabled = false
         tableView.addGestureRecognizer(tap)
+        
+        replyingBarCancel.isUserInteractionEnabled = true
+        let cancel = UITapGestureRecognizer(target: self, action: #selector(replyingBarCancelEvent))
+        replyingBarCancel.addGestureRecognizer(cancel)
         
         commentTextField.delegate = self
         
@@ -95,24 +141,51 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
         
         userDataLoad()
         commentDataLoad()
-        countWatcher()
-        likeWatcher()
+        countObserver()
+        submitLikeObserver()
+        commentCountObserver()
+        ViewsObserver()
         
         let refreshControl = UIRefreshControl()
         tableView.refreshControl = refreshControl
         self.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
-        
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        guard let viewsCount = self.viewsCount else {return}
-        viewsCountUpdate(count: viewsCount + 1)
+    @objc func replyingBarCancelEvent(){
+        isSubComment = false
+        to = nil
+        parentId = nil
+        commentMention.text = ""
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        replyingBar.isHidden = true
+        commentTextField.resignFirstResponder()
     }
     
-    func countWatcher(){
+    func increaseViews(){
+        DispatchQueue.global().async {
+            self.isViews = false
+            guard let id = self.model?.id else {return}
+            Firestore.firestore().collection("submit").document(id).collection("views").getDocuments { (snapshot, error) in
+                if error != nil{
+                    print("error")
+                }else{
+                    let viewsId = UUID.init().uuidString
+                    let viewsModel = ViewsModel(id: viewsId, date: SharedFunction.shared.getToday())
+                    guard let data = try? FirestoreEncoder().encode(viewsModel) else {return}
+                    Firestore.firestore().collection("submit").document(id).collection("views").document(viewsId).setData(data, completion: { (error) in
+                        if error != nil{
+                        }else{
+                        }
+                    })
+                }
+            }
+        }
+    }
+    
+    func countObserver(){
         guard let id = self.model?.id else {return}
-        DispatchQueue.main.async {
+        DispatchQueue.global().async {
             Firestore.firestore().collection("submit").document(id).addSnapshotListener({ (snapshot, error) in
                 guard let snapshot = snapshot, let data = snapshot.data() else {return}
                 if error != nil{
@@ -122,29 +195,79 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
                         self.viewsCount = self.submitModel?.viewsCount
                         self.likesCount = self.submitModel?.likeCount
                         self.commentsCount = self.submitModel?.commentCount
+                        
+                        self.countRefresh()
                     }
                 }
             })
         }
     }
     
-    func likeWatcher(){
-        DispatchQueue.main.async {
+    func submitLikeObserver(){
+        DispatchQueue.global().async {
             guard let id = self.model?.id else {return}
-            Firestore.firestore().collection("submit").document(id).collection("likes").addSnapshotListener({ (snapshot, error) in
+            Firestore.firestore().collection("submit").document(id).collection("like").addSnapshotListener({ (snapshot, error) in
                 if error != nil{
                 }else{
-                    var likeArray: [LikeModel] = []
+                    var submitLikeArray: [LikeModel] = []
                     guard let snapshot = snapshot else {return}
                     for document in snapshot.documents{
                         guard let data = try? FirebaseDecoder().decode(LikeModel.self, from: document.data()) else {return}
-                        likeArray.append(data)
+                        submitLikeArray.append(data)
                     }
-                    let likeCount = likeArray.count
+                    let likeCount = submitLikeArray.count
                     Firestore.firestore().collection("submit").document(id).updateData(["likeCount" : likeCount], completion: { (error) in
                         if error != nil{
                         }else{
-                            self.countRefresh()
+                            
+                        }
+                    })
+                }
+            })
+        }
+    }
+    
+    func commentCountObserver(){
+        DispatchQueue.global().async {
+            guard let id = self.model?.id else {return}
+            Firestore.firestore().collection("submit").document(id).collection("comment").addSnapshotListener({ (snapshot, error) in
+                if error != nil{
+                }else{
+                    var commentArray: [CommentModel] = []
+                    guard let snapshot = snapshot else {return}
+                    for document in snapshot.documents{
+                        guard let data = try? FirebaseDecoder().decode(CommentModel.self, from: document.data()) else {return}
+                        commentArray.append(data)
+                    }
+                    let commentCount = commentArray.count
+                    Firestore.firestore().collection("submit").document(id).updateData(["commentCount" : commentCount], completion: { (error) in
+                        if error != nil{
+                        }else{
+                            
+                        }
+                    })
+                }
+            })
+        }
+    }
+    
+    func ViewsObserver(){
+        DispatchQueue.global().async {
+            guard let id = self.model?.id else {return}
+            Firestore.firestore().collection("submit").document(id).collection("views").addSnapshotListener({ (snapshot, error) in
+                if error != nil{
+                }else{
+                    var viewsArray: [ViewsModel] = []
+                    guard let snapshot = snapshot else {return}
+                    for document in snapshot.documents{
+                        guard let data = try? FirebaseDecoder().decode(ViewsModel.self, from: document.data()) else {return}
+                        viewsArray.append(data)
+                    }
+                    let viewsCount = viewsArray.count
+                    Firestore.firestore().collection("submit").document(id).updateData(["viewsCount" : viewsCount], completion: { (error) in
+                        if error != nil{
+                        }else{
+                            
                         }
                     })
                 }
@@ -153,7 +276,7 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
     }
     
     func countRefresh(){
-        DispatchQueue.main.async {
+        DispatchQueue.global().async {
             guard let id = self.model?.id else {return}
             Firestore.firestore().collection("submit").document(id).getDocument(completion: { (snapshot, error) in
                 if error != nil{
@@ -161,10 +284,9 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
                     guard let snapshot = snapshot, let data = snapshot.data() else { return }
                     do{
                         self.model = try? FirestoreDecoder().decode(SubmitModel.self, from: data)
-                        self.tableView.reloadData()
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
-                            self.isFirst = false
-                        })
+                        DispatchQueue.main.async {
+                            self.tableView.reloadData()
+                        }
                     }
                 }
             })
@@ -172,7 +294,8 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
     }
     
     @objc func refresh(){
-        DispatchQueue.main.async {
+        DispatchQueue.global().async {
+            self.increaseViews()
             guard let id = self.model?.id else {return}
             Firestore.firestore().collection("submit").document(id).getDocument(completion: { (snapshot, error) in
                 if error != nil{
@@ -211,63 +334,106 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
         }
     }
     
-    func commentDataLoad(completion:(()->())? = nil){
+    func commentDataLoad(){
         DispatchQueue.global().async {
             guard let id = self.model?.id else {return}
             Firestore.firestore().collection("submit").document(id).collection("comment").order(by: "date", descending: false).getDocuments(completion: { (snapshot, error) in
-                self.commentArray.removeAll()
-                
                 if error != nil{
                 }else{
                     self.commentArray.removeAll()
+                    self.mainCommentArray.removeAll()
+                    self.subCommentArray.removeAll()
                     self.spanArray.removeAll()
                     guard let snapshot = snapshot else {return}
-                    for document in snapshot.documents{
-                        let model = try? FirestoreDecoder().decode(CommentModel.self, from: document.data())
-                        guard let commentModel = model else {return}
-                        self.commentArray.append(commentModel)
-                    }
                     
-                    for (index, _) in self.commentArray.enumerated() {
-                        let wrritenDate = SharedFunction.shared.dateFromString(string: self.commentArray[index].date)
-                        let nowDate = SharedFunction.shared.dateFromString(string: SharedFunction.shared.getToday())
-                        let span = nowDate.timeIntervalSince(wrritenDate)
-                        self.spanArray.append(span)
+                    var count = 0
+                    
+                    for document in snapshot.documents{
+                        guard let model = try? FirestoreDecoder().decode(CommentModel.self, from: document.data()) else {return}
+                        self.mainCommentArray.append(model)
                         
-                        DispatchQueue.main.async {
-                            if index + 1 == self.spanArray.count {
-                                self.tableView.reloadData()
-                                self.refreshControl?.endRefreshing()
-                                completion?()
+                        Firestore.firestore().collection("submit").document(id).collection("comment").document(model.id).collection("subComment").order(by: "date", descending: false).getDocuments(completion: { (snapshot, error) in
+                            if error != nil{
+                            }else{
+                                guard let snapshot = snapshot else { return }
+                                
+                                var subCommentArrayTemp = [CommentModel]()
+                                
+                                for document in snapshot.documents{
+                                    do {
+                                        let model = try? FirestoreDecoder().decode(CommentModel.self, from: document.data())
+                                        guard let commentModel = model else {return}
+
+                                        subCommentArrayTemp.append(commentModel)
+
+                                        if snapshot.documents.count == subCommentArrayTemp.count {
+                                            count = count + 1
+                                            
+                                            for subCommentTemp in subCommentArrayTemp {
+                                                self.subCommentArray.append(subCommentTemp)
+                                            }
+
+                                            if count == self.mainCommentArray.count {
+                                                self.commentReplace()
+                                            }
+                                        }
+                                    } catch let error {
+                                        print(error.localizedDescription)
+                                    }
+                                }
+
+                                if snapshot.documents.isEmpty {
+                                    count = count + 1
+
+                                    if count == self.mainCommentArray.count {
+                                        self.commentReplace()
+                                    }
+                                }
                             }
-                        }
+                        })
                     }
                 }
             })
         }
     }
     
-    func viewsCountUpdate(count: Int){
-        DispatchQueue.main.async {
-            guard let id = self.model?.id else {return}
-            Firestore.firestore().collection("submit").document(id).updateData(["viewsCount" : count], completion: { (error) in
-                if error != nil{
-                }else{
-                    self.countRefresh()
+    func commentReplace(){
+        var replaceArray = [CommentModel]()
+        for (index, _) in self.mainCommentArray.enumerated(){
+            self.commentArray.append(self.mainCommentArray[index])
+            replaceArray.append(self.mainCommentArray[index])
+            for(subIndex, _) in self.subCommentArray.enumerated(){
+                if self.mainCommentArray[index].id == self.subCommentArray[subIndex].parentId{
+                    self.commentArray.append(self.subCommentArray[subIndex])
+                    replaceArray.append(self.subCommentArray[subIndex])
                 }
-            })
+            }
         }
+        commentTimeSpan()
     }
     
-    func commentCountUpdate(count: Int){
-        DispatchQueue.main.async {
-            guard let id = self.model?.id else {return}
-            Firestore.firestore().collection("submit").document(id).updateData(["commentCount" : count], completion: { (error) in
-                if error != nil{
-                }else{
-                    self.countRefresh()
+    func commentTimeSpan(){
+        if self.commentArray.count == 0{
+            self.refreshControl?.endRefreshing()
+        }
+        for (index, _) in self.commentArray.enumerated() {
+            let wrritenDate = SharedFunction.shared.dateFromString(string: self.commentArray[index].date)
+            let nowDate = SharedFunction.shared.dateFromString(string: SharedFunction.shared.getToday())
+            let span = nowDate.timeIntervalSince(wrritenDate)
+            self.spanArray.append(span)
+            
+            DispatchQueue.main.async {
+                if index + 1 == self.spanArray.count {
+                    self.tableView.dataSource = self
+                    self.tableView.reloadData()
+                    
+                    self.refreshControl?.endRefreshing()
+                    if self.isPost{
+                        self.scrollToBottom()
+                        self.isPost = false
+                    }
                 }
-            })
+            }
         }
     }
     
@@ -286,7 +452,7 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
     }
     
     @objc func keyboardHide(_ sender: UITapGestureRecognizer){
-        commentTextField.resignFirstResponder()
+        replyingBarCancelEvent()
     }
 
     
@@ -294,23 +460,38 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
         commentPostButton.isEnabled = false
         self.commentPostButton.setTitleColor(UIColor(red: 218/255, green: 66/255, blue: 103/255, alpha: 0.2), for: .normal)
         self.commentTextField.resignFirstResponder()
-        guard let name = userModel?.name,
-            let uid = uid,
-            let comment = commentTextField.text else {return}
+        guard let name = self.userModel?.name,
+            let uid = self.uid,
+            let comment = self.commentTextField.text else {return}
         self.commentTextField.text = ""
-        var to: String? = nil
-        let commentId = UUID.init().uuidString
-        let commentModel = CommentModel(name: name , uid: uid, date: SharedFunction.shared.getToday(), comment: comment, commentLikeCount: 0, to: to, id: commentId, isSubComment: false, delete: false)
-        let data = try? FirestoreEncoder().encode(commentModel)
-        guard let id = model?.id, let commentData = data else {return}
-
-        Firestore.firestore().collection("submit").document(id).collection("comment").document(commentId).setData(commentData) { (error) in
-            if error != nil{
+        DispatchQueue.global().async {
+            
+            guard let id = self.model?.id else {return}
+            let documentReference: DocumentReference?
+            let data: [String : Any]?
+            if !self.isSubComment{
+                let commentId = UUID.init().uuidString
+                documentReference = Firestore.firestore().collection("submit").document(id).collection("comment").document(commentId)
+                let commentModel = CommentModel(name: name , uid: uid, date: SharedFunction.shared.getToday(), comment: comment, commentLikeCount: 0, to: self.to, id: commentId, isSubComment: self.isSubComment, delete: false, isLike: nil, parentId: self.parentId)
+                data = try? FirestoreEncoder().encode(commentModel)
             }else{
-                self.commentDataLoad(completion: {
-                        self.scrollToBottom()
-                })
-                self.commentCountUpdate(count: self.commentArray.count + 1)
+                let subCommentId = UUID.init().uuidString
+                guard let parentId = self.parentId else {return}
+                documentReference = Firestore.firestore().collection("submit").document(id).collection("comment").document(parentId).collection("subComment").document(subCommentId)
+                let commentModel = CommentModel(name: name , uid: uid, date: SharedFunction.shared.getToday(), comment: comment, commentLikeCount: 0, to: self.to, id: subCommentId, isSubComment: self.isSubComment, delete: false, isLike: nil, parentId: self.parentId)
+                data = try? FirestoreEncoder().encode(commentModel)
+            }
+            
+            guard let reference = documentReference, let commentData = data else {return}
+            reference.setData(commentData) { (error) in
+                if error != nil{
+                }else{
+                    if self.replyingBar.isHidden == false {
+                        self.replyingBarCancelEvent()
+                    }
+                    self.commentDataLoad()
+                    self.isPost = true
+                }
             }
         }
     }
@@ -355,6 +536,17 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
 }
 
 extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSource{
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        self.cellHeight[indexPath] = cell.frame.size.height
+    }
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        if let height = self.cellHeight[indexPath] {
+            return height
+        } else {
+            return UITableView.automaticDimension
+        }
+    }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let model = model else {return 0}
 
@@ -379,11 +571,7 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
             cell.timeLabel.text = SharedFunction.shared.getCurrentLocaleDateFromString(string: model.date, format: "yyyy.MM.dd  HH:mm")
             cell.commentsCountLabel.text = "\(model.commentCount)"
             cell.likesCountLabel.text = "\(model.likeCount)"
-            if isFirst{
-                cell.viewsCountLabel.text = "\(model.viewsCount + 1)"
-            }else{
-                cell.viewsCountLabel.text = "\(model.viewsCount)"
-            }
+            cell.viewsCountLabel.text = "\(model.viewsCount)"
             cell.uid = self.uid
             cell.submitId = model.id
             return cell
@@ -400,79 +588,89 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
                     return cell
                 } else {
                     let cell = tableView.dequeueReusableCell(withIdentifier: "commentCell", for: indexPath) as! CommentCell
-                    cell.nameLabel.text = commentArray[indexPath.row - 3].name
-                    cell.commentCellDelegate = self
-                    cell.submitId = model.id
-                    cell.commentId = commentArray[indexPath.row - 3].id
-                    
-                    if commentArray[indexPath.row - 3].delete{
-                        cell.commentLabel.text = "This comment has been deleted."
-                        cell.commentLabel.textColor = UIColor.lightGray
+                    if !commentArray.isEmpty{
+                        cell.nameLabel.text = commentArray[indexPath.row - 3].name
+                        cell.commentCellDelegate = self
+                        cell.submitId = model.id
+                        cell.uid = commentArray[indexPath.row - 3].uid
+                        cell.name = commentArray[indexPath.row - 3].name
+                        cell.indexPath = indexPath.row - 3
+                        cell.parentIsSubComment = commentArray[indexPath.row - 3].isSubComment
+                        cell.parentId = commentArray[indexPath.row - 3].parentId
+                        cell.isLiked = commentArray[indexPath.row - 3].isLike
+                        cell.commentId = commentArray[indexPath.row - 3].id
                         
-                        cell.likeButton.isHidden = true
-                        cell.deleteButtonView.isHidden = true
-                        cell.replyButton.isHidden = true
-                    }else{
-                        cell.commentLabel.text = commentArray[indexPath.row - 3].comment
-                        cell.commentLabel.textColor = UIColor.black
-                        if uid == commentArray[indexPath.row - 3].uid{
-                            cell.deleteButtonView.isHidden = false
-                            cell.replyButton.isHidden = true
-                        }else{
+                        if commentArray[indexPath.row - 3].delete{
+                            cell.commentLabel.text = "This comment has been deleted."
+                            cell.commentLabel.textColor = UIColor.lightGray
+                            
+                            cell.likeButtonView.isHidden = true
                             cell.deleteButtonView.isHidden = true
-                            cell.replyButton.isHidden = false
-                        }
-                    }
-
-                    var date = ""
-                    let span = spanArray[indexPath.row - 3]
-                    if span > 2592000{
-                        date = SharedFunction.shared.getCurrentLocaleDateFromString(string: commentArray[indexPath.row - 3].date, format: "yyyy.MM.dd  HH:mm")
-                    }else{
-                        if 1 <= span / 604800{
-                            let spanToWeek = Int(span / 604800)
-                            if spanToWeek > 1{
-                                date = "\(spanToWeek) weeks ago"
+                            cell.replyButtonView.isHidden = true
+                        }else{
+                            cell.commentLabel.text = commentArray[indexPath.row - 3].comment
+                            cell.commentLabel.textColor = UIColor.black
+                            if uid == commentArray[indexPath.row - 3].uid{
+                                cell.deleteButtonView.isHidden = false
+                                cell.likeButtonView.isHidden = true
                             }else{
-                                date = "\(spanToWeek) week ago"
-                            }
-                        }else if 1 <= span / 86400{
-                            let spanToDay = Int(span / 86400)
-                            if spanToDay > 1{
-                                date = "\(spanToDay) days ago"
-                            }else{
-                                date = "\(spanToDay) day ago"
-                            }
-                        }else if 1 <= span / 3600{
-                            let spanToHour = Int(span / 3600)
-                            if spanToHour > 1{
-                                date = "\(spanToHour) hours ago"
-                            }else{
-                                date = "\(spanToHour) hour ago"
-                            }
-                        }else if 1 <= span / 60{
-                            let spanToMin = Int(span / 60)
-                            if spanToMin > 1{
-                                date = "\(spanToMin) minutes ago"
-                            }else{
-                                date = "\(spanToMin) minute ago"
-                            }
-                        }else if span < 60{
-                            let spanToSec = Int(span)
-                            if spanToSec > 1{
-                                date = "\(spanToSec) seconds ago"
-                            }else if spanToSec <= 1{
-                                date = "1 second ago"
+                                cell.deleteButtonView.isHidden = true
+                                cell.likeButtonView.isHidden = false
                             }
                         }
-                    }
-                    
-                    cell.timeLabel.text = date
-                    cell.likeCountLabel.text = "\(commentArray[indexPath.row - 3].commentLikeCount)"
-                    if 0 < commentArray[indexPath.row - 3].commentLikeCount{
-                        cell.likeTextLabel.text = "likes"
-                    }else{
-                        cell.likeTextLabel.text = "like"
+                        
+                        var date = ""
+                        if !spanArray.isEmpty{
+                            let span = spanArray[indexPath.row - 3]
+                            if span > 2592000{
+                                date = SharedFunction.shared.getCurrentLocaleDateFromString(string: commentArray[indexPath.row - 3].date, format: "yyyy.MM.dd  HH:mm")
+                            }else{
+                                if 1 <= span / 604800{
+                                    let spanToWeek = Int(span / 604800)
+                                    if spanToWeek > 1{
+                                        date = "\(spanToWeek) weeks ago"
+                                    }else{
+                                        date = "\(spanToWeek) week ago"
+                                    }
+                                }else if 1 <= span / 86400{
+                                    let spanToDay = Int(span / 86400)
+                                    if spanToDay > 1{
+                                        date = "\(spanToDay) days ago"
+                                    }else{
+                                        date = "\(spanToDay) day ago"
+                                    }
+                                }else if 1 <= span / 3600{
+                                    let spanToHour = Int(span / 3600)
+                                    if spanToHour > 1{
+                                        date = "\(spanToHour) hours ago"
+                                    }else{
+                                        date = "\(spanToHour) hour ago"
+                                    }
+                                }else if 1 <= span / 60{
+                                    let spanToMin = Int(span / 60)
+                                    if spanToMin > 1{
+                                        date = "\(spanToMin) minutes ago"
+                                    }else{
+                                        date = "\(spanToMin) minute ago"
+                                    }
+                                }else if span < 60{
+                                    let spanToSec = Int(span)
+                                    if spanToSec > 1{
+                                        date = "\(spanToSec) seconds ago"
+                                    }else if spanToSec <= 1{
+                                        date = "1 second ago"
+                                    }
+                                }
+                            }
+                        }
+                        
+                        cell.timeLabel.text = date
+                        cell.likeCountLabel.text = "\(commentArray[indexPath.row - 3].commentLikeCount)"
+                        if 1 < commentArray[indexPath.row - 3].commentLikeCount{
+                            cell.likeTextLabel.text = "likes"
+                        }else{
+                            cell.likeTextLabel.text = "like"
+                        }
                     }
                     return cell
                 }
@@ -483,83 +681,99 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
                     return cell
                 } else {
                     let cell = tableView.dequeueReusableCell(withIdentifier: "commentCell", for: indexPath) as! CommentCell
-                    cell.nameLabel.text = commentArray[indexPath.row - 2].name
-                    cell.commentCellDelegate = self
-                    cell.submitId = model.id
-                    cell.commentId = commentArray[indexPath.row - 2].id
-
-                    if commentArray[indexPath.row - 2].delete{
-                        cell.commentLabel.text = "This comment has been deleted."
-                        cell.commentLabel.textColor = UIColor.lightGray
+                    if !commentArray.isEmpty{
+                        cell.nameLabel.text = commentArray[indexPath.row - 2].name
+                        cell.commentCellDelegate = self
+                        cell.submitId = model.id
+                        cell.uid = commentArray[indexPath.row - 2].uid
+                        cell.name = commentArray[indexPath.row - 2].name
+                        cell.indexPath = indexPath.row - 2
+                        cell.parentIsSubComment = commentArray[indexPath.row - 2].isSubComment
+                        cell.parentId = commentArray[indexPath.row - 2].parentId
+                        cell.isLiked = commentArray[indexPath.row - 2].isLike
+                        cell.commentId = commentArray[indexPath.row - 2].id
                         
-                        cell.likeButton.isHidden = true
-                        cell.deleteButtonView.isHidden = true
-                        cell.replyButton.isHidden = true
-                    }else{
-                        cell.commentLabel.text = commentArray[indexPath.row - 2].comment
-                        cell.commentLabel.textColor = UIColor.black
-                        if uid == commentArray[indexPath.row - 2].uid{
-                            cell.deleteButtonView.isHidden = false
-                            cell.replyButton.isHidden = true
-                        }else{
+                        if commentArray[indexPath.row - 2].delete{
+                            cell.commentLabel.text = "This comment has been deleted."
+                            cell.commentLabel.textColor = UIColor.lightGray
+                            
+                            cell.likeButtonView.isHidden = true
                             cell.deleteButtonView.isHidden = true
-                            cell.replyButton.isHidden = false
-                        }
-                    }
-                    
-                    var date = ""
-                    let span = spanArray[indexPath.row - 2]
-                    if span > 2592000{
-                        date = SharedFunction.shared.getCurrentLocaleDateFromString(string: commentArray[indexPath.row - 3].date, format: "yyyy.MM.dd  HH:mm")
-                    }else{
-                        if 1 <= span / 604800{
-                            let spanToWeek = Int(span / 604800)
-                            if spanToWeek > 1{
-                                date = "\(spanToWeek) weeks ago"
+                            cell.replyButtonView.isHidden = true
+                        }else{
+                            cell.commentLabel.text = commentArray[indexPath.row - 2].comment
+                            cell.commentLabel.textColor = UIColor.black
+                            if uid == commentArray[indexPath.row - 2].uid{
+                                cell.deleteButtonView.isHidden = false
+                                cell.likeButtonView.isHidden = true
                             }else{
-                                date = "\(spanToWeek) week ago"
-                            }
-                        }else if 1 <= span / 86400{
-                            let spanToDay = Int(span / 86400)
-                            if spanToDay > 1{
-                                date = "\(spanToDay) days ago"
-                            }else{
-                                date = "\(spanToDay) day ago"
-                            }
-                        }else if 1 <= span / 3600{
-                            let spanToHour = Int(span / 3600)
-                            if spanToHour > 1{
-                                date = "\(spanToHour) hours ago"
-                            }else{
-                                date = "\(spanToHour) hour ago"
-                            }
-                        }else if 1 <= span / 60{
-                            let spanToMin = Int(span / 60)
-                            if spanToMin > 1{
-                                date = "\(spanToMin) minutes ago"
-                            }else{
-                                date = "\(spanToMin) minute ago"
-                            }
-                        }else if span < 60{
-                            let spanToSec = Int(span)
-                            if spanToSec > 1{
-                                date = "\(spanToSec) seconds ago"
-                            }else if spanToSec <= 1{
-                                date = "1 second ago"
+                                cell.deleteButtonView.isHidden = true
+                                cell.likeButtonView.isHidden = false
                             }
                         }
-                    }
-                    
-                    cell.timeLabel.text = date
-                    cell.likeCountLabel.text = "\(commentArray[indexPath.row - 2].commentLikeCount)"
-                    if 0 < commentArray[indexPath.row - 2].commentLikeCount{
-                        cell.likeTextLabel.text = "likes"
-                    }else{
-                        cell.likeTextLabel.text = "like"
+                        
+                        var date = ""
+                        if !spanArray.isEmpty{
+                            let span = spanArray[indexPath.row - 2]
+                            if span > 2592000{
+                                date = SharedFunction.shared.getCurrentLocaleDateFromString(string: commentArray[indexPath.row - 2].date, format: "yyyy.MM.dd  HH:mm")
+                            }else{
+                                if 1 <= span / 604800{
+                                    let spanToWeek = Int(span / 604800)
+                                    if spanToWeek > 1{
+                                        date = "\(spanToWeek) weeks ago"
+                                    }else{
+                                        date = "\(spanToWeek) week ago"
+                                    }
+                                }else if 1 <= span / 86400{
+                                    let spanToDay = Int(span / 86400)
+                                    if spanToDay > 1{
+                                        date = "\(spanToDay) days ago"
+                                    }else{
+                                        date = "\(spanToDay) day ago"
+                                    }
+                                }else if 1 <= span / 3600{
+                                    let spanToHour = Int(span / 3600)
+                                    if spanToHour > 1{
+                                        date = "\(spanToHour) hours ago"
+                                    }else{
+                                        date = "\(spanToHour) hour ago"
+                                    }
+                                }else if 1 <= span / 60{
+                                    let spanToMin = Int(span / 60)
+                                    if spanToMin > 1{
+                                        date = "\(spanToMin) minutes ago"
+                                    }else{
+                                        date = "\(spanToMin) minute ago"
+                                    }
+                                }else if span < 60{
+                                    let spanToSec = Int(span)
+                                    if spanToSec > 1{
+                                        date = "\(spanToSec) seconds ago"
+                                    }else if spanToSec <= 1{
+                                        date = "1 second ago"
+                                    }
+                                }
+                            }
+                        }
+                        
+                        cell.timeLabel.text = date
+                        cell.likeCountLabel.text = "\(commentArray[indexPath.row - 2].commentLikeCount)"
+                        if 1 < commentArray[indexPath.row - 2].commentLikeCount{
+                            cell.likeTextLabel.text = "likes"
+                        }else{
+                            cell.likeTextLabel.text = "like"
+                        }
                     }
                     return cell
                 }
             }
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if let commentCell = cell as? CommentCell {
+            commentCell.listener?.remove()
         }
     }
 }

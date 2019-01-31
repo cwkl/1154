@@ -19,4 +19,6 @@ struct CommentModel: Codable {
     let id: String
     let isSubComment: Bool
     let delete: Bool
+    var isLike: Bool?
+    let parentId: String?
 }
