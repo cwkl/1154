@@ -19,16 +19,16 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BaZ-Uv-sqx">
-                        <rect key="frame" x="16" y="0.0" width="343" height="242"/>
+                        <rect key="frame" x="16" y="8" width="343" height="234"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="v1x-4V-fIo">
                         <rect key="frame" x="0.0" y="258" width="375" height="0.5"/>
-                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="0.80128959760273977" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="0.5" id="caB-v2-cLr"/>
+                            <constraint firstAttribute="height" constant="0.40000000000000002" id="caB-v2-cLr"/>
                         </constraints>
                     </view>
                 </subviews>
@@ -36,7 +36,7 @@
                     <constraint firstAttribute="bottom" secondItem="v1x-4V-fIo" secondAttribute="bottom" id="8nv-6n-pUj"/>
                     <constraint firstAttribute="trailing" secondItem="v1x-4V-fIo" secondAttribute="trailing" id="CrN-5R-YUo"/>
                     <constraint firstItem="BaZ-Uv-sqx" firstAttribute="leading" secondItem="kZf-fa-hyL" secondAttribute="leading" constant="16" id="Iow-oq-xkM"/>
-                    <constraint firstItem="BaZ-Uv-sqx" firstAttribute="top" secondItem="kZf-fa-hyL" secondAttribute="top" id="Tfu-PI-3gX"/>
+                    <constraint firstItem="BaZ-Uv-sqx" firstAttribute="top" secondItem="kZf-fa-hyL" secondAttribute="top" constant="8" id="Tfu-PI-3gX"/>
                     <constraint firstItem="v1x-4V-fIo" firstAttribute="top" secondItem="BaZ-Uv-sqx" secondAttribute="bottom" constant="16" id="ZnT-Lq-4NH"/>
                     <constraint firstAttribute="trailing" secondItem="BaZ-Uv-sqx" secondAttribute="trailing" constant="16" id="dCl-fF-dOX"/>
                     <constraint firstItem="v1x-4V-fIo" firstAttribute="leading" secondItem="kZf-fa-hyL" secondAttribute="leading" id="jcX-R4-AKE"/>

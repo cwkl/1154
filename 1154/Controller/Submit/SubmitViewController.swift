@@ -269,37 +269,44 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
     
     func fetchPhotos () {
-        images.removeAll()
-        let fetchOptions = PHFetchOptions()
-        fetchOptions.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending: false)]
-        fetchOptions.fetchLimit = 10
-        
-        let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: fetchOptions)
-        
-        if fetchResult.count > 0 {
-            let totalImageCountNeeded = 10 // <-- The number of images to fetch
-            fetchPhotoAtIndex(0, totalImageCountNeeded, fetchResult)
+        DispatchQueue.global().async {
+            self.images.removeAll()
+            let fetchOptions = PHFetchOptions()
+            fetchOptions.sortDescriptors = [NSSortDescriptor(key:"creationDate", ascending: false)]
+            fetchOptions.fetchLimit = 10
+            
+            let fetchResult: PHFetchResult = PHAsset.fetchAssets(with: PHAssetMediaType.image, options: fetchOptions)
+            
+            if fetchResult.count > 0 {
+                let totalImageCountNeeded = 10 // <-- The number of images to fetch
+                self.fetchPhotoAtIndex(0, totalImageCountNeeded, fetchResult)
+            }
         }
     }
 
     func fetchPhotoAtIndex(_ index:Int,_ totalImageCountNeeded: Int, _ fetchResult: PHFetchResult<PHAsset>) {
-        let requestOptions = PHImageRequestOptions()
-        requestOptions.isSynchronous = true
-        
-        PHImageManager.default().requestImage(for: fetchResult.object(at: index) as PHAsset, targetSize: CGSize(width: 1024, height: 768), contentMode: PHImageContentMode.aspectFill, options: requestOptions, resultHandler: { (image, _) in
-            if let image = image {
-                self.images += [image]
-            }
+        DispatchQueue.global().async {
+            let requestOptions = PHImageRequestOptions()
+            requestOptions.isSynchronous = true
             
-            if index + 1 < fetchResult.count && self.images.count < totalImageCountNeeded {
-                self.fetchPhotoAtIndex(index + 1, totalImageCountNeeded, fetchResult)
-            } else {
-                self.submitCameraCollectionView?.reloadData()
-            }
-        })
+            PHImageManager.default().requestImage(for: fetchResult.object(at: index) as PHAsset, targetSize: CGSize(width: 1024, height: 768), contentMode: PHImageContentMode.aspectFill, options: requestOptions, resultHandler: { (image, _) in
+                if let image = image {
+                    self.images += [image]
+                }
+                
+                if index + 1 < fetchResult.count && self.images.count < totalImageCountNeeded {
+                    self.fetchPhotoAtIndex(index + 1, totalImageCountNeeded, fetchResult)
+                } else {
+                    DispatchQueue.main.async {
+                        self.submitCameraCollectionView?.reloadData()
+                    }
+                }
+            })
+        }
     }
     
     @IBAction func backEvent(_ sender: Any) {
+        self.submitTitle.resignFirstResponder()
         self.dismiss(animated: true, completion: nil)
     }
     
