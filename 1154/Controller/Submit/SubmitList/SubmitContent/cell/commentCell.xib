@@ -29,13 +29,13 @@
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aZ3-LE-EaG">
-                                <rect key="frame" x="49" y="11.5" width="38" height="18"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <rect key="frame" x="49" y="11.5" width="39.5" height="18"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xt6-jC-OxL">
-                                <rect key="frame" x="103" y="13.5" width="26.5" height="16"/>
+                                <rect key="frame" x="104.5" y="13.5" width="26.5" height="16"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -216,6 +216,8 @@
                 <outlet property="mentionLabel" destination="1Qi-CK-akd" id="TDA-WM-2Je"/>
                 <outlet property="nameLabel" destination="aZ3-LE-EaG" id="54y-sr-eix"/>
                 <outlet property="profileImageView" destination="GU3-1N-wZM" id="mfk-on-8en"/>
+                <outlet property="profileImageViewHeight" destination="17B-n7-RQ1" id="P2b-lY-hJR"/>
+                <outlet property="profileImageViewWidth" destination="N6K-bM-h1z" id="6h8-Ls-tKO"/>
                 <outlet property="replyButtonView" destination="9jh-8c-MmW" id="G5g-Ia-ijT"/>
                 <outlet property="timeLabel" destination="Xt6-jC-OxL" id="Lea-3R-Z9C"/>
             </connections>
