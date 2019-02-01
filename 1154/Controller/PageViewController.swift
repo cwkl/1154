@@ -105,7 +105,7 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource, 
         for visibleCell in collectionView.visibleCells {
             if let visibleCell = visibleCell as? CollectionViewCellCategory {
                 if visibleCell.indexPath?.item == pageIndex {
-                    visibleCell.cellLabel.textColor = UIColor(red: 19/255, green: 69/255, blue: 99/255, alpha: 1.0) /* #134563 */
+                    visibleCell.cellLabel.textColor = UIColor(red: 19/255, green: 69/255, blue: 99/255, alpha: 0.9) /* #134563 */
                 } else {
                     visibleCell.cellLabel.textColor = .lightGray
                 }

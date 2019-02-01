@@ -29,7 +29,6 @@ class PhotoCell: UITableViewCell, UICollectionViewDelegate, UICollectionViewData
         photoCollectionView.showsHorizontalScrollIndicator = true
         photoCollectionView.delegate = self
         photoCollectionView.dataSource = self
-        
         self.selectionStyle = .none
     }
     

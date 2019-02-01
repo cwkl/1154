@@ -57,6 +57,7 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
                         self.commentDataLoad()
                     }
                 }
+                Firestore.firestore().collection("commentCount").document(submitId).collection("commentList").document(commentId).delete()
             }
         })
         
@@ -103,6 +104,7 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
     private var parentId: String?
     private var isSubComment = false
     private var isPost = false
+    private var postId: String?
     var model: SubmitModel?{
         didSet{
             if isViews{
@@ -152,6 +154,8 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
         submitLikeObserver()
         commentCountObserver()
         ViewsObserver()
+        
+        self.tableView.dataSource = self
         
         let refreshControl = UIRefreshControl()
         tableView.refreshControl = refreshControl
@@ -216,19 +220,8 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
             Firestore.firestore().collection("submit").document(id).collection("like").addSnapshotListener({ (snapshot, error) in
                 if error != nil{
                 }else{
-                    var submitLikeArray: [LikeModel] = []
                     guard let snapshot = snapshot else {return}
-                    for document in snapshot.documents{
-                        guard let data = try? FirebaseDecoder().decode(LikeModel.self, from: document.data()) else {return}
-                        submitLikeArray.append(data)
-                    }
-                    let likeCount = submitLikeArray.count
-                    Firestore.firestore().collection("submit").document(id).updateData(["likeCount" : likeCount], completion: { (error) in
-                        if error != nil{
-                        }else{
-                            
-                        }
-                    })
+                    Firestore.firestore().collection("submit").document(id).updateData(["likeCount" : snapshot.documents.count])
                 }
             })
         }
@@ -237,22 +230,11 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
     func commentCountObserver(){
         DispatchQueue.global().async {
             guard let id = self.model?.id else {return}
-            Firestore.firestore().collection("submit").document(id).collection("comment").addSnapshotListener({ (snapshot, error) in
+            Firestore.firestore().collection("commentCount").document(id).collection("commentList").addSnapshotListener({ (snapshot, error) in
                 if error != nil{
                 }else{
-                    var commentArray: [CommentModel] = []
                     guard let snapshot = snapshot else {return}
-                    for document in snapshot.documents{
-                        guard let data = try? FirebaseDecoder().decode(CommentModel.self, from: document.data()) else {return}
-                        commentArray.append(data)
-                    }
-                    let commentCount = commentArray.count
-                    Firestore.firestore().collection("submit").document(id).updateData(["commentCount" : commentCount], completion: { (error) in
-                        if error != nil{
-                        }else{
-                            
-                        }
-                    })
+                    Firestore.firestore().collection("submit").document(id).updateData(["commentCount" : snapshot.documents.count])
                 }
             })
         }
@@ -264,19 +246,8 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
             Firestore.firestore().collection("submit").document(id).collection("views").addSnapshotListener({ (snapshot, error) in
                 if error != nil{
                 }else{
-                    var viewsArray: [ViewsModel] = []
                     guard let snapshot = snapshot else {return}
-                    for document in snapshot.documents{
-                        guard let data = try? FirebaseDecoder().decode(ViewsModel.self, from: document.data()) else {return}
-                        viewsArray.append(data)
-                    }
-                    let viewsCount = viewsArray.count
-                    Firestore.firestore().collection("submit").document(id).updateData(["viewsCount" : viewsCount], completion: { (error) in
-                        if error != nil{
-                        }else{
-                            
-                        }
-                    })
+                    Firestore.firestore().collection("submit").document(id).updateData(["viewsCount" : snapshot.documents.count])
                 }
             })
         }
@@ -352,11 +323,11 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
                     self.subCommentArray.removeAll()
                     self.spanArray.removeAll()
                     guard let snapshot = snapshot else {return}
-                    
-                    var count = 0
                     if snapshot.isEmpty{
-                        self.tableView.dataSource = self
+                        self.refreshControl?.endRefreshing()
                     }
+                    var count = 0
+                    
                     for document in snapshot.documents{
                         guard let model = try? FirestoreDecoder().decode(CommentModel.self, from: document.data()) else {return}
                         self.mainCommentArray.append(model)
@@ -407,14 +378,11 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
     }
     
     func commentReplace(){
-        var replaceArray = [CommentModel]()
         for (index, _) in self.mainCommentArray.enumerated(){
             self.commentArray.append(self.mainCommentArray[index])
-            replaceArray.append(self.mainCommentArray[index])
             for(subIndex, _) in self.subCommentArray.enumerated(){
                 if self.mainCommentArray[index].id == self.subCommentArray[subIndex].parentId{
                     self.commentArray.append(self.subCommentArray[subIndex])
-                    replaceArray.append(self.subCommentArray[subIndex])
                 }
             }
         }
@@ -438,7 +406,7 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
                     
                     self.refreshControl?.endRefreshing()
                     if self.isPost{
-                        self.scrollToBottom()
+                        self.scrollToPost()
                         self.isPost = false
                     }
                 }
@@ -464,6 +432,12 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
         replyingBarCancelEvent()
     }
 
+    func commentCountCollectionUpdate(id: String){
+        DispatchQueue.global().async {
+            guard let submitId = self.model?.id else {return}
+            Firestore.firestore().collection("commentCount").document(submitId).collection("commentList").document(id).setData(["id" : id])
+        }
+    }
     
     @IBAction func commentPostButtonEvent(_ sender: Any) {
         commentPostButton.isEnabled = false
@@ -478,18 +452,24 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
             guard let id = self.model?.id else {return}
             let documentReference: DocumentReference?
             let data: [String : Any]?
+            var countId: String?
             if !self.isSubComment{
                 let commentId = UUID.init().uuidString
+                countId = commentId
                 documentReference = Firestore.firestore().collection("submit").document(id).collection("comment").document(commentId)
                 let commentModel = CommentModel(name: name , uid: uid, date: SharedFunction.shared.getToday(), comment: comment, commentLikeCount: 0, to: self.to, id: commentId, isSubComment: self.isSubComment, delete: false, isLike: nil, parentId: self.parentId)
                 data = try? FirestoreEncoder().encode(commentModel)
             }else{
                 let subCommentId = UUID.init().uuidString
+                countId = subCommentId
                 guard let parentId = self.parentId else {return}
                 documentReference = Firestore.firestore().collection("submit").document(id).collection("comment").document(parentId).collection("subComment").document(subCommentId)
                 let commentModel = CommentModel(name: name , uid: uid, date: SharedFunction.shared.getToday(), comment: comment, commentLikeCount: 0, to: self.to, id: subCommentId, isSubComment: self.isSubComment, delete: false, isLike: nil, parentId: self.parentId)
                 data = try? FirestoreEncoder().encode(commentModel)
             }
+            guard let commentCountId = countId else {return}
+            self.postId = commentCountId
+            self.commentCountCollectionUpdate(id: commentCountId)
             
             guard let reference = documentReference, let commentData = data else {return}
             reference.setData(commentData) { (error) in
@@ -505,9 +485,21 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
         }
     }
 
-    func scrollToBottom(){
+    func scrollToPost(){
         DispatchQueue.main.async {
-            let indexPath = IndexPath(row: self.tableView.numberOfRows(inSection: 0) - 1, section: 0)
+            var scrollIndex = 0
+            for (index, _) in self.commentArray.enumerated(){
+                if self.commentArray[index].id == self.postId{
+                    scrollIndex = index
+                }
+            }
+            if (self.model?.imageUrl) != nil{
+                scrollIndex += 3
+            }else{
+                scrollIndex += 2
+            }
+            
+            let indexPath = IndexPath(row: scrollIndex, section: 0)
             self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
         }
     }
@@ -615,14 +607,20 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
                         cell.commentId = commentArray[indexPath.row - 3].id
                         
                         if commentArray[indexPath.row - 3].isSubComment{
+                            cell.profileImageViewWidth.constant = 20
+                            cell.profileImageViewHeight.constant = 20
                             cell.mainViewLeading.constant = +30
                             cell.mentionLabel.isHidden = false
                             if commentArray[indexPath.row - 3].to == ""{
+                                cell.mentionLabel.isHidden = true
+                            }else if commentArray[indexPath.row - 3].delete{
                                 cell.mentionLabel.isHidden = true
                             }else{
                                 cell.mentionLabel.text = "@\(commentArray[indexPath.row - 3].to)"
                             }
                         }else{
+                            cell.profileImageViewWidth.constant = 25
+                            cell.profileImageViewHeight.constant = 25
                             cell.mainViewLeading.constant = 0
                             cell.mentionLabel.isHidden = true
                         }
@@ -630,13 +628,13 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
                         if commentArray[indexPath.row - 3].delete{
                             cell.commentLabel.text = "This comment has been deleted."
                             cell.commentLabel.textColor = UIColor.lightGray
-                            cell.mentionLabel.isHidden = true
                             cell.likeButtonView.isHidden = true
                             cell.deleteButtonView.isHidden = true
                             cell.replyButtonView.isHidden = true
                         }else{
                             cell.commentLabel.text = commentArray[indexPath.row - 3].comment
                             cell.commentLabel.textColor = UIColor.black
+                            cell.replyButtonView.isHidden = false
                             if uid == commentArray[indexPath.row - 3].uid{
                                 cell.deleteButtonView.isHidden = false
                                 cell.likeButtonView.isHidden = true
@@ -686,14 +684,21 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
                         cell.commentId = commentArray[indexPath.row - 2].id
                         
                         if commentArray[indexPath.row - 2].isSubComment{
+                            cell.profileImageViewWidth.constant = 20
+                            cell.profileImageViewHeight.constant = 20
                             cell.mainViewLeading.constant = +30
                             cell.mentionLabel.isHidden = false
                             if commentArray[indexPath.row - 2].to == ""{
                                 cell.mentionLabel.isHidden = true
+                            }else if commentArray[indexPath.row - 2].delete{
+                                cell.mentionLabel.isHidden = true
                             }else{
                                 cell.mentionLabel.text = "@\(commentArray[indexPath.row - 2].to)"
+
                             }
                         }else{
+                            cell.profileImageViewWidth.constant = 25
+                            cell.profileImageViewHeight.constant = 25
                             cell.mainViewLeading.constant = 0
                             cell.mentionLabel.isHidden = true
                         }
@@ -701,13 +706,13 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
                         if commentArray[indexPath.row - 2].delete{
                             cell.commentLabel.text = "This comment has been deleted."
                             cell.commentLabel.textColor = UIColor.lightGray
-                            cell.mentionLabel.isHidden = true
                             cell.likeButtonView.isHidden = true
                             cell.deleteButtonView.isHidden = true
                             cell.replyButtonView.isHidden = true
                         }else{
                             cell.commentLabel.text = commentArray[indexPath.row - 2].comment
                             cell.commentLabel.textColor = UIColor.black
+                            cell.replyButtonView.isHidden = false
                             if uid == commentArray[indexPath.row - 2].uid{
                                 cell.deleteButtonView.isHidden = false
                                 cell.likeButtonView.isHidden = true

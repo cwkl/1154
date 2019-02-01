@@ -30,7 +30,7 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
     @IBOutlet weak var submitScrollView: UIScrollView!
     @IBOutlet weak var submitPhotoView: UIView!
     
-    private let changedColor = UIColor(red: 94/255, green: 94/255, blue: 94/255, alpha: 1.0)
+    private let changedColor = UIColor(red: 19/255, green: 69/255, blue: 99/255, alpha: 0.9) /* #134563 */
     private let baseColor = UIColor(red: 235/255, green: 235/255, blue: 235/255, alpha: 1.0)
     private var country: String = ""
     private var category: String = ""
@@ -354,15 +354,15 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
                 if !title.isEmpty && !content.isEmpty && self.country != "" && self.category != "" {
                     if !self.selectedImage.isEmpty{
                         var imagesDic = [Int: String]()
-                        print(self.selectedImage.count)
                         for (index, item) in self.selectedImage.enumerated(){
+                            let imageId = UUID.init().uuidString
                             guard let resizeImage = item.resize(size: CGSize(width: 500, height: 500)) else{return}
                             guard let imageJPGE = resizeImage.jpegData(compressionQuality: 0.1) else{return}
-                            
-                            Storage.storage().reference().child("submit/images").child(id).putData(imageJPGE, metadata: nil, completion: { (data, err) in
+                            print(imageJPGE)
+                            Storage.storage().reference().child("submit/images").child(imageId).putData(imageJPGE, metadata: nil, completion: { (data, err) in
                                 if err != nil {
                                 }else{
-                                    Storage.storage().reference().child("submit/images").child(id).downloadURL(completion: { (url, err) in
+                                    Storage.storage().reference().child("submit/images").child(imageId).downloadURL(completion: { (url, err) in
                                         if err != nil{
                                         }else{
                                             guard let url = url?.absoluteString else{return}

@@ -14,6 +14,8 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
     @IBOutlet weak var container: UIView!
     @IBOutlet weak var submitButton: UIImageView!
     @IBOutlet weak var barCountryItem: UIButton!
+    @IBOutlet weak var submitButtonBottom: NSLayoutConstraint!
+    @IBOutlet weak var barProfileItem: UIButton!
     
     
     private var pagerView:PageViewController = PageViewController()
@@ -65,6 +67,14 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
         barCountryItem.setImage(UIImage(named: "all")?.withRenderingMode(UIImage.RenderingMode.alwaysOriginal), for: .normal)
 
         self.navigationController?.setNavigationBarHidden(true, animated: false)
+        
+        submitButtonBottom.constant = 16
+        self.tabBarController?.tabBar.isTranslucent = false
+        
+    }
+    
+    @IBAction func barProfileTouchEvent(_ sender: Any) {
+        
     }
     
     @IBAction func barItemTouchEvent(_ sender: Any) {
@@ -154,7 +164,7 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     
     @objc func submitButtonEvent(){
-        if let view = self.storyboard?.instantiateViewController(withIdentifier: "submitNav") as? UINavigationController{
+        if let view = self.storyboard?.instantiateViewController(withIdentifier: "SubmitViewController"){
             self.present(view, animated: true, completion: nil)
         }
 }
@@ -189,7 +199,7 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
                 visibleCell.tapGesture.isEnabled = false
                 
                 if visibleCell.indexPath?.item == indexPath.item {
-                    visibleCell.cellLabel.textColor = UIColor(red: 19/255, green: 69/255, blue: 99/255, alpha: 1.0) /* #134563 */
+                    visibleCell.cellLabel.textColor = UIColor(red: 19/255, green: 69/255, blue: 99/255, alpha: 0.9) /* #134563 */
                 } else {
                     visibleCell.cellLabel.textColor = .lightGray
                 }
@@ -206,7 +216,6 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
                 self.view.layoutIfNeeded()
             }) { (complete) in
                 self.isAnimating = false
-                
                 
                 for visibleCell in self.collectionView.visibleCells {
                     if let visibleCell = visibleCell as? CollectionViewCellCategory {

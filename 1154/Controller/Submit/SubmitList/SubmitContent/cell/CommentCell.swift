@@ -31,6 +31,8 @@ class CommentCell: UITableViewCell {
     @IBOutlet weak var replyButtonView: UIView!
     @IBOutlet weak var deleteButtonView: UIView!
     @IBOutlet weak var mainViewLeading: NSLayoutConstraint!
+    @IBOutlet weak var profileImageViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var profileImageViewWidth: NSLayoutConstraint!
     
     
     private let uid = Auth.auth().currentUser?.uid
@@ -179,9 +181,8 @@ class CommentCell: UITableViewCell {
     @objc func deleteEvent(_ sender: UITapGestureRecognizer) {
         guard let submitId = self.submitId,
             let commentId = self.commentId,
-            let parentId = self.parentId,
             let isSubComment = self.isSubComment else {return}
-        commentCellDelegate?.showDeleteAlert(submitId: submitId, commentId: commentId, parentId: parentId, isSubComment: isSubComment)
+        commentCellDelegate?.showDeleteAlert(submitId: submitId, commentId: commentId, parentId: self.parentId ?? "", isSubComment: isSubComment)
     }
     
     @objc func likeButtonEvent(_ sender: UITapGestureRecognizer) {
