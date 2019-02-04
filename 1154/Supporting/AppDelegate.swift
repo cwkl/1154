@@ -8,6 +8,7 @@
 
 import Firebase
 import UIKit
+import SideMenuSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -18,6 +19,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         FirebaseApp.configure()
+        
+        SideMenuController.preferences.basic.menuWidth = ((UIScreen.main.bounds.width / 3) * 2) + 20
+        SideMenuController.preferences.basic.statusBarBehavior = .none
+        SideMenuController.preferences.basic.position = .sideBySide
+        SideMenuController.preferences.basic.direction = .left
+        SideMenuController.preferences.basic.enablePanGesture = true
+        SideMenuController.preferences.basic.supportedOrientations = .portrait
+        SideMenuController.preferences.basic.shouldRespectLanguageDirection = true
         
         return true
     }

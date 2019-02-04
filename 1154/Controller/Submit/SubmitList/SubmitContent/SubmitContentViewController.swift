@@ -88,6 +88,7 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
     
     private var userModel: UserModel?
     private var submitModel: SubmitModel?
+    private var submitUserModel: UserModel?
     private var uid: String?
     private var commentArray: [CommentModel] = []
     private var mainCommentArray: [CommentModel] = []
@@ -154,6 +155,7 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
         submitLikeObserver()
         commentCountObserver()
         ViewsObserver()
+        submitUserDataLoad()
         
         self.tableView.dataSource = self
         
@@ -161,6 +163,23 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
         tableView.refreshControl = refreshControl
         self.refreshControl = refreshControl
         refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+    }
+    
+    func submitUserDataLoad(){
+        DispatchQueue.global().async {
+            guard let uid = self.model?.uid else {return}
+            Firestore.firestore().collection("users").document(uid).getDocument { (snapshot, error) in
+                if error != nil{
+                }else{
+                    do{
+                        guard let snapshot = snapshot?.data() else {return}
+                        self.submitUserModel = try? FirestoreDecoder().decode(UserModel.self, from: snapshot)
+                    }catch let error{
+                        print(error.localizedDescription)
+                    }
+                }
+            }
+        }
     }
     
     @objc func replyingBarCancelEvent(){
@@ -559,13 +578,15 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let model = model else {return UITableViewCell()}
+        guard let model = model, let submitUserModel = self.submitUserModel else {return UITableViewCell()}
         if indexPath.row == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "titleCell", for: indexPath) as! TitleCell
-            if model.profileImageUrl == ""{
-                cell.profileImageView.image = UIImage(named: "defaultprofile")
+            if submitUserModel.profileImageUrl != nil {
+                if let imageUrl = submitUserModel.profileImageUrl{
+                    cell.profileImageView.kf.setImage(with: URL(string: imageUrl))
+                }
             }else{
-                
+                cell.profileImageView.image = UIImage(named: "defaultprofile")
             }
             if model.uid == self.uid{
                 cell.likebutton.isHidden = true
