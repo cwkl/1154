@@ -344,7 +344,6 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
                 let title = self.submitTitle.text,
                 let content = self.submitContent.text,
                 let name = self.name else {return}
-            let profileImageUrl = self.profileImageUrl ?? ""
             let date = SharedFunction.shared.getToday()
             let id = UUID.init().uuidString
             self.isLoading = true
@@ -358,7 +357,7 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
                             let imageId = UUID.init().uuidString
                             guard let resizeImage = item.resize(size: CGSize(width: 500, height: 500)) else{return}
                             guard let imageJPGE = resizeImage.jpegData(compressionQuality: 0.1) else{return}
-                            print(imageJPGE)
+                            
                             Storage.storage().reference().child("submit/images").child(imageId).putData(imageJPGE, metadata: nil, completion: { (data, err) in
                                 if err != nil {
                                 }else{
@@ -372,7 +371,7 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
                                             for sortUrl in sortUrls {
                                                 imageUrls.append(sortUrl.value)
                                                 if self.selectedImage.count == imageUrls.count{
-                                                    let submit = SubmitModel(profileImageUrl: profileImageUrl, id: id, uid: uid, name: name, title: title, date: date, content: content, country: self.country , category: self.category , imageUrl: imageUrls, commentCount: 0, likeCount: 0, viewsCount: 0)
+                                                    let submit = SubmitModel(id: id, uid: uid, name: name, title: title, date: date, content: content, country: self.country , category: self.category , imageUrl: imageUrls, commentCount: 0, likeCount: 0, viewsCount: 0)
                                                     let data = try! FirestoreEncoder().encode(submit)
                                                     Firestore.firestore().collection("submit").document(id).setData(data, completion: { (err) in
                                                         if err != nil{
@@ -390,7 +389,7 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
                         }
                         
                     }else {
-                        let submit = SubmitModel(profileImageUrl: profileImageUrl, id: id, uid: uid, name: name, title: title, date: date, content: content, country: self.country, category: self.category, imageUrl: nil, commentCount: 0, likeCount: 0, viewsCount: 0)
+                        let submit = SubmitModel(id: id, uid: uid, name: name, title: title, date: date, content: content, country: self.country, category: self.category, imageUrl: nil, commentCount: 0, likeCount: 0, viewsCount: 0)
                         let data = try! FirestoreEncoder().encode(submit)
                         Firestore.firestore().collection("submit").document(id).setData(data, completion: { (err) in
                             if err != nil{

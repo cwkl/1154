@@ -10,6 +10,7 @@ import UIKit
 import FirebaseAuth
 import FirebaseFirestore
 import Firebase
+import CodableFirebase
 
 class SignupViewController: UIViewController {
     @IBOutlet weak var signup_edtEmail: UITextField!
@@ -71,10 +72,12 @@ class SignupViewController: UIViewController {
             }
         
             let uid = Auth.auth().currentUser?.uid
-            db.collection("users").document(uid!).setData(["email": email, "name": name], completion: { (err) in
+            let userModel = UserModel(email: email, name: name, profileImageUrl: nil, startDate: SharedFunction.shared.getToday(), region: nil)
+            guard let data = try? FirestoreEncoder().encode(userModel) else {return}
+            db.collection("users").document(uid!).setData(data, completion: { (err) in
                 if err != nil{
                 }else{
-                    if let view = self.storyboard?.instantiateViewController(withIdentifier: "MainViewTabBarController") as? UITabBarController{
+                    if let view = self.storyboard?.instantiateViewController(withIdentifier: "SideMenuController"){
                         self.present(view , animated: true, completion: nil)
                     }
                 }

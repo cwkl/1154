@@ -7,15 +7,20 @@
 //
 
 import UIKit
+import SideMenuSwift
+import FirebaseAuth
+import FirebaseFirestore
+import CodableFirebase
+
 
 class MainViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, CollectionViewCellCategoryDelegate {
+    
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var menuView: UIView!
     @IBOutlet weak var container: UIView!
     @IBOutlet weak var submitButton: UIImageView!
     @IBOutlet weak var barCountryItem: UIButton!
-    @IBOutlet weak var submitButtonBottom: NSLayoutConstraint!
-    @IBOutlet weak var barProfileItem: UIButton!
+    @IBOutlet weak var barProfileItem: UIImageView!
     
     
     private var pagerView:PageViewController = PageViewController()
@@ -23,10 +28,70 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
     private var leftConstraints: NSLayoutConstraint?
     private let item = ["All","Free","Trevel","Food","Shopping"]
     var isAnimating = false
+    
+    var isProfileView = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        userDateLoad()
+        addView()
+        configureViewOption()
+        addButtonGesture()
+    }
+    
+    func userDateLoad(){
+        DispatchQueue.global().async {
+            guard let uid = Auth.auth().currentUser?.uid else {return}
+            Firestore.firestore().collection("users").document(uid).getDocument { (snapshot, error) in
+                if error != nil {
+                }else{
+                    do{
+                        guard let snapshot = snapshot?.data(),
+                            let userModel = try? FirestoreDecoder().decode(UserModel.self, from: snapshot) else {return}
+                        
+                        if userModel.profileImageUrl != nil{
+                            guard let imageUrl = userModel.profileImageUrl else {return}
+                            self.barProfileItem.kf.setImage(with: URL(string: imageUrl))
+                        }else{
+                            self.barProfileItem.image = UIImage(named: "defaultprofile")
+                        }
+                        
+                    }catch let error{
+                        print(error.localizedDescription)
+                    }
+                }
+            }
+        }
+    }
+
+    func addButtonGesture(){
+        let submitGesture = UITapGestureRecognizer(target: self, action: #selector(submitButtonEvent))
+        submitButton.isUserInteractionEnabled  = true
+        submitButton.addGestureRecognizer(submitGesture)
+        
+        let sideMenuGesture = UITapGestureRecognizer(target: self, action: #selector(barProfileTouchEvent))
+        barProfileItem.isUserInteractionEnabled = true
+        barProfileItem.addGestureRecognizer(sideMenuGesture)
+    }
+    
+    func configureViewOption(){
+        collectionView.backgroundColor = UIColor.white
+        collectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: .centeredHorizontally)
+        pagerView.collectionView = self.collectionView
+        
+        barCountryItem.setImage(UIImage(named: "all")?.withRenderingMode(UIImage.RenderingMode.alwaysOriginal), for: .normal)
+        barProfileItem.layer.cornerRadius = barProfileItem.frame.height / 2
+        barProfileItem.layer.masksToBounds = true
+        barProfileItem.contentMode = .scaleAspectFill
+        
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.backgroundColor = UIColor.white
+    }
+    
+    func addView(){
         let bar = UIView()
         menuView.addSubview(bar)
         self.bar = bar
@@ -41,8 +106,6 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
         pagerView.bar = bar
         pagerView.leftConstraints = leftConstraints
         
-        collectionView.backgroundColor = UIColor.white
-        
         let underLine = UIView()
         self.view.addSubview(underLine)
         underLine.translatesAutoresizingMaskIntoConstraints = false
@@ -51,30 +114,11 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
         underLine.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
         underLine.heightAnchor.constraint(equalToConstant: 0.5).isActive = true
         underLine.backgroundColor = UIColor.lightGray
-        
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.backgroundColor = UIColor.white
-        
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(submitButtonEvent))
-        submitButton.isUserInteractionEnabled  = true
-        submitButton.addGestureRecognizer(tapGesture)
-        
-        collectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: .centeredHorizontally)
-        
-        pagerView.collectionView = self.collectionView
-        
-        barCountryItem.setImage(UIImage(named: "all")?.withRenderingMode(UIImage.RenderingMode.alwaysOriginal), for: .normal)
-
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
-        
-        submitButtonBottom.constant = 16
-        self.tabBarController?.tabBar.isTranslucent = false
-        
     }
     
-    @IBAction func barProfileTouchEvent(_ sender: Any) {
-        
+
+    @objc func barProfileTouchEvent() {
+        self.sideMenuController?.revealMenu()
     }
     
     @IBAction func barItemTouchEvent(_ sender: Any) {
@@ -225,5 +269,20 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
             }
             self.pagerView.itemWasPressed(index: index)
         }
+    }
+    @IBAction func homeButtonEvent(_ sender: Any) {
+        
+    }
+    
+    @IBAction func rankButtonEvent(_ sender: Any) {
+        
+    }
+    
+    @IBAction func searchButtonEvent(_ sender: Any) {
+        
+    }
+    
+    @IBAction func notificationButtonEvent(_ sender: Any) {
+        
     }
 }

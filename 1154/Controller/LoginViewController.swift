@@ -40,7 +40,7 @@ class LoginViewController: UIViewController {
 //        try! Auth.auth().signOut()
         Auth.auth().addStateDidChangeListener { (Auth, User) in
             if User != nil{
-                if let view = self.storyboard?.instantiateViewController(withIdentifier: "MainViewTabBarController") as? UITabBarController {
+                if let view = self.storyboard?.instantiateViewController(withIdentifier: "SideMenuController"){
                     self.present(view, animated: true, completion: nil)
                 }
             }

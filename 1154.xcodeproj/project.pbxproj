@@ -28,6 +28,9 @@
 		105722E621C0A71200BE540E /* FoodTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105722E521C0A71200BE540E /* FoodTableViewController.swift */; };
 		105722E821C0AB4100BE540E /* ShoppingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105722E721C0AB4100BE540E /* ShoppingTableViewController.swift */; };
 		108E95472203F19200C8487D /* CommentCountModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108E95462203F19200C8487D /* CommentCountModel.swift */; };
+		108E954E2204A59600C8487D /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108E954D2204A59600C8487D /* SideMenuViewController.swift */; };
+		108E95942207038F00C8487D /* ProfileEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108E95932207038F00C8487D /* ProfileEditViewController.swift */; };
+		108E9596220708C900C8487D /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108E9595220708C900C8487D /* ListViewController.swift */; };
 		109A4D7721C34E12003A3597 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 109A4D7621C34E12003A3597 /* GoogleService-Info.plist */; };
 		10A7F6F921F6B63E003BD53F /* CommentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A7F6F821F6B63E003BD53F /* CommentModel.swift */; };
 		10A7F6FB21F6DC7D003BD53F /* SharedFunction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A7F6FA21F6DC7D003BD53F /* SharedFunction.swift */; };
@@ -96,6 +99,9 @@
 		105722E521C0A71200BE540E /* FoodTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodTableViewController.swift; sourceTree = "<group>"; };
 		105722E721C0AB4100BE540E /* ShoppingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingTableViewController.swift; sourceTree = "<group>"; };
 		108E95462203F19200C8487D /* CommentCountModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCountModel.swift; sourceTree = "<group>"; };
+		108E954D2204A59600C8487D /* SideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
+		108E95932207038F00C8487D /* ProfileEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditViewController.swift; sourceTree = "<group>"; };
+		108E9595220708C900C8487D /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 		109A4D7621C34E12003A3597 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		10A7F6F821F6B63E003BD53F /* CommentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentModel.swift; sourceTree = "<group>"; };
 		10A7F6FA21F6DC7D003BD53F /* SharedFunction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedFunction.swift; sourceTree = "<group>"; };
@@ -285,6 +291,9 @@
 				10DBA1C621B4F61D00ECAA41 /* PageViewController.swift */,
 				1005382321C9DC8D000C8427 /* CollectionViewCellPhoto.swift */,
 				1005382121C73EBA000C8427 /* CollectionViewCellCamera.swift */,
+				108E954D2204A59600C8487D /* SideMenuViewController.swift */,
+				108E95932207038F00C8487D /* ProfileEditViewController.swift */,
+				108E9595220708C900C8487D /* ListViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -595,6 +604,7 @@
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
+				"${BUILT_PRODUCTS_DIR}/SideMenuSwift/SideMenuSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/gRPC-C++/grpcpp.framework",
 				"${BUILT_PRODUCTS_DIR}/gRPC-Core/grpc.framework",
@@ -612,6 +622,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SideMenuSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpcpp.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpc.framework",
@@ -644,6 +655,7 @@
 				105722E821C0AB4100BE540E /* ShoppingTableViewController.swift in Sources */,
 				10C76C7921ABB6DA003F0DA2 /* ViewController.swift in Sources */,
 				103452D921EDA6C100DF0242 /* PhotoZoomViewController.swift in Sources */,
+				108E9596220708C900C8487D /* ListViewController.swift in Sources */,
 				103452D321E5A34100DF0242 /* CommentCell.swift in Sources */,
 				10DBA1C321B4D9D300ECAA41 /* CollectionViewCellCategory.swift in Sources */,
 				105722E621C0A71200BE540E /* FoodTableViewController.swift in Sources */,
@@ -654,6 +666,7 @@
 				10C76C7721ABB6DA003F0DA2 /* AppDelegate.swift in Sources */,
 				10A7F703220039CA003BD53F /* ViewsModel.swift in Sources */,
 				10CE3A8B21BA1F15003E8EEB /* PlaceHolderTextView.swift in Sources */,
+				108E954E2204A59600C8487D /* SideMenuViewController.swift in Sources */,
 				1005382421C9DC8D000C8427 /* CollectionViewCellPhoto.swift in Sources */,
 				108E95472203F19200C8487D /* CommentCountModel.swift in Sources */,
 				103452C921E5A2AF00DF0242 /* PhotoCell.swift in Sources */,
@@ -661,6 +674,7 @@
 				10CE3A9A21BE2680003E8EEB /* AllTalbeViewController.swift in Sources */,
 				1023494D21B0DE9E0024AEC0 /* MainViewController.swift in Sources */,
 				10CE3A9321BDFD2E003E8EEB /* UserModel.swift in Sources */,
+				108E95942207038F00C8487D /* ProfileEditViewController.swift in Sources */,
 				105722E221C0A52900BE540E /* FreeTableViewController.swift in Sources */,
 				10D692FD21E435B8005E06D1 /* SubmitContentViewController.swift in Sources */,
 			);
