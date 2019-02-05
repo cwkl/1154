@@ -41,11 +41,20 @@ class CommentCell: UITableViewCell {
     private var likeArray: [LikeModel] = []
     var commentCellDelegate: CommentCellDelegate?
     var submitId: String?
-    var commentUid: String?
     var name: String?
     var indexPath: Int?
     var isSubComment: Bool?
     var parentId: String?
+    var to: String?{
+        didSet{
+            mentionUserDataLoad()
+        }
+    }
+    var commentUid: String?{
+        didSet{
+            commentUserDataLoad()
+        }
+    }
     var isLiked: Bool?{
         didSet{
             guard let isLiked = isLiked else {return}
@@ -70,6 +79,16 @@ class CommentCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         self.selectionStyle = .none
+        addGesture()
+        configureViewOption()
+    }
+    
+    func configureViewOption(){
+        profileImageView.layer.cornerRadius = profileImageView.frame.height / 2
+        profileImageView.layer.masksToBounds = true
+    }
+    
+    func addGesture(){
         deleteButtonView.isUserInteractionEnabled = true
         let deleteGesture = UITapGestureRecognizer(target: self, action: #selector(deleteEvent(_:)))
         deleteButtonView.addGestureRecognizer(deleteGesture)
@@ -79,6 +98,42 @@ class CommentCell: UITableViewCell {
         replyButtonView.isUserInteractionEnabled = true
         let replyGesture = UITapGestureRecognizer(target: self, action: #selector(replyButtonEvent(_:)))
         replyButtonView.addGestureRecognizer(replyGesture)
+    }
+    
+    func mentionUserDataLoad(){
+        guard let mentionUid  = self.to else {return}
+        if mentionUid != ""{
+            DispatchQueue.global().async {
+                Firestore.firestore().collection("users").document(mentionUid).getDocument(completion: { (snapshot, error) in
+                    if error != nil{
+                    }else{
+                        guard let snapshot = snapshot?.data(),
+                            let mentionUserModel = try? FirestoreDecoder().decode(UserModel.self, from: snapshot) else {return}
+                        self.mentionLabel.text = "@\(mentionUserModel.name)"
+                    }
+                })
+            }
+        }
+    }
+    
+    func commentUserDataLoad(){
+        DispatchQueue.global().async {
+            guard let uid = self.commentUid else {return}
+            Firestore.firestore().collection("users").document(uid).getDocument(completion: { (snapshot, error) in
+                if error != nil{
+                }else{
+                    guard let snapshot = snapshot?.data(),
+                        let commentUserModel = try? FirestoreDecoder().decode(UserModel.self, from: snapshot) else {return}
+                    if let imageUrl = commentUserModel.profileImageUrl{
+                        self.profileImageView.kf.setImage(with: URL(string: imageUrl))
+                    }else{
+                        self.profileImageView.image = UIImage(named: "defaultprofile")
+                    }
+                    self.nameLabel.text = commentUserModel.name
+                    self.name = commentUserModel.name
+                }
+            })
+        }
     }
     
     func judgeLike(){

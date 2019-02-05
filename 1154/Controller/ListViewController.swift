@@ -17,7 +17,9 @@ class ListViewController: UIViewController {
     }
     
     @IBAction func backButtonEvent(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
+        if let view = self.storyboard?.instantiateViewController(withIdentifier: "SideMenuController"){
+            self.present(view , animated: true, completion: nil)
+        }
     }
     
 }

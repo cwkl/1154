@@ -14,7 +14,7 @@ import FirebaseFirestore
 import Photos
 import Gallery
 
-class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, GalleryControllerDelegate {
+class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, GalleryControllerDelegate, UITextFieldDelegate {
     @IBOutlet weak var categoryK: UIView!
     @IBOutlet weak var categoryJ: UIView!
     @IBOutlet weak var categoryFree: UIView!
@@ -29,6 +29,8 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
     @IBOutlet weak var submitCameraCollectionView: UICollectionView!
     @IBOutlet weak var submitScrollView: UIScrollView!
     @IBOutlet weak var submitPhotoView: UIView!
+    @IBOutlet weak var postButtonView: UIView!
+    @IBOutlet weak var postButtonLabel: UILabel!
     
     private let changedColor = UIColor(red: 19/255, green: 69/255, blue: 99/255, alpha: 0.9) /* #134563 */
     private let baseColor = UIColor(red: 235/255, green: 235/255, blue: 235/255, alpha: 1.0)
@@ -47,6 +49,14 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        configureViewOption()
+        addGesture()
+        fetchPhotos()
+        userDataLoad()
+        cameraPermission()
+    }
+    
+    func configureViewOption(){
         let category = [categoryK,categoryJ,categoryFree,categoryTrevel,categoryFood,categoryShopping]
         for (index, item) in category.enumerated() {
             item?.layer.cornerRadius = categoryK.frame.height / 2.1
@@ -64,6 +74,10 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
         submitMiddleView.layer.borderColor = baseColor.cgColor
         submitContent.placeHolder = " Content"
         
+        postButtonView.layer.cornerRadius = 5
+        postButtonView.layer.borderColor = UIColor(red: 235/255, green: 235/255, blue: 235/255, alpha: 1.0).cgColor
+        postButtonView.layer.borderWidth = 1
+        
         submitScrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 60, right: 0)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -73,8 +87,17 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
         submitCameraCollectionView.delegate = self
         submitCameraCollectionView.dataSource = self
         
-        fetchPhotos()
-        userDataLoad()
+    }
+    
+    func addGesture(){
+        let postGesture = UITapGestureRecognizer(target: self, action: #selector(submitPostEvent))
+//        postGesture.isEnabled = false
+        postButtonView.addGestureRecognizer(postGesture)
+        postButtonLabel.textColor = UIColor(red: 19/255, green: 69/255, blue: 99/255, alpha: 1)
+    }
+    
+    func cameraPermission(){
+        AVCaptureDevice.requestAccess(for: AVMediaType.video) { response in if response {} else { } }
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -185,8 +208,10 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
         selectedImage.removeAll()
         selectedIndex.removeAll()
         let gallery = GalleryController()
-        gallery.delegate = self
         Gallery.Config.tabsToShow = [.imageTab, .cameraTab]
+        Gallery.Config.initialTab = .imageTab
+        
+        gallery.delegate = self
         Gallery.Config.Camera.imageLimit = 4
         present(gallery, animated: true, completion: nil)
     }
@@ -337,20 +362,21 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
         self.submitTitle.resignFirstResponder()
         self.dismiss(animated: true, completion: nil)
     }
-    
-    @IBAction func submitEvent(_ sender: Any) {
+        
+    @objc func submitPostEvent() {
         if !isLoading{
             guard let uid = self.uid,
                 let title = self.submitTitle.text,
-                let content = self.submitContent.text,
-                let name = self.name else {return}
+                let content = self.submitContent.text else {return}
             let date = SharedFunction.shared.getToday()
             let id = UUID.init().uuidString
             self.isLoading = true
             
             DispatchQueue.global().async {
-                
                 if !title.isEmpty && !content.isEmpty && self.country != "" && self.category != "" {
+                    DispatchQueue.main.async {
+                        self.postButtonLabel.textColor = UIColor(red: 19/255, green: 69/255, blue: 99/255, alpha: 0.2)                        
+                    }
                     if !self.selectedImage.isEmpty{
                         var imagesDic = [Int: String]()
                         for (index, item) in self.selectedImage.enumerated(){
@@ -371,7 +397,7 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
                                             for sortUrl in sortUrls {
                                                 imageUrls.append(sortUrl.value)
                                                 if self.selectedImage.count == imageUrls.count{
-                                                    let submit = SubmitModel(id: id, uid: uid, name: name, title: title, date: date, content: content, country: self.country , category: self.category , imageUrl: imageUrls, commentCount: 0, likeCount: 0, viewsCount: 0)
+                                                    let submit = SubmitModel(id: id, uid: uid, title: title, date: date, content: content, country: self.country , category: self.category , imageUrl: imageUrls, commentCount: 0, likeCount: 0, viewsCount: 0)
                                                     let data = try! FirestoreEncoder().encode(submit)
                                                     Firestore.firestore().collection("submit").document(id).setData(data, completion: { (err) in
                                                         if err != nil{
@@ -389,7 +415,7 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
                         }
                         
                     }else {
-                        let submit = SubmitModel(id: id, uid: uid, name: name, title: title, date: date, content: content, country: self.country, category: self.category, imageUrl: nil, commentCount: 0, likeCount: 0, viewsCount: 0)
+                        let submit = SubmitModel(id: id, uid: uid, title: title, date: date, content: content, country: self.country, category: self.category, imageUrl: nil, commentCount: 0, likeCount: 0, viewsCount: 0)
                         let data = try! FirestoreEncoder().encode(submit)
                         Firestore.firestore().collection("submit").document(id).setData(data, completion: { (err) in
                             if err != nil{

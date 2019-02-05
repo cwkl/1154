@@ -23,6 +23,7 @@
 		103452D721E5B70E00DF0242 /* photoCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 103452D621E5B70E00DF0242 /* photoCollectionViewCell.xib */; };
 		103452D921EDA6C100DF0242 /* PhotoZoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103452D821EDA6C100DF0242 /* PhotoZoomViewController.swift */; };
 		103452DB21EEC91700DF0242 /* PhotoZoomCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103452DA21EEC91700DF0242 /* PhotoZoomCollectionViewCell.swift */; };
+		103D01E92209C15C003EF832 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103D01E82209C15C003EF832 /* ProfileViewController.swift */; };
 		105722E221C0A52900BE540E /* FreeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105722E121C0A52900BE540E /* FreeTableViewController.swift */; };
 		105722E421C0A70200BE540E /* TrevelTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105722E321C0A70200BE540E /* TrevelTableViewController.swift */; };
 		105722E621C0A71200BE540E /* FoodTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105722E521C0A71200BE540E /* FoodTableViewController.swift */; };
@@ -94,6 +95,7 @@
 		103452D621E5B70E00DF0242 /* photoCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = photoCollectionViewCell.xib; sourceTree = "<group>"; };
 		103452D821EDA6C100DF0242 /* PhotoZoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoZoomViewController.swift; sourceTree = "<group>"; };
 		103452DA21EEC91700DF0242 /* PhotoZoomCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoZoomCollectionViewCell.swift; sourceTree = "<group>"; };
+		103D01E82209C15C003EF832 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		105722E121C0A52900BE540E /* FreeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeTableViewController.swift; sourceTree = "<group>"; };
 		105722E321C0A70200BE540E /* TrevelTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrevelTableViewController.swift; sourceTree = "<group>"; };
 		105722E521C0A71200BE540E /* FoodTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodTableViewController.swift; sourceTree = "<group>"; };
@@ -294,6 +296,7 @@
 				108E954D2204A59600C8487D /* SideMenuViewController.swift */,
 				108E95932207038F00C8487D /* ProfileEditViewController.swift */,
 				108E9595220708C900C8487D /* ListViewController.swift */,
+				103D01E82209C15C003EF832 /* ProfileViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -675,6 +678,7 @@
 				1023494D21B0DE9E0024AEC0 /* MainViewController.swift in Sources */,
 				10CE3A9321BDFD2E003E8EEB /* UserModel.swift in Sources */,
 				108E95942207038F00C8487D /* ProfileEditViewController.swift in Sources */,
+				103D01E92209C15C003EF832 /* ProfileViewController.swift in Sources */,
 				105722E221C0A52900BE540E /* FreeTableViewController.swift in Sources */,
 				10D692FD21E435B8005E06D1 /* SubmitContentViewController.swift in Sources */,
 			);

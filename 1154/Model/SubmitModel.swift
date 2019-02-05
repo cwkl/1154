@@ -12,7 +12,6 @@ struct SubmitModel: Codable {
     
     let id: String
     let uid: String
-    let name: String
     let title: String
     let date: String
     let content: String
