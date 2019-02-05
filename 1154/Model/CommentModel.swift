@@ -10,7 +10,6 @@ import Foundation
 
 struct CommentModel: Codable {
     
-    let name: String
     let uid: String?
     let date: String
     let comment: String

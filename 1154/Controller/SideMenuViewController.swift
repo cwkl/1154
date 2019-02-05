@@ -19,7 +19,10 @@ class SideMenuViewController: UIViewController {
     @IBOutlet weak var signoutView: UIView!
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var accountLabel: UILabel!
     @IBOutlet weak var mainViewLeading: NSLayoutConstraint!
+    
+    private var userModel: UserModel?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,7 +41,7 @@ class SideMenuViewController: UIViewController {
                     do{
                         guard let snapshot = snapshot?.data(),
                             let userModel = try? FirestoreDecoder().decode(UserModel.self, from: snapshot) else {return}
-                        
+                        self.userModel = userModel
                         if userModel.profileImageUrl != nil{
                             guard let imageUrl = userModel.profileImageUrl else {return}
                             self.profileImageView.kf.setImage(with: URL(string: imageUrl))
@@ -46,6 +49,7 @@ class SideMenuViewController: UIViewController {
                             self.profileImageView.image = UIImage(named: "defaultprofile")
                         }
                         self.nameLabel.text = userModel.name
+                        self.accountLabel.text = userModel.email
                         
                     }catch let error{
                         print(error.localizedDescription)
@@ -70,6 +74,10 @@ class SideMenuViewController: UIViewController {
         nameLabel.addGestureRecognizer(nameGesture)
         nameLabel.isUserInteractionEnabled = true
         
+        let accountGesture = UITapGestureRecognizer(target: self, action: #selector(profileTouchEvent))
+        accountLabel.addGestureRecognizer(accountGesture)
+        accountLabel.isUserInteractionEnabled = true
+        
         let profileGesture = UITapGestureRecognizer(target: self, action: #selector(profileTouchEvent))
         profileView.addGestureRecognizer(profileGesture)
         
@@ -81,7 +89,8 @@ class SideMenuViewController: UIViewController {
     }
     
     @objc func profileTouchEvent(){
-        if let view = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController"){
+        if let view = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as? ProfileViewController{
+            view.userModel = self.userModel
             self.present(view, animated: true, completion: nil)
         }
     }

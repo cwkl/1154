@@ -104,7 +104,7 @@ extension FoodTableViewController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? TableViewCell
-        cell?.userName.text = self.array[indexPath.row].name
+        cell?.submitUid =  self.array[indexPath.row].uid
         cell?.title.text = self.array[indexPath.row].title
         cell?.commentCount.text = String(self.array[indexPath.row].commentCount)
         cell?.likeCount.text = String(self.array[indexPath.row].likeCount)

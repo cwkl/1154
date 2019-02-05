@@ -26,8 +26,8 @@
                         </constraints>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cAc-H8-jPH">
-                        <rect key="frame" x="64" y="36" width="0.0" height="0.0"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <rect key="frame" x="72" y="36" width="0.0" height="0.0"/>
+                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
@@ -39,7 +39,7 @@
                         </connections>
                     </button>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uDO-U6-Xs5">
-                        <rect key="frame" x="16" y="72" width="392" height="21.5"/>
+                        <rect key="frame" x="16" y="72" width="392" height="9.5"/>
                         <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
@@ -125,12 +125,12 @@
                     <constraint firstItem="n5E-PH-I00" firstAttribute="centerY" secondItem="cAc-H8-jPH" secondAttribute="centerY" id="5b5-FV-Bgw"/>
                     <constraint firstItem="Txs-fb-rlF" firstAttribute="top" secondItem="jRb-Py-uHC" secondAttribute="bottom" constant="4" id="EFx-sd-sr0"/>
                     <constraint firstItem="yBx-ch-I24" firstAttribute="top" secondItem="7W6-Cr-1ui" secondAttribute="bottom" constant="16" id="HrE-aR-on2"/>
-                    <constraint firstItem="jRb-Py-uHC" firstAttribute="top" secondItem="uDO-U6-Xs5" secondAttribute="bottom" constant="4" id="J9j-Us-q27"/>
+                    <constraint firstItem="jRb-Py-uHC" firstAttribute="top" secondItem="uDO-U6-Xs5" secondAttribute="bottom" constant="16" id="J9j-Us-q27"/>
                     <constraint firstItem="sDb-Lp-57U" firstAttribute="leading" secondItem="A0L-gL-74E" secondAttribute="trailing" constant="4" id="KOc-Wy-lAS"/>
                     <constraint firstItem="uDO-U6-Xs5" firstAttribute="top" secondItem="7mx-DU-0i8" secondAttribute="bottom" constant="16" id="KWG-2h-Occ"/>
                     <constraint firstItem="b4W-Pf-T6a" firstAttribute="top" secondItem="jRb-Py-uHC" secondAttribute="bottom" constant="4" id="LhO-yH-Enz"/>
                     <constraint firstItem="yBx-ch-I24" firstAttribute="leading" secondItem="2Ml-Oz-WJc" secondAttribute="leading" constant="8" id="NkQ-6Q-tXj"/>
-                    <constraint firstItem="cAc-H8-jPH" firstAttribute="leading" secondItem="7mx-DU-0i8" secondAttribute="trailing" constant="8" id="SeR-UB-RmN"/>
+                    <constraint firstItem="cAc-H8-jPH" firstAttribute="leading" secondItem="7mx-DU-0i8" secondAttribute="trailing" constant="16" id="SeR-UB-RmN"/>
                     <constraint firstItem="uDO-U6-Xs5" firstAttribute="leading" secondItem="2Ml-Oz-WJc" secondAttribute="leading" constant="16" id="TJD-Dy-Fl7"/>
                     <constraint firstItem="Txs-fb-rlF" firstAttribute="leading" secondItem="b4W-Pf-T6a" secondAttribute="trailing" constant="4" id="YHe-gj-Vn8"/>
                     <constraint firstItem="wbU-Ii-SOf" firstAttribute="top" secondItem="jRb-Py-uHC" secondAttribute="bottom" constant="4" id="cwL-MB-YRn"/>
