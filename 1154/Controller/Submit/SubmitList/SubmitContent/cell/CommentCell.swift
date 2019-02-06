@@ -19,6 +19,7 @@ protocol CommentCellDelegate {
 }
 
 class CommentCell: UITableViewCell {
+    @IBOutlet weak var mainView: UIView!
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
@@ -45,6 +46,7 @@ class CommentCell: UITableViewCell {
     var indexPath: Int?
     var isSubComment: Bool?
     var parentId: String?
+    var submitUid: String?
     var to: String?{
         didSet{
             mentionUserDataLoad()
@@ -54,6 +56,7 @@ class CommentCell: UITableViewCell {
         didSet{
 //            removeCellData()
             commentUserDataLoad()
+            configureViewOption()
         }
     }
     var isLiked: Bool?{
@@ -81,7 +84,6 @@ class CommentCell: UITableViewCell {
         super.awakeFromNib()
         self.selectionStyle = .none
         addGesture()
-        configureViewOption()
     }
     
     func removeCellData(){
@@ -96,6 +98,12 @@ class CommentCell: UITableViewCell {
     func configureViewOption(){
         profileImageView.layer.cornerRadius = profileImageView.frame.height / 2
         profileImageView.layer.masksToBounds = true
+
+        if submitUid == commentUid{
+            mainView.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 1)
+        }else{
+            mainView.backgroundColor = UIColor.white
+        }
     }
     
     func addGesture(){

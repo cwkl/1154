@@ -48,8 +48,6 @@ class TitleCell: UITableViewCell {
         let nameGesture = UITapGestureRecognizer(target: self, action: #selector(presentSubmitUserProfile))
         profileImageView.addGestureRecognizer(profileImageGesture)
         nameLabel.addGestureRecognizer(nameGesture)
-        profileImageView.isUserInteractionEnabled = true
-        nameLabel.isUserInteractionEnabled = true
     }
     
     @objc func presentSubmitUserProfile(){

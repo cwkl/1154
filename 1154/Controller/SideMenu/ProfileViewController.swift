@@ -122,6 +122,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let view = self.storyboard?.instantiateViewController(withIdentifier: "SubmitContentViewController") as? SubmitContentViewController{
             view.model = submitModel[indexPath.row]
+            view.fromProfile = true
             self.present(view, animated: true, completion: nil)
         }
     }
