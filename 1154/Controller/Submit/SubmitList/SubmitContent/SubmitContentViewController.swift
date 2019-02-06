@@ -12,7 +12,15 @@ import FirebaseAuth
 import CodableFirebase
 import Kingfisher
 
-class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFieldDelegate, CommentCellDelegate{
+class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFieldDelegate, TitleCellDelegate, CommentCellDelegate{
+    
+    func presentSubmitUserProfile() {
+        if let view = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as? ProfileViewController{
+            view.userModel = self.submitUserModel
+            self.present(view, animated: true)
+        }
+    }
+    
     
     func setIsLike(isLike: Bool, indexPath: Int) {
         if !commentArray.isEmpty {
@@ -250,7 +258,7 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
     func commentCountObserver(){
         DispatchQueue.global().async {
             guard let id = self.model?.id else {return}
-            Firestore.firestore().collection("commentCount").document(id).collection("commentList").addSnapshotListener({ (snapshot, error) in
+            Firestore.firestore().collection("submitCommentCount").document(id).collection("commentList").addSnapshotListener({ (snapshot, error) in
                 if error != nil{
                 }else{
                     guard let snapshot = snapshot else {return}
@@ -454,8 +462,10 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
 
     func commentCountCollectionUpdate(id: String){
         DispatchQueue.global().async {
-            guard let submitId = self.model?.id else {return}
-            Firestore.firestore().collection("commentCount").document(submitId).collection("commentList").document(id).setData(["id" : id])
+            guard let submitId = self.model?.id, let uid = self.uid else {return}
+            Firestore.firestore().collection("submitCommentCount").document(submitId).collection("commentList").document(id).setData(["id" : id])
+            
+            Firestore.firestore().collection("totalCommentCount").document(id).setData(["uid" : uid])
         }
     }
     
@@ -551,7 +561,11 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
     }
     
     @IBAction func backEvent(_ sender: Any) {
-        self.navigationController?.popViewController(animated: true)
+        if let pop = self.navigationController?.popViewController(animated: true){
+            self.navigationController?.popViewController(animated: true)
+        }else{
+            self.dismiss(animated: true, completion: nil)
+        }
     }
 }
 
@@ -581,6 +595,7 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
         guard let model = model, let submitUserModel = self.submitUserModel else {return UITableViewCell()}
         if indexPath.row == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "titleCell", for: indexPath) as! TitleCell
+            cell.titleCellDelegate = self
             if submitUserModel.profileImageUrl != nil {
                 if let imageUrl = submitUserModel.profileImageUrl{
                     cell.profileImageView.kf.setImage(with: URL(string: imageUrl))

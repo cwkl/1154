@@ -91,20 +91,26 @@ class SideMenuViewController: UIViewController {
     @objc func profileTouchEvent(){
         if let view = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as? ProfileViewController{
             view.userModel = self.userModel
-            self.present(view, animated: true, completion: nil)
+            self.present(view, animated: true) {
+                self.sideMenuController?.hideMenu()
+            }
         }
     }
 
     @objc func listTouchEvent(){
         if let view = self.storyboard?.instantiateViewController(withIdentifier: "ListViewController"){
-            self.present(view, animated: true, completion: nil)
+            self.present(view, animated: true) {
+                self.sideMenuController?.hideMenu()
+            }
         }
     }
     
     @objc func signoutTouchEvent(){
         try! Auth.auth().signOut()
         if let view = self.storyboard?.instantiateViewController(withIdentifier: "LoginViewController"){
-            self.present(view, animated: true, completion: nil)
+            self.present(view, animated: true){
+//                self.dismiss(animated: false, completion: nil)
+            }
         }
     }
 }

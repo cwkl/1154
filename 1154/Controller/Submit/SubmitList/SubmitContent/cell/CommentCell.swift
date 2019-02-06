@@ -52,6 +52,7 @@ class CommentCell: UITableViewCell {
     }
     var commentUid: String?{
         didSet{
+//            removeCellData()
             commentUserDataLoad()
         }
     }
@@ -81,6 +82,15 @@ class CommentCell: UITableViewCell {
         self.selectionStyle = .none
         addGesture()
         configureViewOption()
+    }
+    
+    func removeCellData(){
+        profileImageView.image = nil
+        nameLabel.text = ""
+        commentLabel.text = ""
+        timeLabel.text = ""
+        likeCountLabel.text = ""
+        mentionLabel.text = ""
     }
     
     func configureViewOption(){

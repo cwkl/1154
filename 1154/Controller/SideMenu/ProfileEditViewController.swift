@@ -185,6 +185,7 @@ class ProfileEditViewController: UIViewController, GalleryControllerDelegate, UI
         DispatchQueue.global().async {
             let userModel = UserModel(email: email,
                                       name:  name,
+                                      uid: uid,
                                       profileImageUrl: url,
                                       startDate: startDate,
                                       region: self.country)

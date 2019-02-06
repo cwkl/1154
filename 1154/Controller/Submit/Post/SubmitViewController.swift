@@ -14,7 +14,7 @@ import FirebaseFirestore
 import Photos
 import Gallery
 
-class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, GalleryControllerDelegate, UITextFieldDelegate {
+class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, GalleryControllerDelegate, UITextFieldDelegate, UITextViewDelegate {
     @IBOutlet weak var categoryK: UIView!
     @IBOutlet weak var categoryJ: UIView!
     @IBOutlet weak var categoryFree: UIView!
@@ -45,6 +45,11 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
     private var uid: String?
     private var name: String?
     private var profileImageUrl: String?
+    private var postGesture = UITapGestureRecognizer()
+    private var countryExist = false
+    private var categoryExist = false
+    private var titleExist = false
+    private var contentExist = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -86,14 +91,52 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
         submitPhotoCollectionView.dataSource = self
         submitCameraCollectionView.delegate = self
         submitCameraCollectionView.dataSource = self
+        submitTitle.delegate = self
+        submitContent.delegate = self
+        
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            guard let text = textField.text, let textCount = textField.text?.count else {return}
+            if textCount > 0{
+                self.titleExist = true
+                self.postButtonJudge()
+            }else{
+                self.titleExist = false
+                self.postButtonJudge()
+            }
+        }
+        return true
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        guard let text = textView.text, let textCount = textView.text?.count else {return}
+        if textCount > 0{
+            self.contentExist = true
+            self.postButtonJudge()
+        }else{
+            self.contentExist = false
+            self.postButtonJudge()
+        }
+    }
+    
+    func postButtonJudge(){
+        if self.countryExist && self.categoryExist && self.titleExist && self.contentExist{
+            postGesture.isEnabled = true
+            postButtonLabel.textColor = UIColor(red: 19/255, green: 69/255, blue: 99/255, alpha: 1)
+        }else{
+            postGesture.isEnabled = false
+            postButtonLabel.textColor = UIColor(red: 19/255, green: 69/255, blue: 99/255, alpha: 0.2)
+        }
         
     }
     
     func addGesture(){
-        let postGesture = UITapGestureRecognizer(target: self, action: #selector(submitPostEvent))
-//        postGesture.isEnabled = false
+        postGesture = UITapGestureRecognizer(target: self, action: #selector(submitPostEvent))
+        postGesture.isEnabled = false
         postButtonView.addGestureRecognizer(postGesture)
-        postButtonLabel.textColor = UIColor(red: 19/255, green: 69/255, blue: 99/255, alpha: 1)
+        postButtonLabel.textColor = UIColor(red: 19/255, green: 69/255, blue: 99/255, alpha: 0.2)
     }
     
     func cameraPermission(){
@@ -271,29 +314,41 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
         if sender.view?.tag == 0 {
             categoryJ.backgroundColor = baseColor
             country = "korea"
+            self.countryExist = true
+            self.postButtonJudge()
         }else if sender.view?.tag == 1{
             categoryK.backgroundColor = baseColor
             country = "japan"
+            self.countryExist = true
+            self.postButtonJudge()
         }else if sender.view?.tag == 2{
             categoryTrevel.backgroundColor = baseColor
             categoryFood.backgroundColor = baseColor
             categoryShopping.backgroundColor = baseColor
             category = "free"
+            self.categoryExist = true
+            self.postButtonJudge()
         }else if sender.view?.tag == 3{
             categoryFree.backgroundColor = baseColor
             categoryFood.backgroundColor = baseColor
             categoryShopping.backgroundColor = baseColor
             category = "trevel"
+            self.categoryExist = true
+            self.postButtonJudge()
         }else if sender.view?.tag == 4{
             categoryFree.backgroundColor = baseColor
             categoryTrevel.backgroundColor = baseColor
             categoryShopping.backgroundColor = baseColor
             category = "food"
+            self.categoryExist = true
+            self.postButtonJudge()
         }else if sender.view?.tag == 5{
             categoryFree.backgroundColor = baseColor
             categoryTrevel.backgroundColor = baseColor
             categoryFood.backgroundColor = baseColor
             category = "shopping"
+            self.categoryExist = true
+            self.postButtonJudge()
         }
     }
     

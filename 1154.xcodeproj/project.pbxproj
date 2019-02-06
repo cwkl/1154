@@ -24,6 +24,8 @@
 		103452D921EDA6C100DF0242 /* PhotoZoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103452D821EDA6C100DF0242 /* PhotoZoomViewController.swift */; };
 		103452DB21EEC91700DF0242 /* PhotoZoomCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103452DA21EEC91700DF0242 /* PhotoZoomCollectionViewCell.swift */; };
 		103D01E92209C15C003EF832 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103D01E82209C15C003EF832 /* ProfileViewController.swift */; };
+		103D022A220AD44B003EF832 /* postCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 103D0229220AD44B003EF832 /* postCell.xib */; };
+		103D022C220AD481003EF832 /* PostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103D022B220AD481003EF832 /* PostCell.swift */; };
 		105722E221C0A52900BE540E /* FreeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105722E121C0A52900BE540E /* FreeTableViewController.swift */; };
 		105722E421C0A70200BE540E /* TrevelTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105722E321C0A70200BE540E /* TrevelTableViewController.swift */; };
 		105722E621C0A71200BE540E /* FoodTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105722E521C0A71200BE540E /* FoodTableViewController.swift */; };
@@ -96,6 +98,8 @@
 		103452D821EDA6C100DF0242 /* PhotoZoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoZoomViewController.swift; sourceTree = "<group>"; };
 		103452DA21EEC91700DF0242 /* PhotoZoomCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoZoomCollectionViewCell.swift; sourceTree = "<group>"; };
 		103D01E82209C15C003EF832 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		103D0229220AD44B003EF832 /* postCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = postCell.xib; sourceTree = "<group>"; };
+		103D022B220AD481003EF832 /* PostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCell.swift; sourceTree = "<group>"; };
 		105722E121C0A52900BE540E /* FreeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeTableViewController.swift; sourceTree = "<group>"; };
 		105722E321C0A70200BE540E /* TrevelTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrevelTableViewController.swift; sourceTree = "<group>"; };
 		105722E521C0A71200BE540E /* FoodTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodTableViewController.swift; sourceTree = "<group>"; };
@@ -213,16 +217,60 @@
 			path = cell;
 			sourceTree = "<group>";
 		};
+		103D0224220AD124003EF832 /* Login&Signup */ = {
+			isa = PBXGroup;
+			children = (
+				10C76CA821ABCFFE003F0DA2 /* LoginViewController.swift */,
+				10C76CAA21ACCCE2003F0DA2 /* SignupViewController.swift */,
+			);
+			path = "Login&Signup";
+			sourceTree = "<group>";
+		};
+		103D0225220AD1A0003EF832 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				1023494C21B0DE9E0024AEC0 /* MainViewController.swift */,
+				10DBA1C621B4F61D00ECAA41 /* PageViewController.swift */,
+				10DBA1C221B4D9D300ECAA41 /* CollectionViewCellCategory.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		103D0226220AD1C8003EF832 /* SideMenu */ = {
+			isa = PBXGroup;
+			children = (
+				108E954D2204A59600C8487D /* SideMenuViewController.swift */,
+				108E95932207038F00C8487D /* ProfileEditViewController.swift */,
+				108E9595220708C900C8487D /* ListViewController.swift */,
+				103D01E82209C15C003EF832 /* ProfileViewController.swift */,
+				103D0228220AD3E6003EF832 /* ProfilePostTableViewCell */,
+			);
+			path = SideMenu;
+			sourceTree = "<group>";
+		};
+		103D0227220AD1EE003EF832 /* Post */ = {
+			isa = PBXGroup;
+			children = (
+				10DBA20221B8B52000ECAA41 /* SubmitViewController.swift */,
+				1005382321C9DC8D000C8427 /* CollectionViewCellPhoto.swift */,
+				1005382121C73EBA000C8427 /* CollectionViewCellCamera.swift */,
+			);
+			path = Post;
+			sourceTree = "<group>";
+		};
+		103D0228220AD3E6003EF832 /* ProfilePostTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				103D0229220AD44B003EF832 /* postCell.xib */,
+				103D022B220AD481003EF832 /* PostCell.swift */,
+			);
+			path = ProfilePostTableViewCell;
+			sourceTree = "<group>";
+		};
 		105722E921C0AB4D00BE540E /* SubmitList */ = {
 			isa = PBXGroup;
 			children = (
 				10D692F921E4354F005E06D1 /* SubmitContent */,
-				10CE3A9B21BE2833003E8EEB /* TableViewCell.swift */,
-				10CE3A9921BE2680003E8EEB /* AllTalbeViewController.swift */,
-				105722E121C0A52900BE540E /* FreeTableViewController.swift */,
-				105722E321C0A70200BE540E /* TrevelTableViewController.swift */,
-				105722E521C0A71200BE540E /* FoodTableViewController.swift */,
-				105722E721C0AB4100BE540E /* ShoppingTableViewController.swift */,
 			);
 			path = SubmitList;
 			sourceTree = "<group>";
@@ -285,18 +333,10 @@
 		10CE3A8C21BA41E5003E8EEB /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				103D0224220AD124003EF832 /* Login&Signup */,
+				103D0225220AD1A0003EF832 /* Home */,
 				10CE3A9421BE12B0003E8EEB /* Submit */,
-				10C76CA821ABCFFE003F0DA2 /* LoginViewController.swift */,
-				10C76CAA21ACCCE2003F0DA2 /* SignupViewController.swift */,
-				1023494C21B0DE9E0024AEC0 /* MainViewController.swift */,
-				10DBA1C221B4D9D300ECAA41 /* CollectionViewCellCategory.swift */,
-				10DBA1C621B4F61D00ECAA41 /* PageViewController.swift */,
-				1005382321C9DC8D000C8427 /* CollectionViewCellPhoto.swift */,
-				1005382121C73EBA000C8427 /* CollectionViewCellCamera.swift */,
-				108E954D2204A59600C8487D /* SideMenuViewController.swift */,
-				108E95932207038F00C8487D /* ProfileEditViewController.swift */,
-				108E9595220708C900C8487D /* ListViewController.swift */,
-				103D01E82209C15C003EF832 /* ProfileViewController.swift */,
+				103D0226220AD1C8003EF832 /* SideMenu */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -338,7 +378,13 @@
 		10CE3A9421BE12B0003E8EEB /* Submit */ = {
 			isa = PBXGroup;
 			children = (
-				10DBA20221B8B52000ECAA41 /* SubmitViewController.swift */,
+				10CE3A9921BE2680003E8EEB /* AllTalbeViewController.swift */,
+				105722E121C0A52900BE540E /* FreeTableViewController.swift */,
+				105722E321C0A70200BE540E /* TrevelTableViewController.swift */,
+				105722E521C0A71200BE540E /* FoodTableViewController.swift */,
+				105722E721C0AB4100BE540E /* ShoppingTableViewController.swift */,
+				10CE3A9B21BE2833003E8EEB /* TableViewCell.swift */,
+				103D0227220AD1EE003EF832 /* Post */,
 				105722E921C0AB4D00BE540E /* SubmitList */,
 			);
 			path = Submit;
@@ -347,8 +393,8 @@
 		10D692F921E4354F005E06D1 /* SubmitContent */ = {
 			isa = PBXGroup;
 			children = (
-				103452C521E5A25A00DF0242 /* cell */,
 				10D692FC21E435B8005E06D1 /* SubmitContentViewController.swift */,
+				103452C521E5A25A00DF0242 /* cell */,
 			);
 			path = SubmitContent;
 			sourceTree = "<group>";
@@ -481,6 +527,7 @@
 				109A4D7721C34E12003A3597 /* GoogleService-Info.plist in Resources */,
 				103452C221E5A16000DF0242 /* titleCell.xib in Resources */,
 				10C76C7E21ABB6DC003F0DA2 /* Assets.xcassets in Resources */,
+				103D022A220AD44B003EF832 /* postCell.xib in Resources */,
 				103452D721E5B70E00DF0242 /* photoCollectionViewCell.xib in Resources */,
 				10C76C7C21ABB6DA003F0DA2 /* Main.storyboard in Resources */,
 			);
@@ -675,6 +722,7 @@
 				103452C921E5A2AF00DF0242 /* PhotoCell.swift in Sources */,
 				103452DB21EEC91700DF0242 /* PhotoZoomCollectionViewCell.swift in Sources */,
 				10CE3A9A21BE2680003E8EEB /* AllTalbeViewController.swift in Sources */,
+				103D022C220AD481003EF832 /* PostCell.swift in Sources */,
 				1023494D21B0DE9E0024AEC0 /* MainViewController.swift in Sources */,
 				10CE3A9321BDFD2E003E8EEB /* UserModel.swift in Sources */,
 				108E95942207038F00C8487D /* ProfileEditViewController.swift in Sources */,
