@@ -114,6 +114,7 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
     private var isSubComment = false
     private var isPost = false
     private var postId: String?
+    var fromProfile = false
     var model: SubmitModel?{
         didSet{
             if isViews{
@@ -127,22 +128,32 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        commentPostView.layer.borderWidth = 1
-        commentPostView.layer.borderColor = UIColor(red: 235/255, green: 235/255, blue: 235/255, alpha: 1.0).cgColor
-        commentPostView.layer.cornerRadius = commentPostView.frame.height / 2
-        
-        commentProfileImageView.layer.cornerRadius = commentProfileImageView.frame.width / 2
-        commentProfileImageView.clipsToBounds = true
-        
-        tableView.register(UINib(nibName: "titleCell", bundle: nil), forCellReuseIdentifier: "titleCell")
-        tableView.register(UINib(nibName: "photoCell", bundle: nil), forCellReuseIdentifier: "photoCell")
-        tableView.register(UINib(nibName: "contentCell", bundle: nil), forCellReuseIdentifier: "contentCell")
-        tableView.register(UINib(nibName: "commentCell", bundle: nil), forCellReuseIdentifier: "commentCell")
-        
-        tableView.delegate = self
-        
-        tableView.isUserInteractionEnabled = true
-        tableView.rowHeight = UITableView.automaticDimension
+        configureViewOption()
+        addGesture()
+        tableViewCellRegist()
+        addRefresh()
+        addKeyboardObserver()
+        userDataLoad()
+        commentDataLoad()
+        countObserver()
+        submitLikeObserver()
+        commentCountObserver()
+        ViewsObserver()
+    }
+    
+    func addKeyboardObserver(){
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    func addRefresh(){
+        let refreshControl = UIRefreshControl()
+        tableView.refreshControl = refreshControl
+        self.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+    }
+    
+    func addGesture(){
         tap = UITapGestureRecognizer(target: self, action: #selector(keyboardHide(_:)))
         tap.isEnabled = false
         tableView.addGestureRecognizer(tap)
@@ -150,27 +161,30 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
         replyingBarCancel.isUserInteractionEnabled = true
         let cancel = UITapGestureRecognizer(target: self, action: #selector(replyingBarCancelEvent))
         replyingBarCancel.addGestureRecognizer(cancel)
+    }
+    
+    func tableViewCellRegist(){
+        tableView.register(UINib(nibName: "titleCell", bundle: nil), forCellReuseIdentifier: "titleCell")
+        tableView.register(UINib(nibName: "photoCell", bundle: nil), forCellReuseIdentifier: "photoCell")
+        tableView.register(UINib(nibName: "contentCell", bundle: nil), forCellReuseIdentifier: "contentCell")
+        tableView.register(UINib(nibName: "commentCell", bundle: nil), forCellReuseIdentifier: "commentCell")
+    }
+    
+    func configureViewOption(){
+        commentPostView.layer.borderWidth = 1
+        commentPostView.layer.borderColor = UIColor(red: 235/255, green: 235/255, blue: 235/255, alpha: 1.0).cgColor
+        commentPostView.layer.cornerRadius = commentPostView.frame.height / 2
+        
+        commentProfileImageView.layer.cornerRadius = commentProfileImageView.frame.width / 2
+        commentProfileImageView.clipsToBounds = true
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.isUserInteractionEnabled = true
+        tableView.rowHeight = UITableView.automaticDimension
         
         commentTextField.delegate = self
-        
         commentPostButton.isEnabled = false
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-        
-        userDataLoad()
-        commentDataLoad()
-        countObserver()
-        submitLikeObserver()
-        commentCountObserver()
-        ViewsObserver()
-        
-        self.tableView.dataSource = self
-        
-        let refreshControl = UIRefreshControl()
-        tableView.refreshControl = refreshControl
-        self.refreshControl = refreshControl
-        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
     }
     
     func submitUserDataLoad(){
@@ -596,6 +610,15 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
         if indexPath.row == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "titleCell", for: indexPath) as! TitleCell
             cell.titleCellDelegate = self
+            
+            if self.fromProfile{
+                cell.profileImageView.isUserInteractionEnabled = false
+                cell.nameLabel.isUserInteractionEnabled = false
+            }else{
+                cell.profileImageView.isUserInteractionEnabled = true
+                cell.nameLabel.isUserInteractionEnabled = true
+            }
+            
             if submitUserModel.profileImageUrl != nil {
                 if let imageUrl = submitUserModel.profileImageUrl{
                     cell.profileImageView.kf.setImage(with: URL(string: imageUrl))
@@ -633,6 +656,7 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
                     if !commentArray.isEmpty{
                         cell.commentCellDelegate = self
                         cell.submitId = model.id
+                        cell.submitUid = model.uid
                         cell.commentUid = commentArray[indexPath.row - 3].uid
                         cell.indexPath = indexPath.row - 3
                         cell.isSubComment = commentArray[indexPath.row - 3].isSubComment
@@ -707,6 +731,7 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
                     if !commentArray.isEmpty{
                         cell.commentCellDelegate = self
                         cell.submitId = model.id
+                        cell.submitUid = model.uid
                         cell.commentUid = commentArray[indexPath.row - 2].uid
                         cell.indexPath = indexPath.row - 2
                         cell.isSubComment = commentArray[indexPath.row - 2].isSubComment
