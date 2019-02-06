@@ -11,6 +11,10 @@ import UIKit
 import FirebaseFirestore
 import CodableFirebase
 
+protocol TitleCellDelegate {
+    func presentSubmitUserProfile()
+}
+
 class TitleCell: UITableViewCell {
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
@@ -22,6 +26,9 @@ class TitleCell: UITableViewCell {
     @IBOutlet weak var viewsCountLabel: UILabel!
     var isJudge = false
     var uid: String?
+    var titleCellDelegate: TitleCellDelegate?
+    var likeArray: [LikeModel] = []
+    var isLike: Bool?
     var submitId: String? {
         didSet{
             if !isJudge{
@@ -29,16 +36,31 @@ class TitleCell: UITableViewCell {
             }
         }
     }
-    var likeArray: [LikeModel] = []
-    var isLike: Bool?
-    
     override func awakeFromNib() {
         super.awakeFromNib()
+        
+        configureViewOption()
+        addGesture()
+    }
+    
+    func addGesture(){
+        let profileImageGesture = UITapGestureRecognizer(target: self, action: #selector(presentSubmitUserProfile))
+        let nameGesture = UITapGestureRecognizer(target: self, action: #selector(presentSubmitUserProfile))
+        profileImageView.addGestureRecognizer(profileImageGesture)
+        nameLabel.addGestureRecognizer(nameGesture)
+        profileImageView.isUserInteractionEnabled = true
+        nameLabel.isUserInteractionEnabled = true
+    }
+    
+    @objc func presentSubmitUserProfile(){
+        titleCellDelegate?.presentSubmitUserProfile()
+    }
+    
+    func configureViewOption(){
         profileImageView.layer.cornerRadius = 20
         profileImageView.layer.masksToBounds = true
         profileImageView.contentMode = .scaleAspectFill
         self.selectionStyle = .none
-        
     }
     
     func judgeIsLike(){

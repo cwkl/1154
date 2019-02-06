@@ -71,10 +71,10 @@ class SignupViewController: UIViewController {
                 return
             }
         
-            let uid = Auth.auth().currentUser?.uid
-            let userModel = UserModel(email: email, name: name, profileImageUrl: nil, startDate: SharedFunction.shared.getToday(), region: nil)
+            guard let uid = Auth.auth().currentUser?.uid else {return}
+            let userModel = UserModel(email: email, name: name, uid: uid, profileImageUrl: nil, startDate: SharedFunction.shared.getToday(), region: nil)
             guard let data = try? FirestoreEncoder().encode(userModel) else {return}
-            db.collection("users").document(uid!).setData(data, completion: { (err) in
+            db.collection("users").document(uid).setData(data, completion: { (err) in
                 if err != nil{
                 }else{
                     if let view = self.storyboard?.instantiateViewController(withIdentifier: "SideMenuController"){
