@@ -191,7 +191,7 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" red="0.96078431372549022" green="0.96078431372549022" blue="0.96078431372549022" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="0Fx-EG-01a" secondAttribute="trailing" id="MiV-D1-06V"/>
                             <constraint firstAttribute="bottom" secondItem="0Fx-EG-01a" secondAttribute="bottom" id="PdK-RV-N3l"/>
@@ -218,6 +218,7 @@
                 </constraints>
             </tableViewCellContentView>
             <connections>
+                <outlet property="background" destination="VeJ-6F-80Z" id="XQm-Ta-XAY"/>
                 <outlet property="commentLabel" destination="laS-4Y-T1m" id="BAw-4k-txI"/>
                 <outlet property="deleteButtonView" destination="Loh-s6-N3M" id="MA0-72-xKE"/>
                 <outlet property="likeButton" destination="9wW-kG-8H7" id="8FY-as-Vnp"/>
@@ -238,6 +239,6 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="heart2" width="30" height="26"/>
+        <image name="heart2" width="32" height="28"/>
     </resources>
 </document>

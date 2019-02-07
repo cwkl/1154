@@ -15,9 +15,11 @@ import Kingfisher
 class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFieldDelegate, TitleCellDelegate, CommentCellDelegate{
     
     func presentSubmitUserProfile() {
-        if let view = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewController") as? ProfileViewController{
-            view.userModel = self.submitUserModel
-            self.present(view, animated: true)
+        if let navView = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewNavController") as? UINavigationController{
+            if !navView.viewControllers.isEmpty, let pro = navView.viewControllers[0] as? ProfileViewController {
+                pro.userModel = self.userModel
+            }
+            self.present(navView, animated: true, completion: nil)
         }
     }
     
@@ -118,7 +120,7 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
     var model: SubmitModel?{
         didSet{
             if isViews{
-                submitUserDataLoad()
+                
                 increaseViews()
             }
         }
@@ -128,6 +130,7 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        submitUserDataLoad()
         configureViewOption()
         addGesture()
         tableViewCellRegist()
@@ -479,7 +482,7 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
             guard let submitId = self.model?.id, let uid = self.uid else {return}
             Firestore.firestore().collection("submitCommentCount").document(submitId).collection("commentList").document(id).setData(["id" : id])
             
-            Firestore.firestore().collection("totalCommentCount").document(id).setData(["uid" : uid])
+            Firestore.firestore().collection("users").document(uid).collection("comment").document(id).setData(["submitId" : submitId])
         }
     }
     
@@ -575,11 +578,8 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
     }
     
     @IBAction func backEvent(_ sender: Any) {
-        if let pop = self.navigationController?.popViewController(animated: true){
-            self.navigationController?.popViewController(animated: true)
-        }else{
-            self.dismiss(animated: true, completion: nil)
-        }
+        self.navigationController?.popViewController(animated: true)
+
     }
 }
 
@@ -627,9 +627,9 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
                 cell.profileImageView.image = UIImage(named: "defaultprofile")
             }
             if model.uid == self.uid{
-                cell.likebutton.isHidden = true
+                cell.likeButtonView.isHidden = true
             }else{
-                cell.likebutton.isHidden = false
+                cell.likeButtonView.isHidden = false
             }
             cell.nameLabel.text = submitUserModel.name
             cell.titleLabel.text = model.title

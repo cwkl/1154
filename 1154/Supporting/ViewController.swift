@@ -39,7 +39,11 @@ class ViewController: UIViewController {
             make.height.equalTo(70)
             make.width.equalTo(70)
             }
-        box.image = UIImage(named: "sharon")
+//        box.image = UIImage(named: "")
+    }
+    
+    override var prefersStatusBarHidden: Bool{
+        return true
     }
     
     func displayWelcome(){
