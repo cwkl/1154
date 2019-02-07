@@ -26,6 +26,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     private var submitModel: [SubmitModel] = []
     private var postCount: Int?
+    
     var userModel: UserModel?{
         didSet{
             loadCountData()
@@ -54,8 +55,9 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         DispatchQueue.global().async {
             var likesCount = 0
             guard let userModel = self.userModel else {return}
-            Firestore.firestore().collection("submit").whereField("uid", isEqualTo: userModel.uid).getDocuments { (snapshot, error) in
+            Firestore.firestore().collection("submit").whereField("uid", isEqualTo: userModel.uid).order(by: "date", descending: true).getDocuments { (snapshot, error) in
                 if error != nil{
+                    print(error)
                 }else{
                     guard let postCount = snapshot?.count, let snapshot = snapshot?.documents else {return}
                     self.postCount = postCount
@@ -85,7 +87,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 }
             }
             
-            Firestore.firestore().collection("totalCommentCount").whereField("uid", isEqualTo: userModel.uid).getDocuments(completion: { (snapshot, error) in
+            Firestore.firestore().collection("users").document(userModel.uid).collection("comment").getDocuments(completion: { (snapshot, error) in
                 if error != nil{
                 }else{
                     guard let commentCount = snapshot?.count else {return}
@@ -123,7 +125,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         if let view = self.storyboard?.instantiateViewController(withIdentifier: "SubmitContentViewController") as? SubmitContentViewController{
             view.model = submitModel[indexPath.row]
             view.fromProfile = true
-            self.present(view, animated: true, completion: nil)
+            self.navigationController?.pushViewController(view, animated: true)
         }
     }
     

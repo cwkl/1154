@@ -19,6 +19,7 @@ protocol CommentCellDelegate {
 }
 
 class CommentCell: UITableViewCell {
+    @IBOutlet weak var background: UIView!
     @IBOutlet weak var mainView: UIView!
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
@@ -101,8 +102,10 @@ class CommentCell: UITableViewCell {
 
         if submitUid == commentUid{
             mainView.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 1)
+            background.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 1)
         }else{
             mainView.backgroundColor = UIColor.white
+            background.backgroundColor = UIColor.white
         }
     }
     

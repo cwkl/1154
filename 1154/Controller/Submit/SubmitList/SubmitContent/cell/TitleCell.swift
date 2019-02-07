@@ -19,6 +19,9 @@ class TitleCell: UITableViewCell {
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var likebutton: UIButton!
+    @IBOutlet weak var likeButtonView: UIView!
+    
+    @IBOutlet weak var bookmarkButton: UIButton!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var commentsCountLabel: UILabel!
@@ -29,9 +32,11 @@ class TitleCell: UITableViewCell {
     var titleCellDelegate: TitleCellDelegate?
     var likeArray: [LikeModel] = []
     var isLike: Bool?
+    var isBookmark = false
     var submitId: String? {
         didSet{
             if !isJudge{
+                judgeIsBookmark()
                 judgeIsLike()
             }
         }
@@ -61,9 +66,31 @@ class TitleCell: UITableViewCell {
         self.selectionStyle = .none
     }
     
-    func judgeIsLike(){
-        guard let uid = self.uid, let id = self.submitId else {return}
+    func judgeIsBookmark(){
         DispatchQueue.global().async {
+            guard let uid = self.uid, let id = self.submitId else {return}
+            Firestore.firestore().collection("users").document(uid).collection("bookmark").document(id).getDocument(completion: { (snapshot, error) in
+                if error != nil{
+                }else{
+                    if let snapshot = snapshot?.data(){
+                        self.isBookmark = true
+                        DispatchQueue.main.async {
+                            self.bookmarkButton.setImage(UIImage(named: "fillbookmark"), for: UIControl.State.normal)
+                        }
+                    }else{
+                        self.isBookmark = false
+                        DispatchQueue.main.async {
+                            self.bookmarkButton.setImage(UIImage(named: "bookmark"), for: UIControl.State.normal)
+                        }
+                    }
+                }
+            })
+        }
+    }
+    
+    func judgeIsLike(){
+        DispatchQueue.global().async {
+            guard let uid = self.uid, let id = self.submitId else {return}
             Firestore.firestore().collection("submit").document(id).collection("like").getDocuments { (snapshot, error) in
                 if error != nil{
                     print("error")
@@ -108,12 +135,8 @@ class TitleCell: UITableViewCell {
                     self.likebutton.setImage(UIImage(named: "heart2"), for: UIControl.State.normal)
                     self.isLike = false
                 }
-                Firestore.firestore().collection("submit").document(id).collection("like").document(uid).delete(completion: { (error) in
-                    if error != nil{
-                    }else{
-                        
-                    }
-                })
+                Firestore.firestore().collection("submit").document(id).collection("like").document(uid).delete()
+                Firestore.firestore().collection("users").document(uid).collection("like").document(id).delete()
             }else{
                 DispatchQueue.main.async {
                     self.likebutton.setImage(UIImage(named: "fillheart"), for: UIControl.State.normal)
@@ -122,11 +145,26 @@ class TitleCell: UITableViewCell {
                 let likeModel = LikeModel(id: uid, date: SharedFunction.shared.getToday())
                 let data = try? FirestoreEncoder().encode(likeModel)
                 guard let likeData = data else {return}
-                Firestore.firestore().collection("submit").document(id).collection("like").document(uid).setData(likeData) { (error) in
-                    if error != nil{
-                    }else{
-                        
-                    }
+                Firestore.firestore().collection("submit").document(id).collection("like").document(uid).setData(likeData)
+                Firestore.firestore().collection("users").document(uid).collection("like").document(id).setData(["submitId" : id, "date" : SharedFunction.shared.getToday()])
+            }
+        }
+    }
+    
+    @IBAction func bookmarkButtonEvent(_ sender: Any) {
+        DispatchQueue.global().async {
+            guard let uid = self.uid, let submitId = self.submitId else {return}
+            if self.isBookmark{
+                Firestore.firestore().collection("users").document(uid).collection("bookmark").document(submitId).delete()
+                self.isBookmark = false
+                DispatchQueue.main.async {
+                    self.bookmarkButton.setImage(UIImage(named: "bookmark"), for: UIControl.State.normal)
+                }
+            }else{
+                Firestore.firestore().collection("users").document(uid).collection("bookmark").document(submitId).setData(["submitId" : submitId, "date" : SharedFunction.shared.getToday()])
+                self.isBookmark = true
+                DispatchQueue.main.async {
+                    self.bookmarkButton.setImage(UIImage(named: "fillbookmark"), for: UIControl.State.normal)
                 }
             }
         }
