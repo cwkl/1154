@@ -123,6 +123,9 @@ PODS:
     - nanopb/encode (= 0.3.901)
   - nanopb/decode (0.3.901)
   - nanopb/encode (0.3.901)
+  - NVActivityIndicatorView (4.5.1):
+    - NVActivityIndicatorView/Presenter (= 4.5.1)
+  - NVActivityIndicatorView/Presenter (4.5.1)
   - Protobuf (3.6.1)
   - SideMenuSwift (1.0.0)
   - SnapKit (4.0.1)
@@ -136,6 +139,7 @@ DEPENDENCIES:
   - Firebase/Storage
   - Gallery
   - Kingfisher (~> 5.0)
+  - NVActivityIndicatorView
   - SideMenuSwift
   - SnapKit (~> 4.0.0)
 
@@ -162,6 +166,7 @@ SPEC REPOS:
     - Kingfisher
     - leveldb-library
     - nanopb
+    - NVActivityIndicatorView
     - Protobuf
     - SideMenuSwift
     - SnapKit
@@ -188,10 +193,11 @@ SPEC CHECKSUMS:
   Kingfisher: fcec238063d17404fca89bf0a850583211c4cbf6
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
+  NVActivityIndicatorView: ec34a7b88c51fab270004a1a1f32116e711010cd
   Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
   SideMenuSwift: f8567754feb36ade13ffd613f608829f4b86d4b3
   SnapKit: 0de968a9fec17499afa29683b05d0c775b6d1c29
 
-PODFILE CHECKSUM: 0a3fbb220ac0878233a2af5cb35faf055af8f890
+PODFILE CHECKSUM: 597e2b2954cbb972b3586130d8e1c2be0e813175
 
 COCOAPODS: 1.5.3

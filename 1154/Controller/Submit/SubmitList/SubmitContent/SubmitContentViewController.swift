@@ -14,10 +14,86 @@ import Kingfisher
 
 class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFieldDelegate, TitleCellDelegate, CommentCellDelegate{
     
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var commentMainView: UIView!
+    @IBOutlet weak var commentMainViewBottom: NSLayoutConstraint!
+    @IBOutlet weak var commentPostView: UIView!
+    @IBOutlet weak var commentProfileImageView: UIImageView!
+    @IBOutlet weak var commentTextField: UITextField!
+    @IBOutlet weak var commentPostButton: UIButton!
+    @IBOutlet weak var replyingBar: UIView!
+    @IBOutlet weak var replyingBarCancel: UIView!
+    @IBOutlet weak var replyingBarLabel: UILabel!
+    @IBOutlet weak var commentMention: UILabel!
+    
+    private var userModel: UserModel?
+    private var submitModel: SubmitModel?
+    private var submitUserModel: UserModel?
+    private var uid: String?
+    private var commentArray: [CommentModel] = []
+    private var mainCommentArray: [CommentModel] = []
+    private var subCommentArray: [CommentModel] = []
+    private var tap = UITapGestureRecognizer()
+    private var spanArray: [TimeInterval] = []
+    private var refreshControl : UIRefreshControl?
+    private var viewsCount: Int?
+    private var likesCount: Int?
+    private var commentsCount: Int?
+    private var cellHeight = [IndexPath: CGFloat]()
+    private var isViews = true
+    private var to = ""
+    private var parentId: String?
+    private var isSubComment = false
+    private var isPost = false
+    private var postId: String?
+    private var isAddIndicator = false
+    var fromProfile = false
+    var model: SubmitModel?{
+        didSet{
+            if isViews{
+                
+                increaseViews()
+            }
+        }
+    }
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        submitUserDataLoad()
+        configureViewOption()
+        addGesture()
+        tableViewCellRegist()
+        addRefresh()
+        addKeyboardObserver()
+        userDataLoad()
+        commentDataLoad()
+        countObserver()
+        submitLikeObserver()
+        commentCountObserver()
+        ViewsObserver()
+        tableView.alpha = 0
+        
+        
+    }
+    
+    override func viewDidLayoutSubviews() {
+        if !isAddIndicator{
+            ActivityIndicator.shared.addIndicator(view: self.view)
+            ActivityIndicator.shared.start(view: tableView)
+            isAddIndicator = true
+        }
+    }
+    
+    func activityIndicatorStop() {
+        ActivityIndicator.shared.stop(view: tableView)
+    }
+    
     func presentSubmitUserProfile() {
         if let navView = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewNavController") as? UINavigationController{
             if !navView.viewControllers.isEmpty, let pro = navView.viewControllers[0] as? ProfileViewController {
-                pro.userModel = self.userModel
+                pro.userModel = self.submitUserModel
             }
             self.present(navView, animated: true, completion: nil)
         }
@@ -55,14 +131,13 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
             DispatchQueue.global().async {
                 var reference: DocumentReference?
                 if isSubComment{
-                   reference = Firestore.firestore().collection("submit").document(submitId).collection("comment").document(parentId).collection("subComment").document(commentId)
+                    reference = Firestore.firestore().collection("submit").document(submitId).collection("comment").document(parentId).collection("subComment").document(commentId)
                 }else{
                     reference = Firestore.firestore().collection("submit").document(submitId).collection("comment").document(commentId)
                 }
                 guard let documentReference = reference else {return}
                 documentReference.updateData(["delete" : true]) { (error) in
                     if error != nil{
-                        print(error)
                     }else{
                         self.commentDataLoad()
                     }
@@ -82,66 +157,6 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
     
     func showImageDetail(imageDetailView: UIViewController) {
         self.present(imageDetailView, animated: false, completion: nil)
-    }
-    
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var commentMainView: UIView!
-    @IBOutlet weak var commentMainViewBottom: NSLayoutConstraint!
-    @IBOutlet weak var commentPostView: UIView!
-    @IBOutlet weak var commentProfileImageView: UIImageView!
-    @IBOutlet weak var commentTextField: UITextField!
-    @IBOutlet weak var commentPostButton: UIButton!
-    @IBOutlet weak var replyingBar: UIView!
-    @IBOutlet weak var replyingBarCancel: UIView!
-    @IBOutlet weak var replyingBarLabel: UILabel!
-    @IBOutlet weak var commentMention: UILabel!
-    
-    private var userModel: UserModel?
-    private var submitModel: SubmitModel?
-    private var submitUserModel: UserModel?
-    private var uid: String?
-    private var commentArray: [CommentModel] = []
-    private var mainCommentArray: [CommentModel] = []
-    private var subCommentArray: [CommentModel] = []
-    private var tap = UITapGestureRecognizer()
-    private var spanArray: [TimeInterval] = []
-    private var refreshControl : UIRefreshControl?
-    private var viewsCount: Int?
-    private var likesCount: Int?
-    private var commentsCount: Int?
-    private var cellHeight = [IndexPath: CGFloat]()
-    private var isViews = true
-    private var to = ""
-    private var parentId: String?
-    private var isSubComment = false
-    private var isPost = false
-    private var postId: String?
-    var fromProfile = false
-    var model: SubmitModel?{
-        didSet{
-            if isViews{
-                
-                increaseViews()
-            }
-        }
-    }
-    
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        submitUserDataLoad()
-        configureViewOption()
-        addGesture()
-        tableViewCellRegist()
-        addRefresh()
-        addKeyboardObserver()
-        userDataLoad()
-        commentDataLoad()
-        countObserver()
-        submitLikeObserver()
-        commentCountObserver()
-        ViewsObserver()
     }
     
     func addKeyboardObserver(){
@@ -227,7 +242,7 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
                     print("error")
                 }else{
                     let viewsId = UUID.init().uuidString
-                    let viewsModel = ViewsModel(id: viewsId, date: SharedFunction.shared.getToday())
+                    let viewsModel = IdDateModel(id: viewsId, date: SharedFunction.shared.getToday())
                     guard let data = try? FirestoreEncoder().encode(viewsModel) else {return}
                     Firestore.firestore().collection("submit").document(id).collection("views").document(viewsId).setData(data, completion: { (error) in
                         if error != nil{
@@ -345,9 +360,17 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
                         self.userModel = try? FirestoreDecoder().decode(UserModel.self, from: data)
                         if self.userModel?.profileImageUrl != nil{
                             guard let profileImage = self.userModel?.profileImageUrl else {return}
+                            self.commentProfileImageView.alpha = 0
                             self.commentProfileImageView.kf.setImage(with: URL(string: profileImage))
+                            UIView.animate(withDuration: 0.2, animations: {
+                                self.commentProfileImageView.alpha = 1
+                            })
                         }else{
+                            self.commentProfileImageView.alpha = 0
                             self.commentProfileImageView.image = UIImage(named: "defaultprofile")
+                            UIView.animate(withDuration: 0.2, animations: {
+                                self.commentProfileImageView.alpha = 1
+                            })
                         }
                     }
                 }
@@ -368,6 +391,7 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
                     guard let snapshot = snapshot else {return}
                     if snapshot.isEmpty{
                         self.refreshControl?.endRefreshing()
+                        ActivityIndicator.shared.stop(view: self.tableView)
                         self.tableView.dataSource = self
                         self.tableView.reloadData()
                     }

@@ -16,6 +16,7 @@ protocol CommentCellDelegate {
     func showDeleteAlert(submitId: String, commentId: String, parentId: String, isSubComment: Bool)
     func showReplyingBar(name: String, uid: String, commentId: String)
     func setIsLike(isLike: Bool, indexPath: Int)
+    func activityIndicatorStop()
 }
 
 class CommentCell: UITableViewCell {
@@ -40,7 +41,7 @@ class CommentCell: UITableViewCell {
     private let uid = Auth.auth().currentUser?.uid
     private var isLike: Bool?
     private var isJudge = false
-    private var likeArray: [LikeModel] = []
+    private var likeArray: [IdDateModel] = []
     var commentCellDelegate: CommentCellDelegate?
     var submitId: String?
     var name: String?
@@ -147,8 +148,10 @@ class CommentCell: UITableViewCell {
                         let commentUserModel = try? FirestoreDecoder().decode(UserModel.self, from: snapshot) else {return}
                     if let imageUrl = commentUserModel.profileImageUrl{
                         self.profileImageView.kf.setImage(with: URL(string: imageUrl))
+                        self.commentCellDelegate?.activityIndicatorStop()
                     }else{
                         self.profileImageView.image = UIImage(named: "defaultprofile")
+                        self.commentCellDelegate?.activityIndicatorStop()
                     }
                     self.nameLabel.text = commentUserModel.name
                     self.name = commentUserModel.name
@@ -176,7 +179,7 @@ class CommentCell: UITableViewCell {
                         self.isLike = false
                     }else{
                         for document in snapshot.documents{
-                            let likeModel = try? FirebaseDecoder().decode(LikeModel.self, from: document.data())
+                            let likeModel = try? FirebaseDecoder().decode(IdDateModel.self, from: document.data())
                             guard let model = likeModel else {return}
                             self.likeArray.append(model)
                         }
@@ -219,10 +222,10 @@ class CommentCell: UITableViewCell {
                 if error != nil{
                 }else{
                     guard let snapshot = snapshot else {return}
-                    var likeArray: [LikeModel] = []
+                    var likeArray: [IdDateModel] = []
                     var isLike = false
                     for document in snapshot.documents{
-                        guard let likeModel = try? FirebaseDecoder().decode(LikeModel.self, from: document.data()) else {return}
+                        guard let likeModel = try? FirebaseDecoder().decode(IdDateModel.self, from: document.data()) else {return}
                         if likeModel.id == self.uid{
                             isLike = true
                             
@@ -295,7 +298,7 @@ class CommentCell: UITableViewCell {
                     self.likeButton.image = UIImage(named: "fillheart")
                     self.isLike = true
                 }
-                let likeModel = LikeModel(id: uid, date: SharedFunction.shared.getToday())
+                let likeModel = IdDateModel(id: uid, date: SharedFunction.shared.getToday())
                 guard let data = try? FirestoreEncoder().encode(likeModel) else {return}
                 if isSubComment{
                     guard let parentId = self.parentId else {return}

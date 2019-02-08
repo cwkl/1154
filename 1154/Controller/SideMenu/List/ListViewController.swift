@@ -25,6 +25,7 @@ class ListViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
         addView()
         configureViewOption()
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
     }
     
     
@@ -65,6 +66,11 @@ class ListViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! ListCollectionViewCell
+        if indexPath.item == 0{
+            cell.imageView.image = UIImage(named: "fillheart")
+        }else if indexPath.item == 1{
+            cell.imageView.image = UIImage(named: "fillbookmark")
+        }
         cell.cellLabel.text = item[indexPath.item]
         cell.indexPath = indexPath
         cell.delegate = self
@@ -111,5 +117,11 @@ class ListViewController: UIViewController, UICollectionViewDelegate, UICollecti
     }
     @IBAction func backButtonEvent(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
+    }
+}
+
+extension ListViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }

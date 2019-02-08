@@ -93,13 +93,16 @@ class SideMenuViewController: UIViewController {
             if !navView.viewControllers.isEmpty, let pro = navView.viewControllers[0] as? ProfileViewController {
                pro.userModel = self.userModel
             }
-            self.present(navView, animated: true, completion: nil)
+            self.present(navView, animated: true) {
+                self.sideMenuController?.hideMenu()
+            }
         }
     }
 
     @objc func listTouchEvent(){
-        if let view = self.storyboard?.instantiateViewController(withIdentifier: "ListViewController"){
-            self.present(view, animated: true) {
+        if let navView = self.storyboard?.instantiateViewController(withIdentifier: "ListViewNavController") as? UINavigationController{
+            
+            self.present(navView, animated: true) {
                 self.sideMenuController?.hideMenu()
             }
         }

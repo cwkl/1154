@@ -10,9 +10,10 @@ import UIKit
 import FirebaseFirestore
 import CodableFirebase
 
-class FoodTableViewController: UIViewController {
+class FoodTableViewController: UIViewController, TableViewCellDelegate {
     @IBOutlet weak var tableView: UITableView!
     private var refreshControl : UIRefreshControl?
+    private var isAddIndicator = false
     var pagerView:PageViewController?
     var array: [SubmitModel] = []
     var country = "all"
@@ -34,6 +35,19 @@ class FoodTableViewController: UIViewController {
         refreshed()
     }
     
+    override func viewDidLayoutSubviews() {
+        if !isAddIndicator{
+            self.tableView.alpha = 0
+            ActivityIndicator.shared.addIndicator(view: self.view)
+            ActivityIndicator.shared.start(view: tableView)
+            isAddIndicator = true
+        }
+    }
+    
+    func activityIndicatorStop() {
+        ActivityIndicator.shared.stop(view: tableView)
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let view = self.storyboard?.instantiateViewController(withIdentifier: "SubmitContentViewController") as? SubmitContentViewController{
             view.model = array[indexPath.row]
@@ -43,34 +57,40 @@ class FoodTableViewController: UIViewController {
     }
     
     func tableViewLoad() {
-        var whereField: Query?
-        if country == "all" {
-            whereField = Firestore.firestore().collection("submit").whereField("category", isEqualTo: "food")
-        }else if country == "korea"{
-            whereField = Firestore.firestore().collection("submit").whereField("category", isEqualTo: "food").whereField("country", isEqualTo: "korea")
-        }else if country == "japan"{
-            whereField = Firestore.firestore().collection("submit").whereField("category", isEqualTo: "food").whereField("country", isEqualTo: "japan")
-        }
-        
-        guard let field = whereField else {return}
-        field.order(by: "date", descending: true).getDocuments { (snapshot, error) in
-            guard let snapshot = snapshot else{return}
-            self.array.removeAll()
+        DispatchQueue.global().async {
+            var whereField: Query?
+            if self.country == "all" {
+                whereField = Firestore.firestore().collection("submit").whereField("category", isEqualTo: "food")
+            }else if self.country == "korea"{
+                whereField = Firestore.firestore().collection("submit").whereField("category", isEqualTo: "food").whereField("country", isEqualTo: "korea")
+            }else if self.country == "japan"{
+                whereField = Firestore.firestore().collection("submit").whereField("category", isEqualTo: "food").whereField("country", isEqualTo: "japan")
+            }
             
-            if error != nil{
-            }else{
-                for document in snapshot.documents {
-                    do{
-                        let model = try? FirebaseDecoder().decode(SubmitModel.self, from: document.data())
-                        guard let submitModel = model else{return}
-                        self.array.append(submitModel)
-                        
-                    }catch let error{
+            guard let field = whereField else {return}
+            field.order(by: "date", descending: true).getDocuments { (snapshot, error) in
+                if error != nil{
+                }else{
+                    self.array.removeAll()
+                    guard let snapshot = snapshot else{return}
+                    if snapshot.count == 0{
+                        ActivityIndicator.shared.stop(view: self.tableView)
+                        self.refreshControl?.endRefreshing()
+                    }else{
+                        for document in snapshot.documents {
+                            do{
+                                let model = try? FirebaseDecoder().decode(SubmitModel.self, from: document.data())
+                                guard let submitModel = model else{return}
+                                self.array.append(submitModel)
+                                
+                            }catch let error{
+                            }
+                        }
+                        DispatchQueue.main.async {
+                            self.tableView.reloadData()
+                            self.refreshControl?.endRefreshing()
+                        }
                     }
-                }
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                    self.refreshControl?.endRefreshing()
                 }
             }
         }
@@ -110,6 +130,7 @@ extension FoodTableViewController: UITableViewDelegate, UITableViewDataSource{
         cell?.likeCount.text = String(self.array[indexPath.row].likeCount)
         cell?.viewsCount.text = String(self.array[indexPath.row].viewsCount)
         cell?.selectionStyle = .none
+        cell?.tableViewCellDelegate = self
         
         return cell!
     }

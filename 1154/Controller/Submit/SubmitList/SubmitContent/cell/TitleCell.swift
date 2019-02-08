@@ -30,7 +30,7 @@ class TitleCell: UITableViewCell {
     var isJudge = false
     var uid: String?
     var titleCellDelegate: TitleCellDelegate?
-    var likeArray: [LikeModel] = []
+    var likeArray: [IdDateModel] = []
     var isLike: Bool?
     var isBookmark = false
     var submitId: String? {
@@ -100,7 +100,7 @@ class TitleCell: UITableViewCell {
                         self.isLike = false
                     }else{
                         for  document in snapshot.documents{
-                            let likeModel = try? FirebaseDecoder().decode(LikeModel.self, from: document.data())
+                            let likeModel = try? FirebaseDecoder().decode(IdDateModel.self, from: document.data())
                             guard let model = likeModel else {return}
                             self.likeArray.append(model)
                         }
@@ -142,7 +142,7 @@ class TitleCell: UITableViewCell {
                     self.likebutton.setImage(UIImage(named: "fillheart"), for: UIControl.State.normal)
                     self.isLike = true
                 }
-                let likeModel = LikeModel(id: uid, date: SharedFunction.shared.getToday())
+                let likeModel = IdDateModel(id: uid, date: SharedFunction.shared.getToday())
                 let data = try? FirestoreEncoder().encode(likeModel)
                 guard let likeData = data else {return}
                 Firestore.firestore().collection("submit").document(id).collection("like").document(uid).setData(likeData)
