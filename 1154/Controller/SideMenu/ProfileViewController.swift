@@ -40,6 +40,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         addGesture()
         setUserData()
         checkSelfProfile()
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
     }
     
     func checkSelfProfile(){
@@ -178,5 +179,11 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             registeredLabel.text = SharedFunction.shared.getCurrentLocaleDateFromString(string: userModel.startDate, format: "yyyy. MM. dd")
         }
+    }
+}
+
+extension ProfileViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }

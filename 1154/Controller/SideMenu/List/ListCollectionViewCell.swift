@@ -14,6 +14,8 @@ protocol ListCollectionViewCellDelegate {
 
 class ListCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var cellLabel: UILabel!
+    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var mainView: UIView!
     
     var tapGesture = UITapGestureRecognizer()
     var indexPath: IndexPath? {
@@ -31,8 +33,8 @@ class ListCollectionViewCell: UICollectionViewCell {
     override func awakeFromNib() {
         tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapCell))
         tapGesture.isEnabled = true
-        cellLabel.isUserInteractionEnabled = true
-        cellLabel.addGestureRecognizer(tapGesture)
+        mainView.isUserInteractionEnabled = true
+        mainView.addGestureRecognizer(tapGesture)
     }
     
     @objc private func tapCell() {

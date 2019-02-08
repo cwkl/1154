@@ -37,8 +37,6 @@
 		109A4D7721C34E12003A3597 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 109A4D7621C34E12003A3597 /* GoogleService-Info.plist */; };
 		10A7F6F921F6B63E003BD53F /* CommentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A7F6F821F6B63E003BD53F /* CommentModel.swift */; };
 		10A7F6FB21F6DC7D003BD53F /* SharedFunction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A7F6FA21F6DC7D003BD53F /* SharedFunction.swift */; };
-		10A7F70121FEE039003BD53F /* LikeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A7F70021FEE039003BD53F /* LikeModel.swift */; };
-		10A7F703220039CA003BD53F /* ViewsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A7F702220039CA003BD53F /* ViewsModel.swift */; };
 		10C76C7721ABB6DA003F0DA2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C76C7621ABB6DA003F0DA2 /* AppDelegate.swift */; };
 		10C76C7921ABB6DA003F0DA2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C76C7821ABB6DA003F0DA2 /* ViewController.swift */; };
 		10C76C7C21ABB6DA003F0DA2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 10C76C7A21ABB6DA003F0DA2 /* Main.storyboard */; };
@@ -59,6 +57,10 @@
 		10D8A1EB220C1CDE008A74E3 /* ListPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D8A1EA220C1CDE008A74E3 /* ListPageViewController.swift */; };
 		10D8A1EE220C1DE7008A74E3 /* LikeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D8A1ED220C1DE7008A74E3 /* LikeTableViewController.swift */; };
 		10D8A1F0220C1DF4008A74E3 /* BookmarkTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D8A1EF220C1DF4008A74E3 /* BookmarkTableViewController.swift */; };
+		10D8A1F2220C70BA008A74E3 /* ListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D8A1F1220C70BA008A74E3 /* ListTableViewCell.swift */; };
+		10D8A1F4220C7B2B008A74E3 /* IdDateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D8A1F3220C7B2B008A74E3 /* IdDateModel.swift */; };
+		10D8A1F6220C80E8008A74E3 /* SubmitIdDateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D8A1F5220C80E8008A74E3 /* SubmitIdDateModel.swift */; };
+		10D8A1F8220D49FD008A74E3 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D8A1F7220D49FD008A74E3 /* ActivityIndicator.swift */; };
 		10DBA1C321B4D9D300ECAA41 /* CollectionViewCellCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DBA1C221B4D9D300ECAA41 /* CollectionViewCellCategory.swift */; };
 		10DBA1C721B4F61D00ECAA41 /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DBA1C621B4F61D00ECAA41 /* PageViewController.swift */; };
 		10DBA20321B8B52000ECAA41 /* SubmitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DBA20221B8B52000ECAA41 /* SubmitViewController.swift */; };
@@ -115,8 +117,6 @@
 		109A4D7621C34E12003A3597 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		10A7F6F821F6B63E003BD53F /* CommentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentModel.swift; sourceTree = "<group>"; };
 		10A7F6FA21F6DC7D003BD53F /* SharedFunction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedFunction.swift; sourceTree = "<group>"; };
-		10A7F70021FEE039003BD53F /* LikeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeModel.swift; sourceTree = "<group>"; };
-		10A7F702220039CA003BD53F /* ViewsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewsModel.swift; sourceTree = "<group>"; };
 		10C76C7321ABB6DA003F0DA2 /* 1154.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 1154.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		10C76C7621ABB6DA003F0DA2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		10C76C7821ABB6DA003F0DA2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -143,6 +143,10 @@
 		10D8A1EA220C1CDE008A74E3 /* ListPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListPageViewController.swift; sourceTree = "<group>"; };
 		10D8A1ED220C1DE7008A74E3 /* LikeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeTableViewController.swift; sourceTree = "<group>"; };
 		10D8A1EF220C1DF4008A74E3 /* BookmarkTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkTableViewController.swift; sourceTree = "<group>"; };
+		10D8A1F1220C70BA008A74E3 /* ListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewCell.swift; sourceTree = "<group>"; };
+		10D8A1F3220C7B2B008A74E3 /* IdDateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdDateModel.swift; sourceTree = "<group>"; };
+		10D8A1F5220C80E8008A74E3 /* SubmitIdDateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitIdDateModel.swift; sourceTree = "<group>"; };
+		10D8A1F7220D49FD008A74E3 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		10DBA1C221B4D9D300ECAA41 /* CollectionViewCellCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCellCategory.swift; sourceTree = "<group>"; };
 		10DBA1C621B4F61D00ECAA41 /* PageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageViewController.swift; sourceTree = "<group>"; };
 		10DBA20221B8B52000ECAA41 /* SubmitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitViewController.swift; sourceTree = "<group>"; };
@@ -366,6 +370,7 @@
 			isa = PBXGroup;
 			children = (
 				10CE3A8A21BA1F15003E8EEB /* PlaceHolderTextView.swift */,
+				10D8A1F7220D49FD008A74E3 /* ActivityIndicator.swift */,
 			);
 			path = SupportingClass;
 			sourceTree = "<group>";
@@ -376,9 +381,9 @@
 				10CE3A9021BA424F003E8EEB /* SubmitModel.swift */,
 				10CE3A9221BDFD2E003E8EEB /* UserModel.swift */,
 				10A7F6F821F6B63E003BD53F /* CommentModel.swift */,
-				10A7F70021FEE039003BD53F /* LikeModel.swift */,
-				10A7F702220039CA003BD53F /* ViewsModel.swift */,
 				108E95462203F19200C8487D /* CommentCountModel.swift */,
+				10D8A1F3220C7B2B008A74E3 /* IdDateModel.swift */,
+				10D8A1F5220C80E8008A74E3 /* SubmitIdDateModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -423,6 +428,7 @@
 			children = (
 				10D8A1ED220C1DE7008A74E3 /* LikeTableViewController.swift */,
 				10D8A1EF220C1DF4008A74E3 /* BookmarkTableViewController.swift */,
+				10D8A1F1220C70BA008A74E3 /* ListTableViewCell.swift */,
 			);
 			path = PageView;
 			sourceTree = "<group>";
@@ -681,6 +687,7 @@
 				"${BUILT_PRODUCTS_DIR}/Gallery/Gallery.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
+				"${BUILT_PRODUCTS_DIR}/NVActivityIndicatorView/NVActivityIndicatorView.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/SideMenuSwift/SideMenuSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
@@ -699,6 +706,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Gallery.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NVActivityIndicatorView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SideMenuSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
@@ -727,7 +735,6 @@
 				10DBA20321B8B52000ECAA41 /* SubmitViewController.swift in Sources */,
 				10A7F6F921F6B63E003BD53F /* CommentModel.swift in Sources */,
 				10CE3A9121BA424F003E8EEB /* SubmitModel.swift in Sources */,
-				10A7F70121FEE039003BD53F /* LikeModel.swift in Sources */,
 				10C76CA921ABCFFE003F0DA2 /* LoginViewController.swift in Sources */,
 				10D8A1EE220C1DE7008A74E3 /* LikeTableViewController.swift in Sources */,
 				10DBA1C721B4F61D00ECAA41 /* PageViewController.swift in Sources */,
@@ -735,8 +742,11 @@
 				105722E821C0AB4100BE540E /* ShoppingTableViewController.swift in Sources */,
 				10C76C7921ABB6DA003F0DA2 /* ViewController.swift in Sources */,
 				103452D921EDA6C100DF0242 /* PhotoZoomViewController.swift in Sources */,
+				10D8A1F4220C7B2B008A74E3 /* IdDateModel.swift in Sources */,
+				10D8A1F8220D49FD008A74E3 /* ActivityIndicator.swift in Sources */,
 				108E9596220708C900C8487D /* ListViewController.swift in Sources */,
 				103452D321E5A34100DF0242 /* CommentCell.swift in Sources */,
+				10D8A1F2220C70BA008A74E3 /* ListTableViewCell.swift in Sources */,
 				10DBA1C321B4D9D300ECAA41 /* CollectionViewCellCategory.swift in Sources */,
 				105722E621C0A71200BE540E /* FoodTableViewController.swift in Sources */,
 				10A7F6FB21F6DC7D003BD53F /* SharedFunction.swift in Sources */,
@@ -744,7 +754,6 @@
 				10C76CAB21ACCCE2003F0DA2 /* SignupViewController.swift in Sources */,
 				103452C421E5A17E00DF0242 /* TitleCell.swift in Sources */,
 				10C76C7721ABB6DA003F0DA2 /* AppDelegate.swift in Sources */,
-				10A7F703220039CA003BD53F /* ViewsModel.swift in Sources */,
 				10CE3A8B21BA1F15003E8EEB /* PlaceHolderTextView.swift in Sources */,
 				108E954E2204A59600C8487D /* SideMenuViewController.swift in Sources */,
 				1005382421C9DC8D000C8427 /* CollectionViewCellPhoto.swift in Sources */,
@@ -752,6 +761,7 @@
 				103452C921E5A2AF00DF0242 /* PhotoCell.swift in Sources */,
 				103452DB21EEC91700DF0242 /* PhotoZoomCollectionViewCell.swift in Sources */,
 				10CE3A9A21BE2680003E8EEB /* AllTalbeViewController.swift in Sources */,
+				10D8A1F6220C80E8008A74E3 /* SubmitIdDateModel.swift in Sources */,
 				103D022C220AD481003EF832 /* PostCell.swift in Sources */,
 				1023494D21B0DE9E0024AEC0 /* MainViewController.swift in Sources */,
 				10D8A1E9220C1350008A74E3 /* ListCollectionViewCell.swift in Sources */,

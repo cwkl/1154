@@ -16,6 +16,7 @@ target '1154' do
   pod 'Gallery'  
   pod 'Kingfisher', '~> 5.0'
   pod 'SideMenuSwift'
+  pod 'NVActivityIndicatorView'
 
   target '1154Tests' do
     inherit! :search_paths

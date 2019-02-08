@@ -38,6 +38,7 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
         addView()
         configureViewOption()
         addButtonGesture()
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
     }
     
     func userDateLoad(){
@@ -52,9 +53,17 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
                         
                         if userModel.profileImageUrl != nil{
                             guard let imageUrl = userModel.profileImageUrl else {return}
+                            self.barProfileItem.alpha = 0
                             self.barProfileItem.kf.setImage(with: URL(string: imageUrl))
+                            UIView.animate(withDuration: 0.2, animations: {
+                                self.barProfileItem.alpha = 1
+                            })
                         }else{
+                            self.barProfileItem.alpha = 0
                             self.barProfileItem.image = UIImage(named: "defaultprofile")
+                            UIView.animate(withDuration: 0.2, animations: {
+                                self.barProfileItem.alpha = 1
+                            })
                         }
                         
                     }catch let error{
@@ -284,5 +293,11 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     @IBAction func notificationButtonEvent(_ sender: Any) {
         
+    }
+}
+
+extension MainViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }
