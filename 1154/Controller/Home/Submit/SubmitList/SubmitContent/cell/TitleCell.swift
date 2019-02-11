@@ -19,9 +19,9 @@ class TitleCell: UITableViewCell {
     @IBOutlet weak var profileImageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var likebutton: UIButton!
-    @IBOutlet weak var likeButtonView: UIView!
-    
+    @IBOutlet weak var likeButtonView: UIView!    
     @IBOutlet weak var bookmarkButton: UIButton!
+    @IBOutlet weak var bookmarkButtonView: UIView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var commentsCountLabel: UILabel!

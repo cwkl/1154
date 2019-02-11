@@ -195,6 +195,7 @@
             </tableViewCellContentView>
             <connections>
                 <outlet property="bookmarkButton" destination="3Co-yl-Uf5" id="Mfh-xM-ndG"/>
+                <outlet property="bookmarkButtonView" destination="NDN-fW-0bd" id="YxZ-tl-aZj"/>
                 <outlet property="commentsCountLabel" destination="wbU-Ii-SOf" id="S38-Jx-nQV"/>
                 <outlet property="likeButtonView" destination="JgE-v5-poy" id="hhl-xu-NvQ"/>
                 <outlet property="likebutton" destination="n5E-PH-I00" id="vW7-vb-2OM"/>

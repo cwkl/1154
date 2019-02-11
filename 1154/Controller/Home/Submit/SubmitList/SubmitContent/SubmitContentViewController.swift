@@ -17,6 +17,7 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var commentMainView: UIView!
     @IBOutlet weak var commentMainViewBottom: NSLayoutConstraint!
+    @IBOutlet weak var commentTopBar: UIView!
     @IBOutlet weak var commentPostView: UIView!
     @IBOutlet weak var commentProfileImageView: UIImageView!
     @IBOutlet weak var commentTextField: UITextField!
@@ -47,12 +48,12 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
     private var isPost = false
     private var postId: String?
     private var isAddIndicator = false
+    private var isGuestUser = false
     var isBookmark = false
     var fromProfile = false
     var model: SubmitModel?{
         didSet{
             if isViews{
-                
                 increaseViews()
             }
         }
@@ -350,7 +351,16 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
     
     func userDataLoad(){
         DispatchQueue.global().async {
-            self.uid = Auth.auth().currentUser?.uid
+            guard let uid = Auth.auth().currentUser?.uid
+                else {
+                    DispatchQueue.main.async {
+                        self.commentTopBar.isHidden = true
+                        self.commentMainView.isHidden = true
+                        self.isGuestUser = true                        
+                    }
+                    return
+            }
+            self.uid = uid
             
             Firestore.firestore().collection("users").document(self.uid ?? "").getDocument(completion: { (snapshot, error) in
                 if error != nil{
@@ -658,6 +668,10 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
             }else{
                 cell.likeButtonView.isHidden = false
             }
+            if self.isGuestUser{
+                cell.likeButtonView.isHidden = true
+                cell.bookmarkButtonView.isHidden = true
+            }
             cell.nameLabel.text = submitUserModel.name
             cell.titleLabel.text = model.title
             cell.timeLabel.text = SharedFunction.shared.getCurrentLocaleDateFromString(string: model.date, format: "yyyy.MM.dd  HH:mm")
@@ -726,6 +740,11 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
                                 cell.deleteButtonView.isHidden = true
                                 cell.likeButtonView.isHidden = false
                             }
+                        }
+                        if isGuestUser{
+                            cell.deleteButtonView.isHidden = true
+                            cell.likeButtonView.isHidden = true
+                            cell.replyButtonView.isHidden = true
                         }
                         
                         var date = ""
@@ -800,6 +819,11 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
                                 cell.deleteButtonView.isHidden = true
                                 cell.likeButtonView.isHidden = false
                             }
+                        }
+                        if isGuestUser{
+                            cell.deleteButtonView.isHidden = true
+                            cell.likeButtonView.isHidden = true
+                            cell.replyButtonView.isHidden = true
                         }
                         
                         var date = ""
