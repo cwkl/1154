@@ -95,15 +95,16 @@ class ListTableViewCell: UITableViewCell {
                 }else{
                     guard let snapshot = snapshot?.data(), let model = try? FirestoreDecoder().decode(UserModel.self, from: snapshot) else {return}
                     
-                    self.nameLabel.text = model.name
-                    if let imageUrl = model.profileImageUrl{
-                        self.profileImageView.kf.setImage(with: URL(string: imageUrl))
-                        self.listTableViewCellDelegate?.activityIndicatorStop()
-                    }else{
-                        self.profileImageView.image = UIImage(named: "defaultprofile")
-                        self.listTableViewCellDelegate?.activityIndicatorStop()
+                    DispatchQueue.main.async {
+                        self.nameLabel.text = model.name
+                        if let imageUrl = model.profileImageUrl{
+                            self.profileImageView.kf.setImage(with: URL(string: imageUrl))
+                            self.listTableViewCellDelegate?.activityIndicatorStop()
+                        }else{
+                            self.profileImageView.image = UIImage(named: "defaultprofile")
+                            self.listTableViewCellDelegate?.activityIndicatorStop()
+                        }
                     }
-                    
                 }
             })
         }

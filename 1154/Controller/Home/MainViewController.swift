@@ -30,6 +30,7 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
     private var leftConstraints: NSLayoutConstraint?
     private let item = ["All","Free","Trevel","Food","Shopping"]
     private var statusBarHidden = true
+    private var isFirst = true
     var isAnimating = false
     
     var isProfileView = false
@@ -43,10 +44,13 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
         addButtonGesture()
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
         
-        splashView.backgroundColor = UIColor(red: 19/255, green: 69/255, blue: 99/255, alpha: 0.9) /* #134563 */
-        splashView.alpha = 1
-        mainView.alpha = 0
-        self.tabBarController?.tabBar.isHidden = true
+        if isFirst{
+            splashView.backgroundColor = UIColor(red: 19/255, green: 69/255, blue: 99/255, alpha: 0.9) /* #134563 */
+            splashView.alpha = 1
+            mainView.alpha = 0
+            self.tabBarController?.tabBar.isHidden = true
+            isFirst = false
+        }
 
     }
     
@@ -55,18 +59,27 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
     }
     
     func splashEnd(){
-        self.tabBarController?.tabBar.isHidden = false
-        statusBarHidden = false
-        self.setNeedsStatusBarAppearanceUpdate()
-        mainView.alpha = 1
-        splashView.alpha = 0
-        splashView.isHidden = true
+        DispatchQueue.main.async {
+            self.tabBarController?.tabBar.isHidden = false
+            self.statusBarHidden = false
+            self.setNeedsStatusBarAppearanceUpdate()
+            self.mainView.alpha = 1
+            self.splashView.alpha = 0
+            self.splashView.isHidden = true
+        }
     }
 
     
     func userDateLoad(){
         DispatchQueue.global().async {
-            guard let uid = Auth.auth().currentUser?.uid else {return}
+            guard let uid = Auth.auth().currentUser?.uid
+                else {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
+                        self.barProfileItem.image = UIImage(named: "defaultprofile")
+                        self.splashEnd()
+                    })
+                    return
+            }
             Firestore.firestore().collection("users").document(uid).getDocument { (snapshot, error) in
                 if error != nil {
                 }else{

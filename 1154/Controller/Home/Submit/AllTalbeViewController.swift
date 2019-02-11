@@ -11,7 +11,7 @@ import FirebaseFirestore
 import CodableFirebase
 
 
-class AllTableViewController : UIViewController, TableViewCellDelegate{
+class AllTableViewController : UIViewController{
     
     @IBOutlet weak var tableView: UITableView!
     private var refreshControl : UIRefreshControl?
@@ -35,22 +35,22 @@ class AllTableViewController : UIViewController, TableViewCellDelegate{
         tableViewLoad()
     }
     
-    func activityIndicatorStop() {
-        ActivityIndicator.shared.stop(view: tableView)
-    }
+//    func activityIndicatorStop() {
+//        ActivityIndicator.shared.stop(view: tableView)
+//    }
     
     override func viewWillAppear(_ animated: Bool) {
         refreshed()
     }
     
-    override func viewDidLayoutSubviews() {
-        if !isAddIndicator{
-            self.tableView.alpha = 0
-            ActivityIndicator.shared.addIndicator(view: self.view)
-            ActivityIndicator.shared.start(view: tableView)
-            isAddIndicator = true
-        }
-    }
+//    override func viewDidLayoutSubviews() {
+//        if !isAddIndicator{
+//            self.tableView.alpha = 0
+//            ActivityIndicator.shared.addIndicator(view: self.view)
+//            ActivityIndicator.shared.start(view: tableView)
+//            isAddIndicator = true
+//        }
+//    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let view = self.storyboard?.instantiateViewController(withIdentifier: "SubmitContentViewController") as? SubmitContentViewController{
@@ -134,7 +134,7 @@ extension AllTableViewController: UITableViewDelegate, UITableViewDataSource{
         cell?.likeCount.text = String(self.array[indexPath.row].likeCount)
         cell?.viewsCount.text = String(self.array[indexPath.row].viewsCount)
         cell?.selectionStyle = .none
-        cell?.tableViewCellDelegate = self
+//        cell?.tableViewCellDelegate = self
     
         return cell!
     }
