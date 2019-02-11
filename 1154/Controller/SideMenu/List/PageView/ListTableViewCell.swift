@@ -12,6 +12,7 @@ import CodableFirebase
 
 protocol ListTableViewCellDelegate {
     func tapCell(submitModel: SubmitModel)
+    func activityIndicatorStop()
 }
 
 class ListTableViewCell: UITableViewCell {
@@ -97,8 +98,10 @@ class ListTableViewCell: UITableViewCell {
                     self.nameLabel.text = model.name
                     if let imageUrl = model.profileImageUrl{
                         self.profileImageView.kf.setImage(with: URL(string: imageUrl))
+                        self.listTableViewCellDelegate?.activityIndicatorStop()
                     }else{
                         self.profileImageView.image = UIImage(named: "defaultprofile")
+                        self.listTableViewCellDelegate?.activityIndicatorStop()
                     }
                     
                 }

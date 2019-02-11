@@ -52,6 +52,9 @@
 		10CE3A9321BDFD2E003E8EEB /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10CE3A9221BDFD2E003E8EEB /* UserModel.swift */; };
 		10CE3A9A21BE2680003E8EEB /* AllTalbeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10CE3A9921BE2680003E8EEB /* AllTalbeViewController.swift */; };
 		10CE3A9C21BE2833003E8EEB /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10CE3A9B21BE2833003E8EEB /* TableViewCell.swift */; };
+		10D100A3221192CC0064EC1B /* RankViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D100A2221192CC0064EC1B /* RankViewController.swift */; };
+		10D100A5221192D80064EC1B /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D100A4221192D80064EC1B /* SearchViewController.swift */; };
+		10D100A7221192E70064EC1B /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D100A6221192E70064EC1B /* NotificationViewController.swift */; };
 		10D692FD21E435B8005E06D1 /* SubmitContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D692FC21E435B8005E06D1 /* SubmitContentViewController.swift */; };
 		10D8A1E9220C1350008A74E3 /* ListCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D8A1E8220C1350008A74E3 /* ListCollectionViewCell.swift */; };
 		10D8A1EB220C1CDE008A74E3 /* ListPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D8A1EA220C1CDE008A74E3 /* ListPageViewController.swift */; };
@@ -138,6 +141,9 @@
 		10CE3A9221BDFD2E003E8EEB /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		10CE3A9921BE2680003E8EEB /* AllTalbeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllTalbeViewController.swift; sourceTree = "<group>"; };
 		10CE3A9B21BE2833003E8EEB /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		10D100A2221192CC0064EC1B /* RankViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankViewController.swift; sourceTree = "<group>"; };
+		10D100A4221192D80064EC1B /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		10D100A6221192E70064EC1B /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
 		10D692FC21E435B8005E06D1 /* SubmitContentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitContentViewController.swift; sourceTree = "<group>"; };
 		10D8A1E8220C1350008A74E3 /* ListCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCollectionViewCell.swift; sourceTree = "<group>"; };
 		10D8A1EA220C1CDE008A74E3 /* ListPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListPageViewController.swift; sourceTree = "<group>"; };
@@ -244,6 +250,7 @@
 				1023494C21B0DE9E0024AEC0 /* MainViewController.swift */,
 				10DBA1C621B4F61D00ECAA41 /* PageViewController.swift */,
 				10DBA1C221B4D9D300ECAA41 /* CollectionViewCellCategory.swift */,
+				10CE3A9421BE12B0003E8EEB /* Submit */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -251,11 +258,9 @@
 		103D0226220AD1C8003EF832 /* SideMenu */ = {
 			isa = PBXGroup;
 			children = (
-				10D8A1E7220C1323008A74E3 /* List */,
 				108E954D2204A59600C8487D /* SideMenuViewController.swift */,
-				108E95932207038F00C8487D /* ProfileEditViewController.swift */,
-				103D01E82209C15C003EF832 /* ProfileViewController.swift */,
-				103D0228220AD3E6003EF832 /* ProfilePostTableViewCell */,
+				10D100A82211C65E0064EC1B /* Profile */,
+				10D8A1E7220C1323008A74E3 /* List */,
 			);
 			path = SideMenu;
 			sourceTree = "<group>";
@@ -347,7 +352,9 @@
 			children = (
 				103D0224220AD124003EF832 /* Login&Signup */,
 				103D0225220AD1A0003EF832 /* Home */,
-				10CE3A9421BE12B0003E8EEB /* Submit */,
+				10D100A1221192920064EC1B /* Rank */,
+				10D100A0221192900064EC1B /* Search */,
+				10D1009F2211928E0064EC1B /* Notification */,
 				103D0226220AD1C8003EF832 /* SideMenu */,
 			);
 			path = Controller;
@@ -401,6 +408,40 @@
 				105722E921C0AB4D00BE540E /* SubmitList */,
 			);
 			path = Submit;
+			sourceTree = "<group>";
+		};
+		10D1009F2211928E0064EC1B /* Notification */ = {
+			isa = PBXGroup;
+			children = (
+				10D100A6221192E70064EC1B /* NotificationViewController.swift */,
+			);
+			path = Notification;
+			sourceTree = "<group>";
+		};
+		10D100A0221192900064EC1B /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				10D100A4221192D80064EC1B /* SearchViewController.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		10D100A1221192920064EC1B /* Rank */ = {
+			isa = PBXGroup;
+			children = (
+				10D100A2221192CC0064EC1B /* RankViewController.swift */,
+			);
+			path = Rank;
+			sourceTree = "<group>";
+		};
+		10D100A82211C65E0064EC1B /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				103D01E82209C15C003EF832 /* ProfileViewController.swift */,
+				103D0228220AD3E6003EF832 /* ProfilePostTableViewCell */,
+				108E95932207038F00C8487D /* ProfileEditViewController.swift */,
+			);
+			path = Profile;
 			sourceTree = "<group>";
 		};
 		10D692F921E4354F005E06D1 /* SubmitContent */ = {
@@ -727,6 +768,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				10D100A7221192E70064EC1B /* NotificationViewController.swift in Sources */,
 				103452D521E5B69B00DF0242 /* PhotoCollectionViewCell.swift in Sources */,
 				10CE3A9C21BE2833003E8EEB /* TableViewCell.swift in Sources */,
 				1005382721CC9434000C8427 /* UIImage.swift in Sources */,
@@ -747,6 +789,7 @@
 				108E9596220708C900C8487D /* ListViewController.swift in Sources */,
 				103452D321E5A34100DF0242 /* CommentCell.swift in Sources */,
 				10D8A1F2220C70BA008A74E3 /* ListTableViewCell.swift in Sources */,
+				10D100A3221192CC0064EC1B /* RankViewController.swift in Sources */,
 				10DBA1C321B4D9D300ECAA41 /* CollectionViewCellCategory.swift in Sources */,
 				105722E621C0A71200BE540E /* FoodTableViewController.swift in Sources */,
 				10A7F6FB21F6DC7D003BD53F /* SharedFunction.swift in Sources */,
@@ -762,6 +805,7 @@
 				103452DB21EEC91700DF0242 /* PhotoZoomCollectionViewCell.swift in Sources */,
 				10CE3A9A21BE2680003E8EEB /* AllTalbeViewController.swift in Sources */,
 				10D8A1F6220C80E8008A74E3 /* SubmitIdDateModel.swift in Sources */,
+				10D100A5221192D80064EC1B /* SearchViewController.swift in Sources */,
 				103D022C220AD481003EF832 /* PostCell.swift in Sources */,
 				1023494D21B0DE9E0024AEC0 /* MainViewController.swift in Sources */,
 				10D8A1E9220C1350008A74E3 /* ListCollectionViewCell.swift in Sources */,
