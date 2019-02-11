@@ -12,6 +12,7 @@ class ListViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var menuView: UIView!
+    @IBOutlet weak var downButtonView: UIView!
     
     private var pagerView:ListPageViewController = ListPageViewController()
     private var bar = UIView()
@@ -25,6 +26,7 @@ class ListViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
         addView()
         configureViewOption()
+        addGesture()
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
     }
     
@@ -35,6 +37,15 @@ class ListViewController: UIViewController, UICollectionViewDelegate, UICollecti
 
         collectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: .centeredHorizontally)
         pagerView.collectionView = self.collectionView
+    }
+    
+    func addGesture(){
+        let downGestrue = UITapGestureRecognizer(target: self, action: #selector(downButtonEvent))
+        downButtonView.addGestureRecognizer(downGestrue)
+    }
+    
+    @objc func downButtonEvent(){
+        self.dismiss(animated: true, completion: nil)
     }
     
     func addView(){
@@ -114,9 +125,6 @@ class ListViewController: UIViewController, UICollectionViewDelegate, UICollecti
             }
             self.pagerView.itemWasPressed(index: index)
         }
-    }
-    @IBAction func backButtonEvent(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
     }
 }
 

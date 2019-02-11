@@ -16,13 +16,27 @@ class LikeTableViewController: UIViewController, UITableViewDelegate, UITableVie
     @IBOutlet weak var tableView: UITableView!
     
     private var submitIdArray: [SubmitIdDateModel] = []
+    private var isAddIndicator = false
     
     var pagerView:ListPageViewController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
     
-        loadLikeSubmitList()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        if !isAddIndicator{
+            self.tableView.alpha = 0
+            ActivityIndicator.shared.addIndicator(view: self.view)
+            ActivityIndicator.shared.start(view: tableView)
+            isAddIndicator = true
+            loadLikeSubmitList()
+        }
+    }
+    
+    func activityIndicatorStop() {
+        ActivityIndicator.shared.stop(view: tableView)
     }
     
     func tapCell(submitModel: SubmitModel) {
@@ -40,7 +54,9 @@ class LikeTableViewController: UIViewController, UITableViewDelegate, UITableVie
                 }else{
                     guard let snapshot = snapshot?.documents else {return}
                     let count = snapshot.count
-                    
+                    if count == 0{
+                        ActivityIndicator.shared.stop(view: self.tableView)
+                    }
                     do{
                         for (index, document) in snapshot.enumerated(){
                             guard let data = try? FirestoreDecoder().decode(SubmitIdDateModel.self, from: document.data()) else {return}

@@ -21,12 +21,15 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
     @IBOutlet weak var submitButton: UIImageView!
     @IBOutlet weak var barCountryItem: UIButton!
     @IBOutlet weak var barProfileItem: UIImageView!
+    @IBOutlet weak var splashView: UIView!
+    @IBOutlet weak var mainView: UIView!
     
     
     private var pagerView:PageViewController = PageViewController()
     private var bar = UIView()
     private var leftConstraints: NSLayoutConstraint?
     private let item = ["All","Free","Trevel","Food","Shopping"]
+    private var statusBarHidden = true
     var isAnimating = false
     
     var isProfileView = false
@@ -39,7 +42,27 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
         configureViewOption()
         addButtonGesture()
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+        
+        splashView.backgroundColor = UIColor(red: 19/255, green: 69/255, blue: 99/255, alpha: 0.9) /* #134563 */
+        splashView.alpha = 1
+        mainView.alpha = 0
+        self.tabBarController?.tabBar.isHidden = true
+
     }
+    
+    override var prefersStatusBarHidden: Bool{
+        return statusBarHidden
+    }
+    
+    func splashEnd(){
+        self.tabBarController?.tabBar.isHidden = false
+        statusBarHidden = false
+        self.setNeedsStatusBarAppearanceUpdate()
+        mainView.alpha = 1
+        splashView.alpha = 0
+        splashView.isHidden = true
+    }
+
     
     func userDateLoad(){
         DispatchQueue.global().async {
@@ -58,12 +81,14 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
                             UIView.animate(withDuration: 0.2, animations: {
                                 self.barProfileItem.alpha = 1
                             })
+                            self.splashEnd()
                         }else{
                             self.barProfileItem.alpha = 0
                             self.barProfileItem.image = UIImage(named: "defaultprofile")
                             UIView.animate(withDuration: 0.2, animations: {
                                 self.barProfileItem.alpha = 1
                             })
+                            self.splashEnd()
                         }
                         
                     }catch let error{
@@ -114,15 +139,6 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
         
         pagerView.bar = bar
         pagerView.leftConstraints = leftConstraints
-        
-        let underLine = UIView()
-        self.view.addSubview(underLine)
-        underLine.translatesAutoresizingMaskIntoConstraints = false
-        underLine.topAnchor.constraint(equalTo: collectionView.bottomAnchor).isActive = true
-        underLine.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
-        underLine.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
-        underLine.heightAnchor.constraint(equalToConstant: 0.5).isActive = true
-        underLine.backgroundColor = UIColor.lightGray
     }
     
 
@@ -278,21 +294,6 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
             }
             self.pagerView.itemWasPressed(index: index)
         }
-    }
-    @IBAction func homeButtonEvent(_ sender: Any) {
-        
-    }
-    
-    @IBAction func rankButtonEvent(_ sender: Any) {
-        
-    }
-    
-    @IBAction func searchButtonEvent(_ sender: Any) {
-        
-    }
-    
-    @IBAction func notificationButtonEvent(_ sender: Any) {
-        
     }
 }
 

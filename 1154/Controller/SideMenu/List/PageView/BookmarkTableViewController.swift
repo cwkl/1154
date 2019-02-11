@@ -15,18 +15,33 @@ class BookmarkTableViewController: UIViewController, UITableViewDelegate, UITabl
     @IBOutlet weak var tableView: UITableView!
     
     private var submitIdArray: [SubmitIdDateModel] = []
+    private var isAddIndicator = false
     
     var pagerView:ListPageViewController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        loadLikeSubmitList()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        if !isAddIndicator{
+            self.tableView.alpha = 0
+            ActivityIndicator.shared.addIndicator(view: self.view)
+            ActivityIndicator.shared.start(view: tableView)
+            isAddIndicator = true
+            loadLikeSubmitList()
+        }
+    }
+    
+    func activityIndicatorStop() {
+        ActivityIndicator.shared.stop(view: tableView)
     }
     
     func tapCell(submitModel: SubmitModel) {
         if let view = self.storyboard?.instantiateViewController(withIdentifier: "SubmitContentViewController") as? SubmitContentViewController{
             view.model = submitModel
+            view.isBookmark = true
             self.navigationController?.pushViewController(view, animated: true)
         }
     }
@@ -39,10 +54,11 @@ class BookmarkTableViewController: UIViewController, UITableViewDelegate, UITabl
                 }else{
                     guard let snapshot = snapshot?.documents else {return}
                     let count = snapshot.count
-                    
+                    if count == 0{
+                        ActivityIndicator.shared.stop(view: self.tableView)
+                    }
                     do{
                         for (index, document) in snapshot.enumerated(){
-                            print(document.data())
                             guard let data = try? FirestoreDecoder().decode(SubmitIdDateModel.self, from: document.data()) else {return}
                             self.submitIdArray.append(data)
                             

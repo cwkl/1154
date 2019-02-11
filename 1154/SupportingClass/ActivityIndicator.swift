@@ -17,12 +17,10 @@ class ActivityIndicator{
     
     func addIndicator(view : UIView){
         view.addSubview(activityIndicator)
+        activityIndicator.center = CGPoint(x: UIScreen.main.bounds.width / 2, y: view.frame.height / 2)
     }
     
     func start(view : UIView){
-       
-        activityIndicator.center = view.center
-
         if !(activityIndicator.isAnimating){
             activityIndicator.startAnimating()
         }
