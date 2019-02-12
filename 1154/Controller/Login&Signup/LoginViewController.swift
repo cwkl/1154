@@ -56,6 +56,8 @@ class LoginViewController: UIViewController {
     }
     
     @objc func loginEvent(){
+        login_edtId.resignFirstResponder()
+        login_edtPassword.resignFirstResponder()
         guard let loginEdtIdText = login_edtId.text,
             let loginEdtPasswordText = login_edtPassword.text else { return }
         
@@ -79,17 +81,20 @@ class LoginViewController: UIViewController {
         
         UIView.animate(withDuration: duration, delay: 0, options: UIView.AnimationOptions(rawValue: curve), animations: {
             self.view.layoutIfNeeded()
-            self.scrollView.contentOffset.y = 100
         })
     }
     
     @objc func keyboardWillHide(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            if scrollViewBottom.constant != 0 {
-                scrollViewBottom.constant = 0
-                self.scrollView.contentOffset.y = 0
+        guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue,
+            let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval,
+            let curve = notification.userInfo?[UIResponder.keyboardAnimationCurveUserInfoKey] as? UInt else { return }
+        
+        UIView.animate(withDuration: duration, delay: 0, options: UIView.AnimationOptions(rawValue: curve), animations: {
+            self.view.layoutIfNeeded()
+            if self.scrollViewBottom.constant != 0 {
+                self.scrollViewBottom.constant = 0
             }
-        }
+        })
     }
     
     @objc func viewTapped(){
