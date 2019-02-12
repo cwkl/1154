@@ -14,6 +14,7 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var login_edtPassword: UITextField!
     @IBOutlet weak var login_loginBtn: UIButton!
     @IBOutlet weak var login_signupBtn: UIButton!
+    @IBOutlet weak var login_cancelBtn: UIButton!
     @IBOutlet weak var scrollViewBottom: NSLayoutConstraint!
     @IBOutlet weak var scrollView: UIScrollView!
     
@@ -30,20 +31,28 @@ class LoginViewController: UIViewController {
         login_signupBtn.addTarget(self, action: #selector(presentSignup), for: .touchUpInside)
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(viewTapped)))
         login_loginBtn.addTarget(self, action: #selector(loginEvent), for: .touchUpInside)
+        login_cancelBtn.addTarget(self, action: #selector(backEvent), for: .touchUpInside)
         
         login_signupBtn.layer.cornerRadius = 5
         login_loginBtn.layer.cornerRadius = 5
+        login_cancelBtn.layer.cornerRadius = 5
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         
         Auth.auth().addStateDidChangeListener { (Auth, User) in
             if User != nil{
-                if let view = self.storyboard?.instantiateViewController(withIdentifier: "SideMenuController"){
-                    self.present(view, animated: true, completion: nil)
-                }
+                NotificationManager.postMainUserReload()
+                NotificationManager.postSideUserReload()
+                self.dismiss(animated: true, completion: nil)
             }
         }
+    }
+    
+    @objc func backEvent(){
+        NotificationManager.postMainUserReload()
+        NotificationManager.postSideUserReload()
+        self.dismiss(animated: true, completion: nil)
     }
     
     @objc func loginEvent(){
@@ -53,7 +62,7 @@ class LoginViewController: UIViewController {
         if !loginEdtIdText.isEmpty && !loginEdtPasswordText.isEmpty {
             Auth.auth().signIn(withEmail: login_edtId.text!, password: login_edtPassword.text!) { (result, err) in
                 if err != nil{
-                    let alert = UIAlertController(title: "Error", message: err.debugDescription, preferredStyle: UIAlertController.Style.alert)
+                    let alert = UIAlertController(title: "Invalid ID and password", message: nil, preferredStyle: UIAlertController.Style.alert)
                     alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
                 }
@@ -89,7 +98,8 @@ class LoginViewController: UIViewController {
     }
     
     @objc func presentSignup(){
-        let view = self.storyboard?.instantiateViewController(withIdentifier: "SignupViewController") as! SignupViewController
-        self.present(view, animated: true, completion: nil)
+        if let view = self.storyboard?.instantiateViewController(withIdentifier: "SignupViewController") as? SignupViewController{
+            self.navigationController?.pushViewController(view, animated: true)
+        }
     }
 }

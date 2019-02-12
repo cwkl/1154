@@ -110,6 +110,7 @@ class ProfileEditViewController: UIViewController, GalleryControllerDelegate, UI
     }
     
     @objc func saveTouchEvent(){
+        nameTextField.resignFirstResponder()
         saveButtonLabel.textColor = UIColor(red: 19/255, green: 69/255, blue: 99/255, alpha: 0.2) /* #134563 */
         nameCheck()
     }
@@ -193,9 +194,9 @@ class ProfileEditViewController: UIViewController, GalleryControllerDelegate, UI
             Firestore.firestore().collection("users").document(uid).updateData(data) { (error) in
                 if error != nil{
                 }else{
-                    if let view = self.storyboard?.instantiateViewController(withIdentifier: "SideMenuController"){
-                        self.present(view, animated: true, completion: nil)
-                    }
+                    self.dismiss(animated: true, completion: nil)
+                    NotificationManager.postMainUserReload()
+                    NotificationManager.postSideUserReload()
                 }
             }
         }

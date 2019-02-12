@@ -11,6 +11,8 @@
 		1005382421C9DC8D000C8427 /* CollectionViewCellPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1005382321C9DC8D000C8427 /* CollectionViewCellPhoto.swift */; };
 		1005382721CC9434000C8427 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1005382621CC9434000C8427 /* UIImage.swift */; };
 		1023494D21B0DE9E0024AEC0 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1023494C21B0DE9E0024AEC0 /* MainViewController.swift */; };
+		1027CFBC2212761600A6AEFA /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1027CFBB2212761600A6AEFA /* NotificationManager.swift */; };
+		1027CFBE2212837E00A6AEFA /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1027CFBD2212837E00A6AEFA /* UIColor.swift */; };
 		103452C221E5A16000DF0242 /* titleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 103452C121E5A16000DF0242 /* titleCell.xib */; };
 		103452C421E5A17E00DF0242 /* TitleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103452C321E5A17E00DF0242 /* TitleCell.swift */; };
 		103452C721E5A2A000DF0242 /* photoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 103452C621E5A2A000DF0242 /* photoCell.xib */; };
@@ -94,6 +96,8 @@
 		1005382321C9DC8D000C8427 /* CollectionViewCellPhoto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCellPhoto.swift; sourceTree = "<group>"; };
 		1005382621CC9434000C8427 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		1023494C21B0DE9E0024AEC0 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		1027CFBB2212761600A6AEFA /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		1027CFBD2212837E00A6AEFA /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		103452C121E5A16000DF0242 /* titleCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = titleCell.xib; sourceTree = "<group>"; };
 		103452C321E5A17E00DF0242 /* TitleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleCell.swift; sourceTree = "<group>"; };
 		103452C621E5A2A000DF0242 /* photoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = photoCell.xib; sourceTree = "<group>"; };
@@ -212,6 +216,7 @@
 			isa = PBXGroup;
 			children = (
 				1005382621CC9434000C8427 /* UIImage.swift */,
+				1027CFBD2212837E00A6AEFA /* UIColor.swift */,
 			);
 			path = extension;
 			sourceTree = "<group>";
@@ -378,6 +383,7 @@
 			children = (
 				10CE3A8A21BA1F15003E8EEB /* PlaceHolderTextView.swift */,
 				10D8A1F7220D49FD008A74E3 /* ActivityIndicator.swift */,
+				1027CFBB2212761600A6AEFA /* NotificationManager.swift */,
 			);
 			path = SupportingClass;
 			sourceTree = "<group>";
@@ -774,6 +780,7 @@
 				1005382721CC9434000C8427 /* UIImage.swift in Sources */,
 				10D8A1F0220C1DF4008A74E3 /* BookmarkTableViewController.swift in Sources */,
 				1005382221C73EBA000C8427 /* CollectionViewCellCamera.swift in Sources */,
+				1027CFBC2212761600A6AEFA /* NotificationManager.swift in Sources */,
 				10DBA20321B8B52000ECAA41 /* SubmitViewController.swift in Sources */,
 				10A7F6F921F6B63E003BD53F /* CommentModel.swift in Sources */,
 				10CE3A9121BA424F003E8EEB /* SubmitModel.swift in Sources */,
@@ -782,6 +789,7 @@
 				10DBA1C721B4F61D00ECAA41 /* PageViewController.swift in Sources */,
 				103452CB21E5A2BC00DF0242 /* ContentCell.swift in Sources */,
 				105722E821C0AB4100BE540E /* ShoppingTableViewController.swift in Sources */,
+				1027CFBE2212837E00A6AEFA /* UIColor.swift in Sources */,
 				10C76C7921ABB6DA003F0DA2 /* ViewController.swift in Sources */,
 				103452D921EDA6C100DF0242 /* PhotoZoomViewController.swift in Sources */,
 				10D8A1F4220C7B2B008A74E3 /* IdDateModel.swift in Sources */,
