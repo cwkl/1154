@@ -37,13 +37,20 @@ class SignupViewController: UIViewController {
         
     }
 
-    @objc func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            if scrollViewBottom.constant == 0{
-                scrollViewBottom.constant -= keyboardSize.height
-            }
+    @objc private func keyboardWillShow(_ notification: Notification) {
+        guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue,
+            let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval,
+            let curve = notification.userInfo?[UIResponder.keyboardAnimationCurveUserInfoKey] as? UInt else { return }
+        
+        if scrollViewBottom.constant == 0{
+            scrollViewBottom.constant -= keyboardSize.height
         }
+        
+        UIView.animate(withDuration: duration, delay: 0, options: UIView.AnimationOptions(rawValue: curve), animations: {
+            self.view.layoutIfNeeded()
+        })
     }
+    
     
     @objc func keyboardWillHide(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
@@ -64,6 +71,9 @@ class SignupViewController: UIViewController {
     }
     
     @objc func signupEvent(){
+        signup_edtName.resignFirstResponder()
+        signup_edtEmail.resignFirstResponder()
+        signup_edtPassword.resignFirstResponder()
         let db = Firestore.firestore()
         let email = signup_edtEmail.text!
         let name = signup_edtName.text!
