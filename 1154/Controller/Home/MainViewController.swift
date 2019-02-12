@@ -21,8 +21,8 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
     @IBOutlet weak var submitButton: UIImageView!
     @IBOutlet weak var barCountryItem: UIButton!
     @IBOutlet weak var barProfileItem: UIImageView!
-    @IBOutlet weak var splashView: UIView!
     @IBOutlet weak var mainView: UIView!
+    @IBOutlet weak var splashView: UIView!
     
     
     private var pagerView:PageViewController = PageViewController()
@@ -31,6 +31,8 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
     private let item = ["All","Free","Trevel","Food","Shopping"]
     private var statusBarHidden = true
     private var isFirst = true
+    private var isIndicator = false
+    private var isGuest = false
     var isAnimating = false
     
     var isProfileView = false
@@ -42,42 +44,67 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
         addView()
         configureViewOption()
         addButtonGesture()
+        splashStart()
+        notificationReceive()
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
-        
-        if isFirst{
-            splashView.backgroundColor = UIColor(red: 19/255, green: 69/255, blue: 99/255, alpha: 0.9) /* #134563 */
-            splashView.alpha = 1
-            mainView.alpha = 0
-            self.tabBarController?.tabBar.isHidden = true
-            isFirst = false
-        }
-
     }
     
     override var prefersStatusBarHidden: Bool{
         return statusBarHidden
     }
     
-    func splashEnd(){
+    func notificationReceive(){
+        NotificationManager.receive(splashEnd: self, selector: #selector(splashEnd))
+        NotificationManager.receive(mainUserReload: self, selector: #selector(mainUserLoadNotificaiton))
+    }
+    
+    func splashStart(){
+        if isFirst{
+            splashView.backgroundColor = UIColor(red: 19/255, green: 69/255, blue: 99/255, alpha: 1) /* #134563 */
+            splashView.alpha = 1
+            mainView.alpha = 0
+            self.tabBarController?.tabBar.isHidden = true
+            isFirst = false
+        }
+    }
+    
+    @objc func splashEnd(){
         DispatchQueue.main.async {
             self.tabBarController?.tabBar.isHidden = false
             self.statusBarHidden = false
             self.setNeedsStatusBarAppearanceUpdate()
-            self.mainView.alpha = 1
-            self.splashView.alpha = 0
-            self.splashView.isHidden = true
+            
+            UIView.animate(withDuration: 0.4, animations: {
+                self.mainView.alpha = 1
+                self.splashView.alpha = 0
+                self.splashView.isHidden = true
+            })
+            NotificationManager.removeSplashEnd(observer: self)
         }
     }
-
+    
+    @objc func mainUserLoadNotificaiton(){
+        userDateLoad()
+        mainView.alpha = 0
+        ActivityIndicator.shared.addIndicator(view: self.view)
+        ActivityIndicator.shared.start(view: self.view)
+        isIndicator = true
+    }
     
     func userDateLoad(){
         DispatchQueue.global().async {
             guard let uid = Auth.auth().currentUser?.uid
                 else {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
+                    DispatchQueue.main.async {
+                        self.isGuest = true
+                        self.submitButton.isUserInteractionEnabled = true
                         self.barProfileItem.image = UIImage(named: "defaultprofile")
-                        self.splashEnd()
-                    })
+                        if self.isIndicator{
+                            self.mainView.alpha = 1
+                            ActivityIndicator.shared.stop(view: self.view)
+                            self.isIndicator = false
+                        }                        
+                    }
                     return
             }
             Firestore.firestore().collection("users").document(uid).getDocument { (snapshot, error) in
@@ -87,23 +114,44 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
                         guard let snapshot = snapshot?.data(),
                             let userModel = try? FirestoreDecoder().decode(UserModel.self, from: snapshot) else {return}
                         
+                        self.submitButton.isUserInteractionEnabled = true
+                        self.isGuest = false
                         if userModel.profileImageUrl != nil{
                             guard let imageUrl = userModel.profileImageUrl else {return}
-                            self.barProfileItem.alpha = 0
-                            self.barProfileItem.kf.setImage(with: URL(string: imageUrl))
-                            UIView.animate(withDuration: 0.2, animations: {
-                                self.barProfileItem.alpha = 1
-                            })
-                            self.splashEnd()
+                            DispatchQueue.main.async {
+                                self.barProfileItem.alpha = 0
+                                
+                                self.barProfileItem.kf.setImage(with: URL(string: imageUrl)) { result in
+                                    switch result {
+                                    case .success( _):
+                                        UIView.animate(withDuration: 0.2, animations: {
+                                            self.barProfileItem.alpha = 1
+                                        })
+                                        if self.isIndicator{
+                                            self.mainView.alpha = 1
+                                            ActivityIndicator.shared.stop(view: self.view)
+                                            self.isIndicator = false
+                                        }
+                                    case .failure(let error):
+                                        print(error)
+                                    }
+                                }
+                            }
                         }else{
-                            self.barProfileItem.alpha = 0
-                            self.barProfileItem.image = UIImage(named: "defaultprofile")
-                            UIView.animate(withDuration: 0.2, animations: {
-                                self.barProfileItem.alpha = 1
-                            })
-                            self.splashEnd()
+                            DispatchQueue.main.async {
+                                self.barProfileItem.alpha = 0
+                                self.barProfileItem.image = UIImage(named: "defaultprofile")
+                                
+                                UIView.animate(withDuration: 0.2, animations: {
+                                    self.barProfileItem.alpha = 1
+                                })
+                                if self.isIndicator{
+                                    self.mainView.alpha = 1
+                                    ActivityIndicator.shared.stop(view: self.view)
+                                    self.isIndicator = false
+                                }
+                            }
                         }
-                        
                     }catch let error{
                         print(error.localizedDescription)
                     }
@@ -114,7 +162,7 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
 
     func addButtonGesture(){
         let submitGesture = UITapGestureRecognizer(target: self, action: #selector(submitButtonEvent))
-        submitButton.isUserInteractionEnabled  = true
+        submitButton.isUserInteractionEnabled  = false
         submitButton.addGestureRecognizer(submitGesture)
         
         let sideMenuGesture = UITapGestureRecognizer(target: self, action: #selector(barProfileTouchEvent))
@@ -246,8 +294,23 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     
     @objc func submitButtonEvent(){
-        if let view = self.storyboard?.instantiateViewController(withIdentifier: "SubmitViewController"){
-            self.present(view, animated: true, completion: nil)
+        if isGuest{
+            let alert = UIAlertController(title: "Guest can not post", message: "Do you want to go to the login page?", preferredStyle: UIAlertController.Style.alert)
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil))
+            
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler:{
+                (action: UIAlertAction!) -> Void in
+                if let view = self.storyboard?.instantiateViewController(withIdentifier: "LoginNavViewController") as? UINavigationController{
+                    self.present(view, animated: true)
+                }
+            }))
+            
+            self.present(alert, animated: true, completion: nil)
+        }else{
+            if let view = self.storyboard?.instantiateViewController(withIdentifier: "SubmitViewController"){
+                self.present(view, animated: true, completion: nil)
+            }
         }
 }
     

@@ -33,6 +33,8 @@ class SignupViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        
     }
 
     @objc func keyboardWillShow(notification: NSNotification) {
@@ -52,7 +54,7 @@ class SignupViewController: UIViewController {
     }
     
     @objc func cancleEvent(){
-        self.dismiss(animated: true)
+        self.navigationController?.popViewController(animated: true)
     }
     
     @objc func viewTapped(){
@@ -68,7 +70,9 @@ class SignupViewController: UIViewController {
         let password = signup_edtPassword.text!
         Auth.auth().createUser(withEmail: email, password: password){ (user, err) in
             if err != nil{
-                return
+                let alert = UIAlertController(title: "Invalid ID and password", message: nil, preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
             }
         
             guard let uid = Auth.auth().currentUser?.uid else {return}
@@ -77,9 +81,7 @@ class SignupViewController: UIViewController {
             db.collection("users").document(uid).setData(data, completion: { (err) in
                 if err != nil{
                 }else{
-                    if let view = self.storyboard?.instantiateViewController(withIdentifier: "SideMenuController"){
-                        self.present(view , animated: true, completion: nil)
-                    }
+
                 }
             })
         }
