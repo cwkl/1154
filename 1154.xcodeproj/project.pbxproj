@@ -38,6 +38,13 @@
 		107E24BF22156DD6004FAADA /* UserTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107E24BE22156DD6004FAADA /* UserTableViewController.swift */; };
 		107E24C122156DEC004FAADA /* PostTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107E24C022156DEC004FAADA /* PostTableViewController.swift */; };
 		107E24C422158181004FAADA /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107E24C322158181004FAADA /* SearchTableViewCell.swift */; };
+		107E24C622167A66004FAADA /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107E24C522167A66004FAADA /* SessionManager.swift */; };
+		107E24C8221685F9004FAADA /* AlgoriaSubmitModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107E24C7221685F9004FAADA /* AlgoriaSubmitModel.swift */; };
+		107E24CA221686A5004FAADA /* AlgoriaUserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107E24C9221686A5004FAADA /* AlgoriaUserModel.swift */; };
+		107E24CC2216A986004FAADA /* PostTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 107E24CB2216A986004FAADA /* PostTableViewCell.xib */; };
+		107E24D02216AA08004FAADA /* UserTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 107E24CF2216AA08004FAADA /* UserTableViewCell.xib */; };
+		107E24D22216AB4A004FAADA /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107E24D12216AB4A004FAADA /* PostTableViewCell.swift */; };
+		107E24D42216AB5E004FAADA /* UserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107E24D32216AB5E004FAADA /* UserTableViewCell.swift */; };
 		108E95472203F19200C8487D /* CommentCountModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108E95462203F19200C8487D /* CommentCountModel.swift */; };
 		108E954E2204A59600C8487D /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108E954D2204A59600C8487D /* SideMenuViewController.swift */; };
 		108E95942207038F00C8487D /* ProfileEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108E95932207038F00C8487D /* ProfileEditViewController.swift */; };
@@ -129,6 +136,13 @@
 		107E24BE22156DD6004FAADA /* UserTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTableViewController.swift; sourceTree = "<group>"; };
 		107E24C022156DEC004FAADA /* PostTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTableViewController.swift; sourceTree = "<group>"; };
 		107E24C322158181004FAADA /* SearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
+		107E24C522167A66004FAADA /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
+		107E24C7221685F9004FAADA /* AlgoriaSubmitModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlgoriaSubmitModel.swift; sourceTree = "<group>"; };
+		107E24C9221686A5004FAADA /* AlgoriaUserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlgoriaUserModel.swift; sourceTree = "<group>"; };
+		107E24CB2216A986004FAADA /* PostTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PostTableViewCell.xib; sourceTree = "<group>"; };
+		107E24CF2216AA08004FAADA /* UserTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserTableViewCell.xib; sourceTree = "<group>"; };
+		107E24D12216AB4A004FAADA /* PostTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
+		107E24D32216AB5E004FAADA /* UserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTableViewCell.swift; sourceTree = "<group>"; };
 		108E95462203F19200C8487D /* CommentCountModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCountModel.swift; sourceTree = "<group>"; };
 		108E954D2204A59600C8487D /* SideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
 		108E95932207038F00C8487D /* ProfileEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditViewController.swift; sourceTree = "<group>"; };
@@ -314,11 +328,47 @@
 			isa = PBXGroup;
 			children = (
 				107E24BC22156D21004FAADA /* SearchPageViewController.swift */,
-				107E24C022156DEC004FAADA /* PostTableViewController.swift */,
-				107E24BE22156DD6004FAADA /* UserTableViewController.swift */,
+				107E24CD2216A9D0004FAADA /* PostTableView */,
+				107E24CE2216A9E5004FAADA /* UserTableView */,
 				107E24C322158181004FAADA /* SearchTableViewCell.swift */,
 			);
 			path = PageView;
+			sourceTree = "<group>";
+		};
+		107E24CD2216A9D0004FAADA /* PostTableView */ = {
+			isa = PBXGroup;
+			children = (
+				107E24C022156DEC004FAADA /* PostTableViewController.swift */,
+				107E24D52216AB6A004FAADA /* Cell */,
+			);
+			path = PostTableView;
+			sourceTree = "<group>";
+		};
+		107E24CE2216A9E5004FAADA /* UserTableView */ = {
+			isa = PBXGroup;
+			children = (
+				107E24BE22156DD6004FAADA /* UserTableViewController.swift */,
+				107E24D62216AB79004FAADA /* Cell */,
+			);
+			path = UserTableView;
+			sourceTree = "<group>";
+		};
+		107E24D52216AB6A004FAADA /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				107E24CB2216A986004FAADA /* PostTableViewCell.xib */,
+				107E24D12216AB4A004FAADA /* PostTableViewCell.swift */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		107E24D62216AB79004FAADA /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				107E24CF2216AA08004FAADA /* UserTableViewCell.xib */,
+				107E24D32216AB5E004FAADA /* UserTableViewCell.swift */,
+			);
+			path = Cell;
 			sourceTree = "<group>";
 		};
 		10C76C6A21ABB6DA003F0DA2 = {
@@ -398,6 +448,7 @@
 				10C76C7D21ABB6DC003F0DA2 /* Assets.xcassets */,
 				10C76C7F21ABB6DC003F0DA2 /* LaunchScreen.storyboard */,
 				10A7F6FA21F6DC7D003BD53F /* SharedFunction.swift */,
+				107E24C522167A66004FAADA /* SessionManager.swift */,
 			);
 			path = Supporting;
 			sourceTree = "<group>";
@@ -421,6 +472,8 @@
 				108E95462203F19200C8487D /* CommentCountModel.swift */,
 				10D8A1F3220C7B2B008A74E3 /* IdDateModel.swift */,
 				10D8A1F5220C80E8008A74E3 /* SubmitIdDateModel.swift */,
+				107E24C7221685F9004FAADA /* AlgoriaSubmitModel.swift */,
+				107E24C9221686A5004FAADA /* AlgoriaUserModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -628,7 +681,9 @@
 			files = (
 				103452CF21E5A32B00DF0242 /* commentCell.xib in Resources */,
 				103452C721E5A2A000DF0242 /* photoCell.xib in Resources */,
+				107E24D02216AA08004FAADA /* UserTableViewCell.xib in Resources */,
 				10C76C8121ABB6DC003F0DA2 /* LaunchScreen.storyboard in Resources */,
+				107E24CC2216A986004FAADA /* PostTableViewCell.xib in Resources */,
 				10C76CA721ABCB01003F0DA2 /* RemoteConfigDefaults.plist in Resources */,
 				103452CD21E5A2CC00DF0242 /* contentCell.xib in Resources */,
 				109A4D7721C34E12003A3597 /* GoogleService-Info.plist in Resources */,
@@ -759,6 +814,7 @@
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/Gallery/Gallery.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
+				"${BUILT_PRODUCTS_DIR}/InstantSearchClient/InstantSearchClient.framework",
 				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
 				"${BUILT_PRODUCTS_DIR}/NVActivityIndicatorView/NVActivityIndicatorView.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
@@ -778,6 +834,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Gallery.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/InstantSearchClient.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NVActivityIndicatorView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
@@ -800,12 +857,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				107E24D22216AB4A004FAADA /* PostTableViewCell.swift in Sources */,
 				10D100A7221192E70064EC1B /* NotificationViewController.swift in Sources */,
 				103452D521E5B69B00DF0242 /* PhotoCollectionViewCell.swift in Sources */,
 				10CE3A9C21BE2833003E8EEB /* TableViewCell.swift in Sources */,
+				107E24D42216AB5E004FAADA /* UserTableViewCell.swift in Sources */,
 				1005382721CC9434000C8427 /* UIImage.swift in Sources */,
 				107E24C422158181004FAADA /* SearchTableViewCell.swift in Sources */,
 				10D8A1F0220C1DF4008A74E3 /* BookmarkTableViewController.swift in Sources */,
+				107E24C622167A66004FAADA /* SessionManager.swift in Sources */,
 				1005382221C73EBA000C8427 /* CollectionViewCellCamera.swift in Sources */,
 				1027CFBC2212761600A6AEFA /* NotificationManager.swift in Sources */,
 				10DBA20321B8B52000ECAA41 /* SubmitViewController.swift in Sources */,
@@ -845,6 +905,7 @@
 				10D8A1F6220C80E8008A74E3 /* SubmitIdDateModel.swift in Sources */,
 				107E24B922156185004FAADA /* UISearchBar.swift in Sources */,
 				10D100A5221192D80064EC1B /* SearchViewController.swift in Sources */,
+				107E24CA221686A5004FAADA /* AlgoriaUserModel.swift in Sources */,
 				103D022C220AD481003EF832 /* PostCell.swift in Sources */,
 				1023494D21B0DE9E0024AEC0 /* MainViewController.swift in Sources */,
 				10D8A1E9220C1350008A74E3 /* ListCollectionViewCell.swift in Sources */,
@@ -855,6 +916,7 @@
 				105722E221C0A52900BE540E /* FreeTableViewController.swift in Sources */,
 				10D692FD21E435B8005E06D1 /* SubmitContentViewController.swift in Sources */,
 				10D8A1EB220C1CDE008A74E3 /* ListPageViewController.swift in Sources */,
+				107E24C8221685F9004FAADA /* AlgoriaSubmitModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

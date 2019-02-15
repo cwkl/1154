@@ -116,6 +116,7 @@ PODS:
     - nanopb (~> 0.3)
   - gRPC-Core/Interface (1.14.0)
   - GTMSessionFetcher/Core (1.2.1)
+  - InstantSearchClient (6.1.1)
   - Kingfisher (5.1.0)
   - leveldb-library (1.20)
   - nanopb (0.3.901):
@@ -138,6 +139,7 @@ DEPENDENCIES:
   - Firebase/RemoteConfig
   - Firebase/Storage
   - Gallery
+  - InstantSearchClient (~> 6.0)
   - Kingfisher (~> 5.0)
   - NVActivityIndicatorView
   - SideMenuSwift
@@ -163,6 +165,7 @@ SPEC REPOS:
     - "gRPC-C++"
     - gRPC-Core
     - GTMSessionFetcher
+    - InstantSearchClient
     - Kingfisher
     - leveldb-library
     - nanopb
@@ -190,6 +193,7 @@ SPEC CHECKSUMS:
   "gRPC-C++": 19eec1ffd34de29453f5fab5b4697ad0f240ad51
   gRPC-Core: f4836515817c0eb479aeeb9cc27c91c4ba62a9f6
   GTMSessionFetcher: 32aeca0aa144acea523e1c8e053089dec2cb98ca
+  InstantSearchClient: 8e3754ff154e2d65b0a391671a2a36f045a9bf5a
   Kingfisher: fcec238063d17404fca89bf0a850583211c4cbf6
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
@@ -198,6 +202,6 @@ SPEC CHECKSUMS:
   SideMenuSwift: f8567754feb36ade13ffd613f608829f4b86d4b3
   SnapKit: 0de968a9fec17499afa29683b05d0c775b6d1c29
 
-PODFILE CHECKSUM: 597e2b2954cbb972b3586130d8e1c2be0e813175
+PODFILE CHECKSUM: c65b9cc8f925300fa860c4e861273053de26332d
 
 COCOAPODS: 1.5.3

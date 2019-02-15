@@ -17,6 +17,7 @@ target '1154' do
   pod 'Kingfisher', '~> 5.0'
   pod 'SideMenuSwift'
   pod 'NVActivityIndicatorView'
+  pod 'InstantSearchClient', '~> 6.0'
 
   target '1154Tests' do
     inherit! :search_paths
