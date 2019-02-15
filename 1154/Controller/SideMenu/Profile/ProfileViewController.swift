@@ -57,7 +57,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func checkSelfProfile(){
-        guard let uid = Auth.auth().currentUser?.uid, let modelUid = userModel?.uid else {return}
+        guard let uid = Auth.auth().currentUser?.uid, let modelUid = userModel?.uid else {self.editButtonView.isHidden = true; return}
         if  modelUid == uid{
             self.editButtonView.isHidden = false
         }else{
