@@ -222,7 +222,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qe7-Ov-AeW">
-                                <rect key="frame" x="0.0" y="44" width="375" height="734"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="685"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kVB-dE-gxw">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -410,7 +410,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IhC-DN-Ejm">
-                                <rect key="frame" x="0.0" y="44" width="375" height="734"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="685"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5GF-9l-jle">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -502,7 +502,7 @@
                                                                     <subviews>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ba3-19-XrR">
                                                                             <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
                                                                             <nil key="textColor"/>
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
@@ -548,7 +548,7 @@
                                         </constraints>
                                     </view>
                                     <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1DH-WX-1vK">
-                                        <rect key="frame" x="0.0" y="88.666666666666686" width="375" height="645.33333333333326"/>
+                                        <rect key="frame" x="0.0" y="40" width="375" height="596"/>
                                         <connections>
                                             <segue destination="URC-T8-d2G" kind="embed" identifier="SearchPager" id="fJ2-ka-4tS"/>
                                         </connections>
@@ -606,7 +606,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hjx-PS-v6x">
-                                <rect key="frame" x="0.0" y="44" width="375" height="734"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="685"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aH7-Rl-XhZ">
@@ -850,7 +850,6 @@
                         <viewLayoutGuide key="safeArea" id="8UO-6i-glz"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="grayhome" id="ovy-OF-9Uf">
-                        <inset key="imageInsets" minX="0.0" minY="1" maxX="0.0" maxY="0.0"/>
                         <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="0.0"/>
                     </tabBarItem>
                     <navigationItem key="navigationItem" title="HOME" id="vNh-Ha-Iqr">
@@ -4026,9 +4025,7 @@
         <scene sceneID="R69-uJ-iB0">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="1Lq-AF-M10" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="" image="grayrank" id="LgD-te-32g">
-                        <inset key="imageInsets" minX="0.0" minY="1" maxX="0.0" maxY="0.0"/>
-                    </tabBarItem>
+                    <tabBarItem key="tabBarItem" title="" image="grayrank" id="LgD-te-32g"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="GuM-Jl-yBC">
                         <autoresizingMask key="autoresizingMask"/>
@@ -4046,9 +4043,7 @@
         <scene sceneID="9dc-hB-Wx9">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="Ktu-ys-QaW" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="" image="graysearch" id="cMV-w0-cC4">
-                        <inset key="imageInsets" minX="0.0" minY="1" maxX="0.0" maxY="0.0"/>
-                    </tabBarItem>
+                    <tabBarItem key="tabBarItem" title="" image="graysearch" id="cMV-w0-cC4"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="gQs-WA-4Td">
                         <autoresizingMask key="autoresizingMask"/>
@@ -4066,9 +4061,7 @@
         <scene sceneID="n9M-13-ZwM">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="nAS-Mo-Qbk" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="" image="graynotification" id="Krt-5M-ruA">
-                        <inset key="imageInsets" minX="0.0" minY="1" maxX="0.0" maxY="0.0"/>
-                    </tabBarItem>
+                    <tabBarItem key="tabBarItem" title="" image="graynotification" id="Krt-5M-ruA"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="0Pk-yI-tIu">
                         <autoresizingMask key="autoresizingMask"/>
@@ -4107,8 +4100,8 @@
         <image name="x" width="18" height="18"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="jWQ-Dm-1Wv"/>
-        <segue reference="KdX-PB-YDM"/>
-        <segue reference="YyL-ig-CRX"/>
+        <segue reference="Csp-Kw-a4v"/>
+        <segue reference="LPS-jU-Zgh"/>
+        <segue reference="pve-Yl-NJz"/>
     </inferredMetricsTieBreakers>
 </document>

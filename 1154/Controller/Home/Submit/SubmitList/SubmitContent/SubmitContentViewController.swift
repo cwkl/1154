@@ -68,7 +68,6 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
         addGesture()
         tableViewCellRegist()
         addRefresh()
-        addKeyboardObserver()
         userDataLoad()
         commentDataLoad()
         countObserver()
@@ -78,6 +77,16 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
         tableView.alpha = 0
         
         
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     override func viewDidLayoutSubviews() {
@@ -159,11 +168,6 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
     
     func showImageDetail(imageDetailView: UIViewController) {
         self.present(imageDetailView, animated: false, completion: nil)
-    }
-    
-    func addKeyboardObserver(){
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     func addRefresh(){
