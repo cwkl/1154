@@ -13,6 +13,7 @@ import FirebaseAuth
 import FirebaseFirestore
 import Photos
 import Gallery
+import InstantSearchClient
 
 class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, GalleryControllerDelegate, UITextFieldDelegate, UITextViewDelegate {
     @IBOutlet weak var categoryK: UIView!
@@ -421,6 +422,26 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
         self.submitTitle.resignFirstResponder()
         self.dismiss(animated: true, completion: nil)
     }
+    
+    private func pushDataAlgolia(data: [String: AnyObject]) {
+        
+        var index: Index?
+        
+        index = SessionManager.shared.client.index(withName: "post")
+        
+        var newData = data
+        if let objectId = data["uid"] {
+            newData.updateValue(objectId, forKey: "objectID")
+        }
+        
+        DispatchQueue.global().async {
+            index?.addObject(newData, completionHandler: { (content, error) -> Void in
+                if error == nil {
+                    print("Object IDs: \(content!)")
+                }
+            })
+        }
+    }
         
     @objc func submitPostEvent() {
         if !isLoading{
@@ -463,6 +484,8 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
                                                         }else{
                                                             self.dismiss(animated: true, completion: nil)
                                                             self.isLoading = false
+                                                            
+                                                            self.pushDataAlgolia(data: data as [String : AnyObject])
                                                         }
                                                     })
                                                 }
@@ -481,6 +504,8 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
                             }else{
                                 self.dismiss(animated: true, completion: nil)
                                 self.isLoading = false
+                                
+                                self.pushDataAlgolia(data: data as [String : AnyObject])
                             }
                         })
                     }

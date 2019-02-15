@@ -12,6 +12,7 @@ import FirebaseAuth
 import FirebaseFirestore
 import CodableFirebase
 
+
 class SearchViewController: UIViewController, UISearchBarDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, SearchCollectionViewCellDelegate{
     
     @IBOutlet weak var barProfileImageView: UIImageView!
@@ -19,13 +20,27 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UICollectionV
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var menuView: UIView!    
+    @IBOutlet weak var containerView: UIView!
     
     private var keyboardHideGesture = UITapGestureRecognizer()
-    private var searchText: String?
-    private var pagerView:SearchPageViewController = SearchPageViewController()
+    private var searchText: String? {
+        didSet{
+            if pagerView.pageIndex == 0 {
+                if let vc = pagerView.viewControllers?.first as? PostTableViewController {
+                    vc.searchText = searchText
+                }
+            } else {
+                if let vc = pagerView.viewControllers?.last as? UserTableViewController {
+                    vc.searchText = searchText
+                }
+            }
+        }
+    }
+    private var pagerView: SearchPageViewController = SearchPageViewController()
     private var bar = UIView()
     private var leftConstraints: NSLayoutConstraint?
     private let item = ["Post","User"]
+
     var isAnimating = false
     
     override func viewDidLoad() {
@@ -142,10 +157,10 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UICollectionV
             self.pagerView.itemWasPressed(index: index)
         }
     }
-
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let searchBarTextField = searchBar.textField else { return }
+        self.searchText = searchBarTextField.text
         if searchBarTextField.isFirstResponder {
             searchBarTextField.resignFirstResponder()
         }
