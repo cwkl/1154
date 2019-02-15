@@ -28,8 +28,8 @@
                                     <constraint firstAttribute="height" constant="40" id="eTJ-h8-4va"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="aaaa" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PH6-YW-mFG">
-                                <rect key="frame" x="72" y="32" width="38" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PH6-YW-mFG">
+                                <rect key="frame" x="72" y="42.5" width="0.0" height="0.0"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -51,6 +51,11 @@
                     <constraint firstItem="A0k-QV-X5c" firstAttribute="leading" secondItem="eG9-aZ-AIN" secondAttribute="leading" constant="8" id="tbh-vb-q9f"/>
                 </constraints>
             </tableViewCellContentView>
+            <connections>
+                <outlet property="mainView" destination="A0k-QV-X5c" id="b0r-JY-fyn"/>
+                <outlet property="nameLabel" destination="PH6-YW-mFG" id="r65-8E-4eI"/>
+                <outlet property="profileImageView" destination="LBu-Ih-Jzy" id="nlW-dO-iKb"/>
+            </connections>
             <point key="canvasLocation" x="32.799999999999997" y="-111.0944527736132"/>
         </tableViewCell>
     </objects>

@@ -33,8 +33,8 @@ class UserTableViewController: UIViewController, UITableViewDelegate, UITableVie
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.register(UINib(nibName: "PostTableViewCell", bundle: nil), forCellReuseIdentifier: "PostTableViewCell")
         
+        configureViewOption()
     }
     
 //    override func viewDidLayoutSubviews() {
@@ -92,7 +92,7 @@ class UserTableViewController: UIViewController, UITableViewDelegate, UITableVie
         ActivityIndicator.shared.stop(view: tableView)
     }
     
-    func tapCell(submitModel: SubmitModel) {
+    func tapCell(submitId: String) {
         //        if let view = self.storyboard?.instantiateViewController(withIdentifier: "SubmitContentViewController") as? SubmitContentViewController{
         //            view.model = submitModel
         //            self.navigationController?.pushViewController(view, animated: true)
@@ -100,6 +100,7 @@ class UserTableViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func configureViewOption(){
+        tableView.register(UINib(nibName: "UserTableViewCell", bundle: nil), forCellReuseIdentifier: "UserTableViewCell")
         tableView.delegate = self
         tableView.dataSource = self
         tableView.reloadData()
@@ -111,6 +112,7 @@ class UserTableViewController: UIViewController, UITableViewDelegate, UITableVie
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "UserTableViewCell", for: indexPath) as? UserTableViewCell{
+            if self.searchUser.isEmpty {return UITableViewCell()}
             cell.userTableViewCellDelegate = self
             
             return cell

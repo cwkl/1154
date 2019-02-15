@@ -430,7 +430,7 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
         index = SessionManager.shared.client.index(withName: "post")
         
         var newData = data
-        if let objectId = data["uid"] {
+        if let objectId = data["id"] {
             newData.updateValue(objectId, forKey: "objectID")
         }
         
