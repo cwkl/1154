@@ -64,12 +64,12 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
             splashView.alpha = 1
             mainView.alpha = 0
             self.tabBarController?.tabBar.isHidden = true
-            isFirst = false
         }
     }
     
     @objc func splashEnd(){
         DispatchQueue.main.async {
+            self.isFirst = false
             self.tabBarController?.tabBar.isHidden = false
             self.statusBarHidden = false
             self.setNeedsStatusBarAppearanceUpdate()
@@ -91,28 +91,29 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
         isIndicator = true
     }
     
+    func userDataLoadFailed(){
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+            self.isGuest = true
+            self.submitButton.isUserInteractionEnabled = true
+            self.barProfileItem.image = UIImage(named: "defaultprofile")
+            if self.isIndicator{
+                self.mainView.alpha = 1
+                ActivityIndicator.shared.stop(view: self.view)
+                self.isIndicator = false
+            }
+        })
+    }
+    
     func userDateLoad(){
         DispatchQueue.global().async {
-            guard let uid = Auth.auth().currentUser?.uid
-                else {
-                    DispatchQueue.main.async {
-                        self.isGuest = true
-                        self.submitButton.isUserInteractionEnabled = true
-                        self.barProfileItem.image = UIImage(named: "defaultprofile")
-                        if self.isIndicator{
-                            self.mainView.alpha = 1
-                            ActivityIndicator.shared.stop(view: self.view)
-                            self.isIndicator = false
-                        }                        
-                    }
-                    return
-            }
+            guard let uid = Auth.auth().currentUser?.uid else {self.userDataLoadFailed(); return}
             Firestore.firestore().collection("users").document(uid).getDocument { (snapshot, error) in
                 if error != nil {
                 }else{
                     do{
                         guard let snapshot = snapshot?.data(),
-                            let userModel = try? FirestoreDecoder().decode(UserModel.self, from: snapshot) else {return}
+                            let userModel = try? FirestoreDecoder().decode(UserModel.self, from: snapshot)
+                            else {self.userDataLoadFailed(); return}
                         
                         self.submitButton.isUserInteractionEnabled = true
                         self.isGuest = false

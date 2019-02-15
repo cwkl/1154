@@ -15,6 +15,7 @@ import InstantSearchClient
 class UserTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UserTableViewCellDelegate {
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var noResultView: UIView!
     
     private var submitIdArray: [SubmitIdDateModel] = []
     private var isAddIndicator = false
@@ -27,7 +28,9 @@ class UserTableViewController: UIViewController, UITableViewDelegate, UITableVie
     
     var searchText: String? {
         didSet {
-            
+            guard let searchText = self.searchText else {return}
+            search(searchText: searchText)
+            startIndicator()
         }
     }
     
@@ -37,23 +40,26 @@ class UserTableViewController: UIViewController, UITableViewDelegate, UITableVie
         configureViewOption()
     }
     
-//    override func viewDidLayoutSubviews() {
-//        if !isAddIndicator{
-//            self.tableView.alpha = 0
-//            ActivityIndicator.shared.addIndicator(view: self.view)
-//            ActivityIndicator.shared.start(view: tableView)
-//            isAddIndicator = true
-//        }
-//    }
+    func startIndicator() {
+        if !isAddIndicator{
+            self.tableView.alpha = 0
+            ActivityIndicator.shared.addIndicator(view: self.view)
+            ActivityIndicator.shared.start(view: tableView)
+            isAddIndicator = true
+        }
+    }
     
     func search(searchText: String){
+        tableView.isHidden = false
+        noResultView.isHidden = true
+        
         let index = SessionManager.shared.client.index(withName: "user")
         
         query.query = searchText
         //        query.hitsPerPage = 30
         page = 0
         query.page = page
-        
+        self.searchUser.removeAll()
         DispatchQueue.global().async {
             
             index.search(self.query, completionHandler: { (content, error) -> Void in
@@ -72,7 +78,7 @@ class UserTableViewController: UIViewController, UITableViewDelegate, UITableVie
                             
                             DispatchQueue.main.async {
                                 if hitIndex + 1 == hits.count {
-                                    
+                                    self.tableView.reloadData()
                                 }
                             }
                         } catch let error {
@@ -80,23 +86,33 @@ class UserTableViewController: UIViewController, UITableViewDelegate, UITableVie
                         }
                     }
                 } else if let error = error {
-                    
+                    self.noResultEvent()
+                    self.activityIndicatorStop()
                 } else {
-                    
+                    self.noResultEvent()
+                    self.activityIndicatorStop()
                 }
             })
         }
     }
     
-    func activityIndicatorStop() {
-        ActivityIndicator.shared.stop(view: tableView)
+    func noResultEvent(){
+        tableView.isHidden = true
+        noResultView.isHidden = false
     }
     
-    func tapCell(submitId: String) {
-        //        if let view = self.storyboard?.instantiateViewController(withIdentifier: "SubmitContentViewController") as? SubmitContentViewController{
-        //            view.model = submitModel
-        //            self.navigationController?.pushViewController(view, animated: true)
-        //        }
+    func activityIndicatorStop() {
+        ActivityIndicator.shared.stop(view: tableView)
+        isAddIndicator = false
+    }
+    
+    func tapCell(userModel: UserModel) {
+        if let navView = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewNavController") as? UINavigationController{
+            if !navView.viewControllers.isEmpty, let pro = navView.viewControllers[0] as? ProfileViewController {
+                pro.userModel = userModel
+            }
+            self.present(navView, animated: true)
+        }
     }
     
     func configureViewOption(){
@@ -114,6 +130,7 @@ class UserTableViewController: UIViewController, UITableViewDelegate, UITableVie
         if let cell = tableView.dequeueReusableCell(withIdentifier: "UserTableViewCell", for: indexPath) as? UserTableViewCell{
             if self.searchUser.isEmpty {return UITableViewCell()}
             cell.userTableViewCellDelegate = self
+            cell.userId = self.searchUser[indexPath.row].uid
             
             return cell
         }
@@ -121,7 +138,7 @@ class UserTableViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 50
+        return 60
     }
     
 }

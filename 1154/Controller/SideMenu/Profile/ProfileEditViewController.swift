@@ -194,11 +194,27 @@ class ProfileEditViewController: UIViewController, GalleryControllerDelegate, UI
             Firestore.firestore().collection("users").document(uid).updateData(data) { (error) in
                 if error != nil{
                 }else{
-                    self.dismiss(animated: true, completion: nil)
-                    NotificationManager.postMainUserReload()
-                    NotificationManager.postSideUserReload()
+                    self.dismiss(animated: true, completion: {
+                        self.updateDataAlgolia(data: data as [String : AnyObject])
+                        NotificationManager.postMainUserReload()
+                        NotificationManager.postSideUserReload()
+                    })
                 }
             }
+        }
+    }
+    
+    private func updateDataAlgolia(data: [String: AnyObject]) {
+        guard let objectId =  self.uid else { return }
+        
+        let index = SessionManager.shared.client.index(withName: "user")
+        
+        DispatchQueue.global().async {
+            index.partialUpdateObject(data, withID: objectId, completionHandler: { (content, error) -> Void in
+                if error == nil {
+                    print("Object IDs: \(content!)")
+                }
+            })
         }
     }
     

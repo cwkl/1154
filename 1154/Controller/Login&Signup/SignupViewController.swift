@@ -11,6 +11,7 @@ import FirebaseAuth
 import FirebaseFirestore
 import Firebase
 import CodableFirebase
+import InstantSearchClient
 
 class SignupViewController: UIViewController {
     @IBOutlet weak var signup_edtEmail: UITextField!
@@ -70,6 +71,26 @@ class SignupViewController: UIViewController {
         signup_edtPassword.resignFirstResponder()
     }
     
+    private func pushDataAlgolia(data: [String: AnyObject]) {
+        
+        var index: Index?
+        
+        index = SessionManager.shared.client.index(withName: "user")
+        
+        var newData = data
+        if let objectId = data["uid"] {
+            newData.updateValue(objectId, forKey: "objectID")
+        }
+        
+        DispatchQueue.global().async {
+            index?.addObject(newData, completionHandler: { (content, error) -> Void in
+                if error == nil {
+                    print("Object IDs: \(content!)")
+                }
+            })
+        }
+    }
+    
     @objc func signupEvent(){
         signup_edtName.resignFirstResponder()
         signup_edtEmail.resignFirstResponder()
@@ -91,7 +112,7 @@ class SignupViewController: UIViewController {
             db.collection("users").document(uid).setData(data, completion: { (err) in
                 if err != nil{
                 }else{
-
+                    self.pushDataAlgolia(data: data as [String : AnyObject])
                 }
             })
         }
