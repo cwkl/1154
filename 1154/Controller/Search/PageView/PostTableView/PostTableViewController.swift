@@ -15,6 +15,7 @@ import InstantSearchClient
 class PostTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, PostTableViewCellDelegate {
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var noResultView: UIView!
     
     private var submitIdArray: [SubmitIdDateModel] = []
     private var isAddIndicator = false
@@ -29,33 +30,38 @@ class PostTableViewController: UIViewController, UITableViewDelegate, UITableVie
         didSet {
             guard let searchText = self.searchText else {return}
             search(searchText: searchText)
+            startIndicator()
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.register(UINib(nibName: "PostTableViewCell", bundle: nil), forCellReuseIdentifier: "PostTableViewCell")
+        
+        configureViewOption()
+        
     }
     
-//    override func viewDidLayoutSubviews() {
-//        if !isAddIndicator{
-//            self.tableView.alpha = 0
-//            ActivityIndicator.shared.addIndicator(view: self.view)
-//            ActivityIndicator.shared.start(view: tableView)
-//            isAddIndicator = true
-//        }
-//    }
+    func startIndicator() {
+        if !isAddIndicator{
+            self.tableView.alpha = 0
+            ActivityIndicator.shared.addIndicator(view: self.view)
+            ActivityIndicator.shared.start(view: tableView)
+            isAddIndicator = true
+        }
+    }
     
     func search(searchText: String){
+        tableView.isHidden = false
+        noResultView.isHidden = true
+        
         let index = SessionManager.shared.client.index(withName: "post")
         
         query.query = searchText
 //        query.hitsPerPage = 30
         page = 0
         query.page = page
-        
+        self.searchPost.removeAll()
         DispatchQueue.global().async {
-            
             index.search(self.query, completionHandler: { (content, error) -> Void in
                 if let content = content, let hits = content["hits"] as? [AnyObject], !hits.isEmpty {
                     for (hitIndex, hit) in hits.enumerated() {
@@ -72,7 +78,7 @@ class PostTableViewController: UIViewController, UITableViewDelegate, UITableVie
                             
                             DispatchQueue.main.async {
                                 if hitIndex + 1 == hits.count {
-                                    
+                                    self.tableView.reloadData()
                                 }
                             }
                         } catch let error {
@@ -80,26 +86,45 @@ class PostTableViewController: UIViewController, UITableViewDelegate, UITableVie
                         }
                     }
                 } else if let error = error {
-                    
+                    self.noResultEvent()
+                    self.activityIndicatorStop()
                 } else {
-                    
+                    self.noResultEvent()
+                    self.activityIndicatorStop()
                 }
             })
         }
     }
     
-    func activityIndicatorStop() {
-        ActivityIndicator.shared.stop(view: tableView)
+    func noResultEvent(){
+        tableView.isHidden = true
+        noResultView.isHidden = false
     }
     
-    func tapCell(submitModel: SubmitModel) {
-//        if let view = self.storyboard?.instantiateViewController(withIdentifier: "SubmitContentViewController") as? SubmitContentViewController{
-//            view.model = submitModel
-//            self.navigationController?.pushViewController(view, animated: true)
-//        }
+    func activityIndicatorStop() {
+        ActivityIndicator.shared.stop(view: tableView)
+        isAddIndicator = false
+    }
+    
+    func tapCell(submitId: String) {
+        DispatchQueue.global().async {
+            Firestore.firestore().collection("submit").document(submitId).getDocument { (snapshot, error) in
+                if error != nil{
+                }else{
+                    guard let snapshot = snapshot?.data(), let data = try? FirestoreDecoder().decode(SubmitModel.self, from: snapshot) else {return}
+                    
+                    if let view = self.storyboard?.instantiateViewController(withIdentifier: "SubmitContentViewController") as? SubmitContentViewController{
+                        view.model = data
+                        view.hidesBottomBarWhenPushed = true
+                        self.navigationController?.pushViewController(view, animated: true)
+                    }
+                }
+            }
+        }
     }
     
     func configureViewOption(){
+        tableView.register(UINib(nibName: "PostTableViewCell", bundle: nil), forCellReuseIdentifier: "PostTableViewCell")
         tableView.delegate = self
         tableView.dataSource = self
         tableView.reloadData()
@@ -111,14 +136,25 @@ class PostTableViewController: UIViewController, UITableViewDelegate, UITableVie
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "PostTableViewCell", for: indexPath) as? PostTableViewCell{
+            if self.searchPost.isEmpty{ return UITableViewCell()}
             cell.postTableViewCellDelegate = self
+            cell.titleLabel.text = self.searchPost[indexPath.row].title
+            cell.submitId = self.searchPost[indexPath.row].id
+            cell.userId = self.searchPost[indexPath.row].uid
+            cell.dateLabel.text = SharedFunction.shared.getCurrentLocaleDateFromString(string: self.searchPost[indexPath.row].date, format: "yyyy. MM. dd")
             return cell
         }
         return UITableViewCell()
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 90
+        return 70
     }
     
+}
+
+extension PostTableViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
 }
