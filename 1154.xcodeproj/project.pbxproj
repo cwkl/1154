@@ -13,6 +13,13 @@
 		1023494D21B0DE9E0024AEC0 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1023494C21B0DE9E0024AEC0 /* MainViewController.swift */; };
 		1027CFBC2212761600A6AEFA /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1027CFBB2212761600A6AEFA /* NotificationManager.swift */; };
 		1027CFBE2212837E00A6AEFA /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1027CFBD2212837E00A6AEFA /* UIColor.swift */; };
+		102AEA9422184DE900D48E41 /* NotificationCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102AEA9322184DE900D48E41 /* NotificationCollectionViewCell.swift */; };
+		102AEA99221850DD00D48E41 /* NotificationPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102AEA98221850DD00D48E41 /* NotificationPageViewController.swift */; };
+		102AEA9D2218512400D48E41 /* CommentNotifiTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102AEA9C2218512400D48E41 /* CommentNotifiTableViewController.swift */; };
+		102AEAA12218516500D48E41 /* LikeNotifiTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102AEAA02218516500D48E41 /* LikeNotifiTableViewCell.swift */; };
+		102AEAA52218535400D48E41 /* CommentNotifiTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102AEAA42218535400D48E41 /* CommentNotifiTableViewCell.swift */; };
+		102AEAA72218536400D48E41 /* CommentNotifiTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 102AEAA62218536400D48E41 /* CommentNotifiTableViewCell.xib */; };
+		102AEAAC2218616300D48E41 /* LikeNotifiTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 102AEAAB2218616300D48E41 /* LikeNotifiTableViewController.swift */; };
 		103452C221E5A16000DF0242 /* titleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 103452C121E5A16000DF0242 /* titleCell.xib */; };
 		103452C421E5A17E00DF0242 /* TitleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103452C321E5A17E00DF0242 /* TitleCell.swift */; };
 		103452C721E5A2A000DF0242 /* photoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 103452C621E5A2A000DF0242 /* photoCell.xib */; };
@@ -45,6 +52,7 @@
 		107E24D02216AA08004FAADA /* UserTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 107E24CF2216AA08004FAADA /* UserTableViewCell.xib */; };
 		107E24D22216AB4A004FAADA /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107E24D12216AB4A004FAADA /* PostTableViewCell.swift */; };
 		107E24D42216AB5E004FAADA /* UserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107E24D32216AB5E004FAADA /* UserTableViewCell.swift */; };
+		1080DB312218678E00DE3F53 /* LikeNotifiTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1080DB302218678E00DE3F53 /* LikeNotifiTableViewCell.xib */; };
 		108E95472203F19200C8487D /* CommentCountModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108E95462203F19200C8487D /* CommentCountModel.swift */; };
 		108E954E2204A59600C8487D /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108E954D2204A59600C8487D /* SideMenuViewController.swift */; };
 		108E95942207038F00C8487D /* ProfileEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108E95932207038F00C8487D /* ProfileEditViewController.swift */; };
@@ -111,6 +119,13 @@
 		1023494C21B0DE9E0024AEC0 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		1027CFBB2212761600A6AEFA /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		1027CFBD2212837E00A6AEFA /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		102AEA9322184DE900D48E41 /* NotificationCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NotificationCollectionViewCell.swift; path = /Users/junhyeokkwon/ios/1154/1154/Controller/Notification/NotificationCollectionViewCell.swift; sourceTree = "<absolute>"; };
+		102AEA98221850DD00D48E41 /* NotificationPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationPageViewController.swift; sourceTree = "<group>"; };
+		102AEA9C2218512400D48E41 /* CommentNotifiTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentNotifiTableViewController.swift; sourceTree = "<group>"; };
+		102AEAA02218516500D48E41 /* LikeNotifiTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeNotifiTableViewCell.swift; sourceTree = "<group>"; };
+		102AEAA42218535400D48E41 /* CommentNotifiTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentNotifiTableViewCell.swift; sourceTree = "<group>"; };
+		102AEAA62218536400D48E41 /* CommentNotifiTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CommentNotifiTableViewCell.xib; sourceTree = "<group>"; };
+		102AEAAB2218616300D48E41 /* LikeNotifiTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeNotifiTableViewController.swift; sourceTree = "<group>"; };
 		103452C121E5A16000DF0242 /* titleCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = titleCell.xib; sourceTree = "<group>"; };
 		103452C321E5A17E00DF0242 /* TitleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleCell.swift; sourceTree = "<group>"; };
 		103452C621E5A2A000DF0242 /* photoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = photoCell.xib; sourceTree = "<group>"; };
@@ -143,6 +158,7 @@
 		107E24CF2216AA08004FAADA /* UserTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserTableViewCell.xib; sourceTree = "<group>"; };
 		107E24D12216AB4A004FAADA /* PostTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
 		107E24D32216AB5E004FAADA /* UserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTableViewCell.swift; sourceTree = "<group>"; };
+		1080DB302218678E00DE3F53 /* LikeNotifiTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LikeNotifiTableViewCell.xib; sourceTree = "<group>"; };
 		108E95462203F19200C8487D /* CommentCountModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCountModel.swift; sourceTree = "<group>"; };
 		108E954D2204A59600C8487D /* SideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
 		108E95932207038F00C8487D /* ProfileEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditViewController.swift; sourceTree = "<group>"; };
@@ -246,6 +262,53 @@
 				107E24B822156185004FAADA /* UISearchBar.swift */,
 			);
 			path = extension;
+			sourceTree = "<group>";
+		};
+		102AEA952218506900D48E41 /* PageView */ = {
+			isa = PBXGroup;
+			children = (
+				102AEA98221850DD00D48E41 /* NotificationPageViewController.swift */,
+				102AEAAA2218612800D48E41 /* LikeNotifiTableView */,
+				102AEA962218508100D48E41 /* CommentNotifiTableView */,
+			);
+			path = PageView;
+			sourceTree = "<group>";
+		};
+		102AEA962218508100D48E41 /* CommentNotifiTableView */ = {
+			isa = PBXGroup;
+			children = (
+				102AEA9C2218512400D48E41 /* CommentNotifiTableViewController.swift */,
+				102AEA9F2218513000D48E41 /* Cell */,
+			);
+			path = CommentNotifiTableView;
+			sourceTree = "<group>";
+		};
+		102AEA9E2218512A00D48E41 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				1080DB302218678E00DE3F53 /* LikeNotifiTableViewCell.xib */,
+				102AEAA02218516500D48E41 /* LikeNotifiTableViewCell.swift */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		102AEA9F2218513000D48E41 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				102AEAA62218536400D48E41 /* CommentNotifiTableViewCell.xib */,
+				102AEAA42218535400D48E41 /* CommentNotifiTableViewCell.swift */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		102AEAAA2218612800D48E41 /* LikeNotifiTableView */ = {
+			isa = PBXGroup;
+			children = (
+				102AEAAB2218616300D48E41 /* LikeNotifiTableViewController.swift */,
+				102AEA9E2218512A00D48E41 /* Cell */,
+			);
+			name = LikeNotifiTableView;
+			path = "New Group";
 			sourceTree = "<group>";
 		};
 		103452C521E5A25A00DF0242 /* cell */ = {
@@ -497,6 +560,8 @@
 			isa = PBXGroup;
 			children = (
 				10D100A6221192E70064EC1B /* NotificationViewController.swift */,
+				102AEA9322184DE900D48E41 /* NotificationCollectionViewCell.swift */,
+				102AEA952218506900D48E41 /* PageView */,
 			);
 			path = Notification;
 			sourceTree = "<group>";
@@ -687,9 +752,11 @@
 				10C76CA721ABCB01003F0DA2 /* RemoteConfigDefaults.plist in Resources */,
 				103452CD21E5A2CC00DF0242 /* contentCell.xib in Resources */,
 				109A4D7721C34E12003A3597 /* GoogleService-Info.plist in Resources */,
+				102AEAA72218536400D48E41 /* CommentNotifiTableViewCell.xib in Resources */,
 				103452C221E5A16000DF0242 /* titleCell.xib in Resources */,
 				10C76C7E21ABB6DC003F0DA2 /* Assets.xcassets in Resources */,
 				103D022A220AD44B003EF832 /* postCell.xib in Resources */,
+				1080DB312218678E00DE3F53 /* LikeNotifiTableViewCell.xib in Resources */,
 				103452D721E5B70E00DF0242 /* photoCollectionViewCell.xib in Resources */,
 				10C76C7C21ABB6DA003F0DA2 /* Main.storyboard in Resources */,
 			);
@@ -884,14 +951,18 @@
 				103452D921EDA6C100DF0242 /* PhotoZoomViewController.swift in Sources */,
 				10D8A1F4220C7B2B008A74E3 /* IdDateModel.swift in Sources */,
 				10D8A1F8220D49FD008A74E3 /* ActivityIndicator.swift in Sources */,
+				102AEAAC2218616300D48E41 /* LikeNotifiTableViewController.swift in Sources */,
 				108E9596220708C900C8487D /* ListViewController.swift in Sources */,
 				103452D321E5A34100DF0242 /* CommentCell.swift in Sources */,
 				10D8A1F2220C70BA008A74E3 /* ListTableViewCell.swift in Sources */,
+				102AEAA52218535400D48E41 /* CommentNotifiTableViewCell.swift in Sources */,
 				10D100A3221192CC0064EC1B /* RankViewController.swift in Sources */,
 				10DBA1C321B4D9D300ECAA41 /* CollectionViewCellCategory.swift in Sources */,
 				105722E621C0A71200BE540E /* FoodTableViewController.swift in Sources */,
 				10A7F6FB21F6DC7D003BD53F /* SharedFunction.swift in Sources */,
 				105722E421C0A70200BE540E /* TrevelTableViewController.swift in Sources */,
+				102AEA9D2218512400D48E41 /* CommentNotifiTableViewController.swift in Sources */,
+				102AEAA12218516500D48E41 /* LikeNotifiTableViewCell.swift in Sources */,
 				10C76CAB21ACCCE2003F0DA2 /* SignupViewController.swift in Sources */,
 				103452C421E5A17E00DF0242 /* TitleCell.swift in Sources */,
 				10C76C7721ABB6DA003F0DA2 /* AppDelegate.swift in Sources */,
@@ -909,6 +980,7 @@
 				103D022C220AD481003EF832 /* PostCell.swift in Sources */,
 				1023494D21B0DE9E0024AEC0 /* MainViewController.swift in Sources */,
 				10D8A1E9220C1350008A74E3 /* ListCollectionViewCell.swift in Sources */,
+				102AEA9422184DE900D48E41 /* NotificationCollectionViewCell.swift in Sources */,
 				10CE3A9321BDFD2E003E8EEB /* UserModel.swift in Sources */,
 				108E95942207038F00C8487D /* ProfileEditViewController.swift in Sources */,
 				107E24BD22156D21004FAADA /* SearchPageViewController.swift in Sources */,
@@ -916,6 +988,7 @@
 				105722E221C0A52900BE540E /* FreeTableViewController.swift in Sources */,
 				10D692FD21E435B8005E06D1 /* SubmitContentViewController.swift in Sources */,
 				10D8A1EB220C1CDE008A74E3 /* ListPageViewController.swift in Sources */,
+				102AEA99221850DD00D48E41 /* NotificationPageViewController.swift in Sources */,
 				107E24C8221685F9004FAADA /* AlgoriaSubmitModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

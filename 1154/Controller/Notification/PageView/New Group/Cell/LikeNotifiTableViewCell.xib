@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="113" id="Eh5-Pb-iIW" customClass="LikeNotifiTableViewCell" customModule="_154" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="113"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Eh5-Pb-iIW" id="Ng5-wL-eZn">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="112.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zLE-gf-fFq">
+                        <rect key="frame" x="8" y="3" width="359" height="106.5"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </view>
+                </subviews>
+                <color key="backgroundColor" red="0.96078431369999995" green="0.96078431369999995" blue="0.96078431369999995" alpha="1" colorSpace="calibratedRGB"/>
+                <constraints>
+                    <constraint firstItem="zLE-gf-fFq" firstAttribute="leading" secondItem="Ng5-wL-eZn" secondAttribute="leading" constant="8" id="7vh-Wg-KRY"/>
+                    <constraint firstAttribute="bottom" secondItem="zLE-gf-fFq" secondAttribute="bottom" constant="3" id="Wkm-AP-1DW"/>
+                    <constraint firstItem="zLE-gf-fFq" firstAttribute="top" secondItem="Ng5-wL-eZn" secondAttribute="top" constant="3" id="ZrV-lb-A4b"/>
+                    <constraint firstAttribute="trailing" secondItem="zLE-gf-fFq" secondAttribute="trailing" constant="8" id="m2B-gI-Hj4"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="mainView" destination="zLE-gf-fFq" id="IPX-A9-v3I"/>
+            </connections>
+            <point key="canvasLocation" x="-28" y="80.50974512743629"/>
+        </tableViewCell>
+    </objects>
+</document>
