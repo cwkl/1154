@@ -1,14 +1,14 @@
 //
-//  SearchPageViewController.swift
+//  NotificationPageViewController.swift
 //  1154
 //
-//  Created by Junhyeok Kwon on 2019. 2. 14..
+//  Created by Junhyeok Kwon on 2019. 2. 16..
 //  Copyright © 2019년 Junhyeok Kwon. All rights reserved.
 //
 
 import UIKit
 
-class SearchPageViewController: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIScrollViewDelegate {
+class NotificationPageViewController: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIScrollViewDelegate {
     
     var pageIndex = 0
     var flag = true
@@ -20,20 +20,20 @@ class SearchPageViewController: UIPageViewController, UIPageViewControllerDataSo
         
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
         
-        let page1 = storyBoard.instantiateViewController(withIdentifier: "PostTableViewController")
+        let page1 = storyBoard.instantiateViewController(withIdentifier: "LikeNotifiTableViewController")
         page1.view.tag = 0
-        if let post = page1 as? PostTableViewController {
-            post.pagerView = self
+        if let like = page1 as? LikeNotifiTableViewController {
+            like.pagerView = self
         }
-        let page2 = storyBoard.instantiateViewController(withIdentifier: "UserTableViewController")
+        let page2 = storyBoard.instantiateViewController(withIdentifier: "CommentNotifiTableViewController")
         page2.view.tag = 1
-        if let user = page2 as? UserTableViewController {
-            user.pagerView = self
+        if let comment = page2 as? CommentNotifiTableViewController {
+            comment.pagerView = self
         }
         
         return [page1, page2]
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.dataSource = self
@@ -87,7 +87,7 @@ class SearchPageViewController: UIPageViewController, UIPageViewControllerDataSo
         pageIndex = pageViewController.viewControllers!.first!.view.tag
         
         for visibleCell in collectionView.visibleCells {
-            if let visibleCell = visibleCell as? SearchCollectionViewCell {
+            if let visibleCell = visibleCell as? NotificationCollectionViewCell {
                 if visibleCell.indexPath?.item == pageIndex {
                     visibleCell.categoryLabel.textColor = UIColor(red: 19/255, green: 69/255, blue: 99/255, alpha: 0.9) /* #134563 */
                 } else {
