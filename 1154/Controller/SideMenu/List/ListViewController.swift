@@ -18,6 +18,7 @@ class ListViewController: UIViewController, UICollectionViewDelegate, UICollecti
     private var bar = UIView()
     private var leftConstraints: NSLayoutConstraint?
     private let item = ["Like","Bookmark"]
+    
     var isAnimating = false
     
     

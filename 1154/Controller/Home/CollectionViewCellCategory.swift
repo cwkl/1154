@@ -37,8 +37,9 @@ class CollectionViewCellCategory: UICollectionViewCell {
     
     @objc private func tapCell() {
         guard let indexPath = self.indexPath else { return }
-        
-        self.delegate?.tapCell(indexPath: indexPath)
+        if cellLabel.textColor == .lightGray{
+            self.delegate?.tapCell(indexPath: indexPath)
+        }
     }
 }
 

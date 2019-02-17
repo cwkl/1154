@@ -33,6 +33,7 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
     private var isFirst = true
     private var isIndicator = false
     private var isGuest = false
+    
     var isAnimating = false
     
     var isProfileView = false
@@ -357,7 +358,7 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
             let index = indexPath.row
             let x = (UIScreen.main.bounds.width / CGFloat(item.count)) * CGFloat(index)
             leftConstraints?.constant = x
-
+            
             UIView.animate(withDuration: 0.5, animations: {
                 self.view.layoutIfNeeded()
             }) { (complete) in
