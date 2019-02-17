@@ -48,8 +48,9 @@ class NotificationCollectionViewCell: UICollectionViewCell {
     
     @objc private func tapCell() {
         guard let indexPath = self.indexPath else { return }
-        
-        self.delegate?.tapCell(indexPath: indexPath)
+        if categoryLabel.textColor == .lightGray{
+            self.delegate?.tapCell(indexPath: indexPath)
+        }
     }
     
 }
