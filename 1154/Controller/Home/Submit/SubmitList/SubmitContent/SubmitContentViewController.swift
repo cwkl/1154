@@ -49,6 +49,7 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
     private var postId: String?
     private var isAddIndicator = false
     private var isGuestUser = false
+    var fromNotifiCommentId: String?
     var isBookmark = false
     var fromProfile = false
     var model: SubmitModel?{
@@ -99,6 +100,29 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
     
     func activityIndicatorStop() {
         ActivityIndicator.shared.stop(view: tableView)
+        if fromNotifiCommentId != nil{
+            scrollToNotification()
+        }
+    }
+    
+    func scrollToNotification(){
+        guard let commentId = fromNotifiCommentId else {return}
+        
+        var scrollIndex = 0
+        for (index, _) in self.commentArray.enumerated(){
+            if self.commentArray[index].id == commentId{
+                scrollIndex = index
+            }
+        }
+        if (self.model?.imageUrl) != nil{
+            scrollIndex += 3
+        }else{
+            scrollIndex += 2
+        }
+        
+        let indexPath = IndexPath(row: scrollIndex, section: 0)
+        self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+        
     }
     
     func presentSubmitUserProfile() {
@@ -534,9 +558,11 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
         self.commentTextField.text = ""
         DispatchQueue.global().async {
             
-            guard let id = self.model?.id else {return}
+            guard let id = self.model?.id, let myName = self.userModel?.name, let submitUid = self.model?.uid else {return}
             let documentReference: DocumentReference?
+            let notifiDocumentReference: DocumentReference?
             let data: [String : Any]?
+            let notifiData: [String : Any]?
             var countId: String?
             if !self.isSubComment{
                 let commentId = UUID.init().uuidString
@@ -544,6 +570,16 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
                 documentReference = Firestore.firestore().collection("submit").document(id).collection("comment").document(commentId)
                 let commentModel = CommentModel(uid: uid, date: SharedFunction.shared.getToday(), comment: comment, commentLikeCount: 0, to: self.to, id: commentId, isSubComment: self.isSubComment, delete: false, isLike: nil, parentId: self.parentId)
                 data = try? FirestoreEncoder().encode(commentModel)
+                
+                notifiDocumentReference = Firestore.firestore().collection("users").document(submitUid).collection("notification").document(commentId)
+                let notifiModel = NotificationModel(type: "comment",
+                id: commentId,
+                uid: uid,
+                content: "replied your post.",
+                date: SharedFunction.shared.getToday(),
+                name: myName,
+                submitId: id)
+                notifiData = try? FirestoreEncoder().encode(notifiModel)
             }else{
                 let subCommentId = UUID.init().uuidString
                 countId = subCommentId
@@ -551,15 +587,45 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
                 documentReference = Firestore.firestore().collection("submit").document(id).collection("comment").document(parentId).collection("subComment").document(subCommentId)
                 let commentModel = CommentModel(uid: uid, date: SharedFunction.shared.getToday(), comment: comment, commentLikeCount: 0, to: self.to, id: subCommentId, isSubComment: self.isSubComment, delete: false, isLike: nil, parentId: self.parentId)
                 data = try? FirestoreEncoder().encode(commentModel)
+                if self.to == ""{
+                    notifiDocumentReference = Firestore.firestore().collection("notification").document("dummy")
+                    let notifiModel = NotificationModel(type: "comment",
+                                                        id: subCommentId,
+                                                        uid: uid,
+                                                        content: "replied your comment.",
+                                                        date: SharedFunction.shared.getToday(),
+                                                        name: myName,
+                                                        submitId: id)
+                    notifiData = try? FirestoreEncoder().encode(notifiModel)
+                }else{
+                    notifiDocumentReference = Firestore.firestore().collection("users").document(self.to).collection("notification").document(subCommentId)
+                    let notifiModel = NotificationModel(type: "comment",
+                                                        id: subCommentId,
+                                                        uid: uid,
+                                                        content: "replied your comment.",
+                                                        date: SharedFunction.shared.getToday(),
+                                                        name: myName,
+                                                        submitId: id)
+                    notifiData = try? FirestoreEncoder().encode(notifiModel)
+                }
             }
             guard let commentCountId = countId else {return}
             self.postId = commentCountId
             self.commentCountCollectionUpdate(id: commentCountId)
             
-            guard let reference = documentReference, let commentData = data else {return}
+            guard let reference = documentReference, let commentData = data, let notificationData = notifiData else {return}
             reference.setData(commentData) { (error) in
                 if error != nil{
                 }else{
+                    if self.isSubComment{
+                        if self.to != ""{
+                            notifiDocumentReference?.setData(notificationData)
+                        }
+                    }else{
+                        if submitUid != self.userModel?.uid{
+                            notifiDocumentReference?.setData(notificationData)
+                        }
+                    }
                     if self.replyingBar.isHidden == false {
                         self.replyingBarCancelEvent()
                     }
@@ -682,6 +748,8 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
             cell.commentsCountLabel.text = "\(model.commentCount)"
             cell.likesCountLabel.text = "\(model.likeCount)"
             cell.viewsCountLabel.text = "\(model.viewsCount)"
+            cell.submitUserUid = model.uid
+            cell.myName = self.userModel?.name
             cell.uid = self.uid
             cell.submitId = model.id
             return cell

@@ -27,6 +27,8 @@ class TitleCell: UITableViewCell {
     @IBOutlet weak var commentsCountLabel: UILabel!
     @IBOutlet weak var likesCountLabel: UILabel!
     @IBOutlet weak var viewsCountLabel: UILabel!
+    var submitUserUid: String?
+    var myName: String?
     var isJudge = false
     var uid: String?
     var titleCellDelegate: TitleCellDelegate?
@@ -143,7 +145,7 @@ class TitleCell: UITableViewCell {
     
     @IBAction func likeButtonEvent(_ sender: Any) {
         DispatchQueue.global().async {
-            guard let isLike = self.isLike, let uid = self.uid, let id = self.submitId else {return}
+            guard let isLike = self.isLike, let uid = self.uid, let id = self.submitId, let myName = self.myName, let submitUserUid = self.submitUserUid, let submitId = self.submitId  else {return}
             if isLike{
                 DispatchQueue.main.async {
                     self.likebutton.setImage(UIImage(named: "heart2"), for: UIControl.State.normal)
@@ -151,6 +153,7 @@ class TitleCell: UITableViewCell {
                 }
                 Firestore.firestore().collection("submit").document(id).collection("like").document(uid).delete()
                 Firestore.firestore().collection("users").document(uid).collection("like").document(id).delete()
+                Firestore.firestore().collection("users").document(submitUserUid).collection("notification").document(uid).delete()
             }else{
                 DispatchQueue.main.async {
                     self.likebutton.setImage(UIImage(named: "fillheart"), for: UIControl.State.normal)
@@ -161,6 +164,16 @@ class TitleCell: UITableViewCell {
                 guard let likeData = data else {return}
                 Firestore.firestore().collection("submit").document(id).collection("like").document(uid).setData(likeData)
                 Firestore.firestore().collection("users").document(uid).collection("like").document(id).setData(["submitId" : id, "date" : SharedFunction.shared.getToday()])
+                
+                let notifiModel = NotificationModel(type: "like",
+                                                    id: uid,
+                                                    uid: uid,
+                                                    content: "liked your post.",
+                                                    date: SharedFunction.shared.getToday(),
+                                                    name: myName,
+                                                    submitId: submitId)
+                guard let notifiData = try? FirestoreEncoder().encode(notifiModel) else {return}
+                Firestore.firestore().collection("users").document(submitUserUid).collection("notification").document(uid).setData(notifiData)
             }
         }
     }

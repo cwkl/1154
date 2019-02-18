@@ -120,3 +120,4 @@ class SearchPageViewController: UIPageViewController, UIPageViewControllerDataSo
         flag = true
     }
 }
+

@@ -112,11 +112,12 @@ class PostTableViewController: UIViewController, UITableViewDelegate, UITableVie
                 if error != nil{
                 }else{
                     guard let snapshot = snapshot?.data(), let data = try? FirestoreDecoder().decode(SubmitModel.self, from: snapshot) else {return}
-                    
-                    if let view = self.storyboard?.instantiateViewController(withIdentifier: "SubmitContentViewController") as? SubmitContentViewController{
-                        view.model = data
-                        view.hidesBottomBarWhenPushed = true
-                        self.navigationController?.pushViewController(view, animated: true)
+                    DispatchQueue.main.async {
+                        if let view = self.storyboard?.instantiateViewController(withIdentifier: "SubmitContentViewController") as? SubmitContentViewController{
+                            view.model = data
+                            view.hidesBottomBarWhenPushed = true
+                            self.navigationController?.pushViewController(view, animated: true)
+                        }                        
                     }
                 }
             }
@@ -149,12 +150,5 @@ class PostTableViewController: UIViewController, UITableViewDelegate, UITableVie
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 70
-    }
-    
-}
-
-extension PostTableViewController: UIGestureRecognizerDelegate {
-    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
     }
 }

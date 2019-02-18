@@ -32,11 +32,11 @@ class SideMenuViewController: UIViewController {
         configureViewOption()
         buttonGestureAdd()
         loadUserData()
-        NotificationManager.receive(sideUserReload: self, selector: #selector(sideUserLoadNotificaiton))
-        NotificationManager.receive(sideUserReload: self, selector: #selector(sideUserLoadNotificaiton))
+        NotificationManager.receive(sideUserReload: self, selector: #selector(sideUserLoadNotification))
+        NotificationManager.receive(sideUserReload: self, selector: #selector(sideUserLoadNotification))
     }
     
-    @objc func sideUserLoadNotificaiton(){
+    @objc func sideUserLoadNotification(){
         loadUserData()
     }
     

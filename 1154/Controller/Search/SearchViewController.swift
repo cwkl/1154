@@ -96,7 +96,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UICollectionV
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         
-        NotificationManager.receive(mainUserReload: self, selector: #selector(mainUserLoadNotificaiton))
+        NotificationManager.receive(mainUserReload: self, selector: #selector(mainUserLoadNotification))
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -230,7 +230,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UICollectionV
         }
     }
     
-    @objc func mainUserLoadNotificaiton(){
+    @objc func mainUserLoadNotification(){
         userDateLoad()
     }
     
@@ -295,5 +295,11 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UICollectionV
                 }
             }
         }
+    }
+}
+
+extension SearchViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }

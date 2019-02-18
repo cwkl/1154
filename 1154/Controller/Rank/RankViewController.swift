@@ -36,10 +36,10 @@ class RankViewController: UIViewController {
     }
     
     func notificationReceive(){
-        NotificationManager.receive(mainUserReload: self, selector: #selector(mainUserLoadNotificaiton))
+        NotificationManager.receive(mainUserReload: self, selector: #selector(mainUserLoadNotification))
     }
     
-    @objc func mainUserLoadNotificaiton(){
+    @objc func mainUserLoadNotification(){
         userDateLoad()
     }
     
