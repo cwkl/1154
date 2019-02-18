@@ -11,6 +11,7 @@ target '1154' do
   pod 'Firebase/RemoteConfig'
   pod 'Firebase/Firestore'
   pod 'Firebase/Auth'
+  pod 'Firebase/Messaging'
   pod 'CodableFirebase'
   pod 'Firebase/Storage'
   pod 'Gallery'  

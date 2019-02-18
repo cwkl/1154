@@ -13,13 +13,16 @@ import Firebase
 import CodableFirebase
 import InstantSearchClient
 
-class SignupViewController: UIViewController {
+class SignupViewController: UIViewController, UITextFieldDelegate {
+    @IBOutlet weak var mainView: UIView!
     @IBOutlet weak var signup_edtEmail: UITextField!
     @IBOutlet weak var signup_edtName: UITextField!
     @IBOutlet weak var signup_edtPassword: UITextField!
     @IBOutlet weak var signup_signup: UIButton!
     @IBOutlet weak var signup_cancle: UIButton!
     @IBOutlet weak var scrollViewBottom: NSLayoutConstraint!
+    
+    private var isAddIndicator = false
     
     
     override func viewDidLoad() {
@@ -29,6 +32,8 @@ class SignupViewController: UIViewController {
         signup_cancle.addTarget(self, action: #selector(cancleEvent), for: .touchUpInside)
         signup_signup.layer.cornerRadius = 5
         signup_cancle.layer.cornerRadius = 5
+        
+        signup_edtName.delegate = self
         
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(viewTapped)))
         
@@ -51,14 +56,21 @@ class SignupViewController: UIViewController {
             self.view.layoutIfNeeded()
         })
     }
-    
-    
+
     @objc func keyboardWillHide(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             if scrollViewBottom.constant != 0{
                 scrollViewBottom.constant = 0
             }
         }
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let maxLength = 10
+        let currentString: NSString = textField.text! as NSString
+        let newString: NSString =
+            currentString.replacingCharacters(in: range, with: string) as NSString
+        return newString.length <= maxLength
     }
     
     @objc func cancleEvent(){
@@ -91,7 +103,24 @@ class SignupViewController: UIViewController {
         }
     }
     
+    func startIndicator() {
+        if !isAddIndicator{
+            UIView.animate(withDuration: 0.5) {
+                self.mainView.alpha = 0
+            }
+            ActivityIndicator.shared.addIndicator(view: self.view)
+            ActivityIndicator.shared.start(view: mainView)
+            isAddIndicator = true
+        }
+    }
+    
+    func activityIndicatorStop() {
+        ActivityIndicator.shared.stop(view: mainView)
+        isAddIndicator = false
+    }
+    
     @objc func signupEvent(){
+        startIndicator()
         signup_edtName.resignFirstResponder()
         signup_edtEmail.resignFirstResponder()
         signup_edtPassword.resignFirstResponder()
@@ -101,6 +130,7 @@ class SignupViewController: UIViewController {
         let password = signup_edtPassword.text!
         Auth.auth().createUser(withEmail: email, password: password){ (user, err) in
             if err != nil{
+                self.activityIndicatorStop()
                 let alert = UIAlertController(title: "Invalid ID and password", message: nil, preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
                 self.present(alert, animated: true, completion: nil)

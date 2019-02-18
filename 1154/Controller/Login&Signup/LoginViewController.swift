@@ -10,6 +10,7 @@ import UIKit
 import FirebaseAuth
 
 class LoginViewController: UIViewController {
+    @IBOutlet weak var mainView: UIView!
     @IBOutlet weak var login_edtId: UITextField!
     @IBOutlet weak var login_edtPassword: UITextField!
     @IBOutlet weak var login_loginBtn: UIButton!
@@ -17,6 +18,8 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var login_cancelBtn: UIButton!
     @IBOutlet weak var scrollViewBottom: NSLayoutConstraint!
     @IBOutlet weak var scrollView: UIScrollView!
+    
+    private var isAddIndicator = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,9 +47,26 @@ class LoginViewController: UIViewController {
             if User != nil{
                 NotificationManager.postMainUserReload()
                 NotificationManager.postSideUserReload()
+                self.activityIndicatorStop()
                 self.dismiss(animated: true, completion: nil)
             }
         }
+    }
+    
+    func startIndicator() {
+        if !isAddIndicator{
+            UIView.animate(withDuration: 0.5) {
+                self.mainView.alpha = 0
+            }
+            ActivityIndicator.shared.addIndicator(view: self.view)
+            ActivityIndicator.shared.start(view: mainView)
+            isAddIndicator = true
+        }
+    }
+    
+    func activityIndicatorStop() {
+        ActivityIndicator.shared.stop(view: mainView)
+        isAddIndicator = false
     }
     
     @objc func backEvent(){
@@ -56,6 +76,7 @@ class LoginViewController: UIViewController {
     }
     
     @objc func loginEvent(){
+        startIndicator()
         login_edtId.resignFirstResponder()
         login_edtPassword.resignFirstResponder()
         guard let loginEdtIdText = login_edtId.text,
