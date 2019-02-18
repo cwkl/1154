@@ -6,8 +6,10 @@
 //  Copyright © 2018년 Junhyeok Kwon. All rights reserved.
 //
 
-import Firebase
 import UIKit
+import Firebase
+import FirebaseMessaging
+import UserNotifications
 import SideMenuSwift
 
 @UIApplicationMain
@@ -19,6 +21,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         FirebaseApp.configure()
+        
+        application.registerForRemoteNotifications()
+        Messaging.messaging().delegate = self
+        UNUserNotificationCenter.current().delegate = self
+        
         
         SideMenuController.preferences.basic.menuWidth = ((UIScreen.main.bounds.width / 3) * 2) + 20
         SideMenuController.preferences.basic.statusBarBehavior = .none
@@ -56,3 +63,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
+extension AppDelegate : UNUserNotificationCenterDelegate{
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        let userInfo = notification.request.content.userInfo
+        
+        if let messageID = userInfo["gcm.message_id"]{
+            print("Message ID: \(messageID)")
+        }
+        
+        completionHandler([.alert])
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        let userInfo = response.notification.request.content.userInfo
+        
+        if let messageID = userInfo["gcm.message_id"]{
+            print("Message ID: \(messageID)")
+        }
+        completionHandler()
+    }
+}
+
+extension AppDelegate : MessagingDelegate{
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+        print("Firebase registration token: \(fcmToken)")
+    }
+    
+    func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingRemoteMessage) {
+        print("Received data message: \(remoteMessage.appData)")
+    }
+}

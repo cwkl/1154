@@ -13,7 +13,7 @@ class ActivityIndicator{
     
     static let shared = ActivityIndicator()
     
-    var activityIndicator = NVActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 25, height: 25), type: NVActivityIndicatorType.lineSpinFadeLoader, color: UIColor(red: 19/255, green: 69/255, blue: 99/255, alpha: 1) /* #134563 */)
+    var activityIndicator = NVActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 25, height: 25), type: NVActivityIndicatorType.circleStrokeSpin, color: UIColor(red: 19/255, green: 69/255, blue: 99/255, alpha: 1) /* #134563 */)
     
     func addIndicator(view : UIView){
         view.addSubview(activityIndicator)

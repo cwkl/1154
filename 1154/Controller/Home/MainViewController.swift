@@ -11,6 +11,7 @@ import SideMenuSwift
 import FirebaseAuth
 import FirebaseFirestore
 import CodableFirebase
+import UserNotifications
 
 
 class MainViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, CollectionViewCellCategoryDelegate {
@@ -81,6 +82,12 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
                 self.splashView.isHidden = true
             })
             NotificationManager.removeSplashEnd(observer: self)
+            
+            // 푸쉬 통지 허가 요청
+            let authOption: UNAuthorizationOptions = [.alert, .badge, .sound]
+            UNUserNotificationCenter.current().requestAuthorization(options: authOption, completionHandler: { (_, _) in
+                print("push permission finished")
+            })
         }
     }
     

@@ -105,6 +105,7 @@
                         <outlet property="login_edtPassword" destination="w6N-Js-keg" id="wVB-dd-9cg"/>
                         <outlet property="login_loginBtn" destination="N2h-Ob-aVo" id="WmC-RU-2aO"/>
                         <outlet property="login_signupBtn" destination="LHP-Jf-APi" id="2J9-rM-yVA"/>
+                        <outlet property="mainView" destination="H4E-VF-Ebi" id="dIL-2U-GCw"/>
                         <outlet property="scrollView" destination="Ax8-rp-eXA" id="Xzx-gV-E5C"/>
                         <outlet property="scrollViewBottom" destination="nwG-1L-lUf" id="v7M-p4-JAH"/>
                     </connections>
@@ -201,6 +202,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="F2J-9e-Wcw"/>
                     <connections>
+                        <outlet property="mainView" destination="WIw-0I-Nuh" id="iSr-GC-dH2"/>
                         <outlet property="scrollViewBottom" destination="6oW-jk-OXZ" id="fS0-Ej-dMg"/>
                         <outlet property="signup_cancle" destination="xA4-jW-4nt" id="oTZ-m8-dGB"/>
                         <outlet property="signup_edtEmail" destination="lmC-ue-csp" id="6YU-oh-S9T"/>
@@ -1764,13 +1766,13 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="81" height="128"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="posts" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HsP-Qo-Oec">
-                                                                        <rect key="frame" x="22.666666666666654" y="32.33333333333335" width="35.666666666666657" height="87.666666666666686"/>
+                                                                        <rect key="frame" x="22.666666666666654" y="103" width="35.666666666666657" height="17"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                         <color key="textColor" white="0.66666666666666663" alpha="0.89747431506849318" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gl4-cX-HDl">
-                                                                        <rect key="frame" x="38.333333333333343" y="7.9999999999999982" width="4.3333333333333357" height="20.333333333333329"/>
+                                                                        <rect key="frame" x="38.333333333333343" y="8" width="4.3333333333333357" height="91"/>
                                                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
@@ -1814,13 +1816,13 @@
                                                                 <rect key="frame" x="162" y="0.0" width="81" height="128"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="likes" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="upU-X4-1Sy">
-                                                                        <rect key="frame" x="26" y="32.33333333333335" width="29" height="87.666666666666686"/>
+                                                                        <rect key="frame" x="26" y="103" width="29" height="17"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                         <color key="textColor" white="0.66666666666666663" alpha="0.89787564212328763" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cRK-bO-y52">
-                                                                        <rect key="frame" x="38.333333333333314" y="7.9999999999999982" width="4.3333333333333357" height="20.333333333333329"/>
+                                                                        <rect key="frame" x="38.333333333333314" y="8" width="4.3333333333333357" height="91"/>
                                                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
                                                                         <nil key="textColor"/>
                                                                         <nil key="highlightedColor"/>
