@@ -270,7 +270,9 @@ class CommentCell: UITableViewCell {
                 let submitId = self.submitId,
                 let commentId = self.commentId,
                 let isLike = self.isLike,
-                let isSubComment = self.isSubComment else {return}
+                let isSubComment = self.isSubComment,
+                let myName = self.name,
+                let commentUid = self.commentUid else {return}
             if isLike{
                 DispatchQueue.main.async {
                     self.likeButton.image = UIImage(named: "heart2")
@@ -278,21 +280,11 @@ class CommentCell: UITableViewCell {
                 }
                 if isSubComment{
                    guard let parentId = self.parentId else {return}
-                    Firestore.firestore().collection("submit").document(submitId).collection("comment").document(parentId).collection("subComment").document(commentId).collection("like").document(uid).delete { (error) in
-                        if error != nil{
-                            print(error.debugDescription)
-                        }else{
-                            
-                        }
-                    }
+                    Firestore.firestore().collection("submit").document(submitId).collection("comment").document(parentId).collection("subComment").document(commentId).collection("like").document(uid).delete()
                 }else{
-                    Firestore.firestore().collection("submit").document(submitId).collection("comment").document(commentId).collection("like").document(uid).delete { (error) in
-                        if error != nil{
-                        }else{
-                            
-                        }
-                    }
+                    Firestore.firestore().collection("submit").document(submitId).collection("comment").document(commentId).collection("like").document(uid).delete()
                 }
+                Firestore.firestore().collection("users").document(commentUid).collection("notification").document("\(commentId)\(uid)").delete()
             }else{
                 DispatchQueue.main.async {
                     self.likeButton.image = UIImage(named: "fillheart")
@@ -302,20 +294,20 @@ class CommentCell: UITableViewCell {
                 guard let data = try? FirestoreEncoder().encode(likeModel) else {return}
                 if isSubComment{
                     guard let parentId = self.parentId else {return}
-                    Firestore.firestore().collection("submit").document(submitId).collection("comment").document(parentId).collection("subComment").document(commentId).collection("like").document(uid).setData(data) { (error) in
-                        if error != nil{
-                        }else{
-                            
-                        }
-                    }
+                    Firestore.firestore().collection("submit").document(submitId).collection("comment").document(parentId).collection("subComment").document(commentId).collection("like").document(uid).setData(data)
                 }else{
-                Firestore.firestore().collection("submit").document(submitId).collection("comment").document(commentId).collection("like").document(uid).setData(data) { (error) in
-                        if error != nil{
-                        }else{
-                            
-                        }
-                    }
+                Firestore.firestore().collection("submit").document(submitId).collection("comment").document(commentId).collection("like").document(uid).setData(data)
                 }
+                
+                let notifiModel = NotificationModel(type: "commentlike",
+                                                    id: commentId,
+                                                    uid: uid,
+                                                    content: "liked your comment.",
+                                                    date: SharedFunction.shared.getToday(),
+                                                    name: myName,
+                                                    submitId: submitId)
+                guard let notifiData = try? FirestoreEncoder().encode(notifiModel) else {return}
+                Firestore.firestore().collection("users").document(commentUid).collection("notification").document("\(commentId)\(uid)").setData(notifiData)
             }
         }
     }

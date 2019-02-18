@@ -56,7 +56,7 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
     
     func notificationReceive(){
         NotificationManager.receive(splashEnd: self, selector: #selector(splashEnd))
-        NotificationManager.receive(mainUserReload: self, selector: #selector(mainUserLoadNotificaiton))
+        NotificationManager.receive(mainUserReload: self, selector: #selector(mainUserLoadNotification))
     }
     
     func splashStart(){
@@ -84,7 +84,7 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
         }
     }
     
-    @objc func mainUserLoadNotificaiton(){
+    @objc func mainUserLoadNotification(){
         userDateLoad()
         mainView.alpha = 0
         ActivityIndicator.shared.addIndicator(view: self.view)

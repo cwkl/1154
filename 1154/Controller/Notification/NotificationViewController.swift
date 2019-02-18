@@ -12,26 +12,23 @@ import FirebaseAuth
 import FirebaseFirestore
 import CodableFirebase
 
-class NotificationViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, NotificationCollectionViewCellDelegate {
-
+class NotificationViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, NotificationTableViewCellLikeDelegate{
+    
     @IBOutlet weak var barProfileImageView: UIImageView!
-    @IBOutlet weak var menuView: UIView!
-    @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var tableView: UITableView!
     
-    private var pagerView: NotificationPageViewController = NotificationPageViewController()
-    private var bar = UIView()
-    private var leftConstraints: NSLayoutConstraint?
-    private let item = ["Like","Comment"]
+    private var notifiModel: [NotificationModel] = []
+    private var refreshControl : UIRefreshControl?
+    private var isAddIndicator = false
     
-    var isAnimating = false
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        startIndicator()
+        notifiDataLoad()
         userDateLoad()
         configureViewOption()
-        addView()
         addGesture()
         notificationReceive()
     }
@@ -40,26 +37,34 @@ class NotificationViewController: UIViewController, UICollectionViewDelegate, UI
         barProfileImageView.layer.cornerRadius = barProfileImageView.frame.height / 2
         barProfileImageView.layer.masksToBounds = true
         
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: .centeredHorizontally)
-        pagerView.collectionView = self.collectionView
+        tableView.register(UINib(nibName: "NotificationTableViewCellLike", bundle: nil), forCellReuseIdentifier: "NotificationTableViewCellLike")
+        
+        let refreshControl = UIRefreshControl()
+        tableView.refreshControl = refreshControl
+        self.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(refreshed), for: .valueChanged)
     }
     
-    func addView(){
-        let bar = UIView()
-        menuView.addSubview(bar)
-        self.bar = bar
-        bar.backgroundColor = UIColor(red: 218/255, green: 65/255, blue: 103/255, alpha: 1.0) /* #da4167 */
-        bar.translatesAutoresizingMaskIntoConstraints = false
-        leftConstraints = bar.leadingAnchor.constraint(equalTo: menuView.leadingAnchor)
-        leftConstraints?.isActive = true
-        bar.bottomAnchor.constraint(equalTo: menuView.bottomAnchor).isActive = true
-        bar.heightAnchor.constraint(equalToConstant: 2).isActive = true
-        bar.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width / CGFloat(item.count)).isActive = true
-        
-        pagerView.bar = bar
-        pagerView.leftConstraints = leftConstraints
+    func startIndicator() {
+        if !isAddIndicator{
+            self.tableView.alpha = 0
+            ActivityIndicator.shared.addIndicator(view: self.view)
+            ActivityIndicator.shared.start(view: tableView)
+            isAddIndicator = true
+        }
+    }
+    
+    func activityIndicatorStop() {
+        ActivityIndicator.shared.stop(view: tableView)
+        isAddIndicator = false
+    }
+    
+    @objc func refreshed(){
+        notifiDataLoad()
+    }
+    
+    func refreshEnd() {
+        refreshControl?.endRefreshing()
     }
     
     func addGesture(){
@@ -69,10 +74,10 @@ class NotificationViewController: UIViewController, UICollectionViewDelegate, UI
     }
     
     func notificationReceive(){
-        NotificationManager.receive(mainUserReload: self, selector: #selector(mainUserLoadNotificaiton))
+        NotificationManager.receive(mainUserReload: self, selector: #selector(mainUserLoadNotification))
     }
     
-    @objc func mainUserLoadNotificaiton(){
+    @objc func mainUserLoadNotification(){
         userDateLoad()
     }
     
@@ -80,64 +85,75 @@ class NotificationViewController: UIViewController, UICollectionViewDelegate, UI
         self.sideMenuController?.revealMenu()
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let vc = segue.destination as? NotificationPageViewController,
-            segue.identifier == "NotificationPager"{
-            self.pagerView = vc
+    func tapMainCell(submitId: String, type: String, commentId: String) {
+        self.view.isUserInteractionEnabled = false
+        DispatchQueue.global().async {
+            Firestore.firestore().collection("submit").document(submitId).getDocument(completion: { (snapshot, error) in
+                if error != nil{
+                }else{
+                    guard let snapshot = snapshot?.data(), let data = try? FirestoreDecoder().decode(SubmitModel.self, from: snapshot) else {return}
+                    DispatchQueue.main.async {
+                        if let view = self.storyboard?.instantiateViewController(withIdentifier: "SubmitContentViewController") as? SubmitContentViewController{
+                            if type == "comment"{
+                                view.fromNotifiCommentId = commentId
+                            }else if type == "commentlike"{
+                                view.fromNotifiCommentId = commentId
+                            }
+                            view.model = data
+                            view.hidesBottomBarWhenPushed = true
+                            self.view.isUserInteractionEnabled = true
+                            self.navigationController?.pushViewController(view, animated: true)
+                        }
+                    }
+                }
+            })
+        }
+        
+    }
+    
+    func tapProfileCell(uid: String) {
+        self.view.isUserInteractionEnabled = false
+        DispatchQueue.global().async {
+            Firestore.firestore().collection("users").document(uid).getDocument(completion: { (snapshot, error) in
+                if error != nil{
+                }else{
+                    guard let snapshot = snapshot?.data(), let data = try? FirestoreDecoder().decode(UserModel.self, from: snapshot) else {return}
+                    DispatchQueue.main.async {
+                        if let navView = self.storyboard?.instantiateViewController(withIdentifier: "ProfileViewNavController") as? UINavigationController{
+                            if !navView.viewControllers.isEmpty, let pro = navView.viewControllers[0] as? ProfileViewController {
+                                pro.userModel = data
+                            }
+                             self.view.isUserInteractionEnabled = true
+                            self.present(navView, animated: true)
+                        }
+                    }
+                }
+            })
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return item.count
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return notifiModel.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as? NotificationCollectionViewCell{
-            cell.categoryLabel.text = item[indexPath.item]
-            cell.indexPath = indexPath
-            cell.delegate = self
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "NotificationTableViewCellLike", for: indexPath) as? NotificationTableViewCellLike{
+            cell.notificationTableViewCellLikeDelegate = self
+            cell.selectionStyle = .none
+            cell.submitId = self.notifiModel[indexPath.row].submitId
+            cell.type = self.notifiModel[indexPath.row].type
+            cell.commentId = self.notifiModel[indexPath.row].id
+            cell.date = self.notifiModel[indexPath.row].date
+            cell.content = self.notifiModel[indexPath.row].content
+            cell.uid = self.notifiModel[indexPath.row].uid
             
             return cell
         }
-        return UICollectionViewCell()
+        return UITableViewCell()
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: UIScreen.main.bounds.width / CGFloat(item.count), height: collectionView.frame.height)
-    }
-    
-    func tapCell(indexPath: IndexPath) {
-        for visibleCell in collectionView.visibleCells {
-            if let visibleCell = visibleCell as? NotificationCollectionViewCell {
-                visibleCell.tapGesture.isEnabled = false
-                
-                if visibleCell.indexPath?.item == indexPath.item {
-                    visibleCell.categoryLabel.textColor = UIColor(red: 19/255, green: 69/255, blue: 99/255, alpha: 0.9) /* #134563 */
-                } else {
-                    visibleCell.categoryLabel.textColor = .lightGray
-                }
-            }
-        }
-        
-        if !isAnimating {
-            isAnimating = true
-            let index = indexPath.row
-            let x = (UIScreen.main.bounds.width / CGFloat(item.count)) * CGFloat(index)
-            leftConstraints?.constant = x
-            
-            UIView.animate(withDuration: 0.5, animations: {
-                self.view.layoutIfNeeded()
-            }) { (complete) in
-                self.isAnimating = false
-                
-                for visibleCell in self.collectionView.visibleCells {
-                    if let visibleCell = visibleCell as? NotificationCollectionViewCell {
-                        visibleCell.tapGesture.isEnabled = true
-                    }
-                }
-            }
-            self.pagerView.itemWasPressed(index: index)
-        }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 70
     }
     
     func userDateLoad(){
@@ -146,6 +162,7 @@ class NotificationViewController: UIViewController, UICollectionViewDelegate, UI
                 else {
                     DispatchQueue.main.async {
                         self.barProfileImageView.image = UIImage(named: "defaultprofile")
+                        self.activityIndicatorStop()
                     }
                     return
             }
@@ -189,5 +206,39 @@ class NotificationViewController: UIViewController, UICollectionViewDelegate, UI
                 }
             }
         }
+    }
+    
+    func notifiDataLoad(){
+        guard let uid = Auth.auth().currentUser?.uid else {return}
+        DispatchQueue.global().async {
+            Firestore.firestore().collection("users").document(uid).collection("notification").order(by: "date", descending: true).getDocuments(completion: { (snapshot, error) in
+                if error != nil{
+                    
+                }else{
+                    guard let snapshot = snapshot?.documents else {return}
+                    if snapshot.count == 0 {
+                        self.activityIndicatorStop()
+                        self.refreshControl?.endRefreshing()
+                    }
+                    self.notifiModel.removeAll()
+                    for (index, document) in snapshot.enumerated(){
+                        guard let data = try? FirestoreDecoder().decode(NotificationModel.self, from: document.data()) else {return}
+                        self.notifiModel.append(data)
+                        
+                        if index + 1 == snapshot.count{
+                            self.tableView.delegate = self
+                            self.tableView.dataSource = self
+                            self.tableView.reloadData()
+                        }
+                    }
+                }
+            })
+        }
+    }
+}
+
+extension NotificationViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }
