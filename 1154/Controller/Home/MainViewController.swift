@@ -58,6 +58,7 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
     func notificationReceive(){
         NotificationManager.receive(splashEnd: self, selector: #selector(splashEnd))
         NotificationManager.receive(mainUserReload: self, selector: #selector(mainUserLoadNotification))
+        NotificationManager.receive(pushNotification: self, selector: #selector(pushNotification))
     }
     
     func splashStart(){
@@ -67,6 +68,10 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
             mainView.alpha = 0
             self.tabBarController?.tabBar.isHidden = true
         }
+    }
+    
+    @objc func pushNotification(){
+        self.tabBarController?.selectedIndex = 3
     }
     
     @objc func splashEnd(){
@@ -108,6 +113,8 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
                 self.mainView.alpha = 1
                 ActivityIndicator.shared.stop(view: self.view)
                 self.isIndicator = false
+            }else{
+                self.splashEnd()
             }
         })
     }
@@ -117,10 +124,12 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
             guard let uid = Auth.auth().currentUser?.uid else {self.userDataLoadFailed(); return}
             Firestore.firestore().collection("users").document(uid).getDocument { (snapshot, error) in
                 if error != nil {
+                    
                 }else{
                     do{
                         guard let snapshot = snapshot?.data(),
-                            let userModel = try? FirestoreDecoder().decode(UserModel.self, from: snapshot)
+                            let userModel = try? FirestoreDecoder().decode(UserModel.self, from: snapshot),
+                            let fcmToken = UserDefaults.standard.string(forKey: "FCM_TOKEN")
                             else {self.userDataLoadFailed(); return}
                         
                         self.submitButton.isUserInteractionEnabled = true
@@ -161,6 +170,11 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
                                 }
                             }
                         }
+                        
+                        if userModel.fcmToken != fcmToken{
+                            Firestore.firestore().collection("users").document(uid).updateData(["fcmToken" : fcmToken])
+                        }
+                        
                     }catch let error{
                         print(error.localizedDescription)
                     }

@@ -63,33 +63,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
-extension AppDelegate : UNUserNotificationCenterDelegate{
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        let userInfo = notification.request.content.userInfo
-        
-        if let messageID = userInfo["gcm.message_id"]{
-            print("Message ID: \(messageID)")
-        }
-        
-        completionHandler([.alert])
-    }
+// MARK: - UNUserNotificationCenterDelegate
+extension AppDelegate : UNUserNotificationCenterDelegate {
     
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+    // 通知を開いた時に呼ばれるメソッド
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
         
-        if let messageID = userInfo["gcm.message_id"]{
-            print("Message ID: \(messageID)")
-        }
+        NotificationManager.postPushNotification()
+        
         completionHandler()
     }
 }
 
-extension AppDelegate : MessagingDelegate{
+// MARK: - MessagingDelegate
+extension AppDelegate: MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
-        print("Firebase registration token: \(fcmToken)")
-    }
-    
-    func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingRemoteMessage) {
-        print("Received data message: \(remoteMessage.appData)")
+        UserDefaults.standard.set(fcmToken, forKey: "FCM_TOKEN")
+        UserDefaults.standard.synchronize()
     }
 }

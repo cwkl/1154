@@ -122,6 +122,7 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
         
         let indexPath = IndexPath(row: scrollIndex, section: 0)
         self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+        fromNotifiCommentId = nil
         
     }
     

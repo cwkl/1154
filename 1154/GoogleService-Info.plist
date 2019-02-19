@@ -7,9 +7,9 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>993283252872-4r6av1ndlv0hq4815bhfgl8elqnsnbk4.apps.googleusercontent.com</string>
+	<string>993283252872-tgbem51j74i2jqqfi3k3qs47ur2r7fm0.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.993283252872-4r6av1ndlv0hq4815bhfgl8elqnsnbk4</string>
+	<string>com.googleusercontent.apps.993283252872-tgbem51j74i2jqqfi3k3qs47ur2r7fm0</string>
 	<key>API_KEY</key>
 	<string>AIzaSyDdOc_OfhAg5VuEO_ZO33E3oOeNMBs34r0</string>
 	<key>GCM_SENDER_ID</key>
@@ -17,7 +17,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>lightair-1154</string>
+	<string>lightair-1155</string>
 	<key>PROJECT_ID</key>
 	<string>project-375889132537588214</string>
 	<key>STORAGE_BUCKET</key>
@@ -33,7 +33,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:993283252872:ios:7e2637b220518504</string>
+	<string>1:993283252872:ios:a548064a38d5ad0b</string>
 	<key>DATABASE_URL</key>
 	<string>https://project-375889132537588214.firebaseio.com</string>
 </dict>

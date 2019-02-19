@@ -16,4 +16,5 @@ struct UserModel: Codable {
     let profileImageUrl: String?
     let startDate: String
     let region: String?
+    let fcmToken: String
 }
