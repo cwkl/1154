@@ -19,6 +19,7 @@ protocol NotificationTableViewCellLikeDelegate {
 
 class NotificationTableViewCellLike: UITableViewCell {
 
+    @IBOutlet weak var borderView: UIView!
     @IBOutlet weak var profileView: UIView!
     @IBOutlet weak var mainView: UIView!
     @IBOutlet weak var profileImageView: UIImageView!
@@ -50,7 +51,8 @@ class NotificationTableViewCellLike: UITableViewCell {
     }
     
     func configureViewOption(){
-        mainView.layer.cornerRadius = 5
+        borderView.layer.cornerRadius = 5
+        borderView.layer.masksToBounds = true
         profileImageView.layer.cornerRadius = profileImageView.frame.height / 2
         profileImageView.layer.masksToBounds = true
     }

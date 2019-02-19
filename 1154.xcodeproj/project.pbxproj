@@ -32,6 +32,7 @@
 		105722E421C0A70200BE540E /* TrevelTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105722E321C0A70200BE540E /* TrevelTableViewController.swift */; };
 		105722E621C0A71200BE540E /* FoodTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105722E521C0A71200BE540E /* FoodTableViewController.swift */; };
 		105722E821C0AB4100BE540E /* ShoppingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105722E721C0AB4100BE540E /* ShoppingTableViewController.swift */; };
+		10696590221BB4B4003602B4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1069658F221BB4B4003602B4 /* GoogleService-Info.plist */; };
 		107E24B922156185004FAADA /* UISearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107E24B822156185004FAADA /* UISearchBar.swift */; };
 		107E24BB22156C11004FAADA /* SearchCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107E24BA22156C11004FAADA /* SearchCollectionViewCell.swift */; };
 		107E24BD22156D21004FAADA /* SearchPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107E24BC22156D21004FAADA /* SearchPageViewController.swift */; };
@@ -54,7 +55,6 @@
 		108E954E2204A59600C8487D /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108E954D2204A59600C8487D /* SideMenuViewController.swift */; };
 		108E95942207038F00C8487D /* ProfileEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108E95932207038F00C8487D /* ProfileEditViewController.swift */; };
 		108E9596220708C900C8487D /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108E9595220708C900C8487D /* ListViewController.swift */; };
-		109A4D7721C34E12003A3597 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 109A4D7621C34E12003A3597 /* GoogleService-Info.plist */; };
 		10A7F6F921F6B63E003BD53F /* CommentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A7F6F821F6B63E003BD53F /* CommentModel.swift */; };
 		10A7F6FB21F6DC7D003BD53F /* SharedFunction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A7F6FA21F6DC7D003BD53F /* SharedFunction.swift */; };
 		10C76C7721ABB6DA003F0DA2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10C76C7621ABB6DA003F0DA2 /* AppDelegate.swift */; };
@@ -135,6 +135,7 @@
 		105722E321C0A70200BE540E /* TrevelTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrevelTableViewController.swift; sourceTree = "<group>"; };
 		105722E521C0A71200BE540E /* FoodTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodTableViewController.swift; sourceTree = "<group>"; };
 		105722E721C0AB4100BE540E /* ShoppingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingTableViewController.swift; sourceTree = "<group>"; };
+		1069658F221BB4B4003602B4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		107E24B822156185004FAADA /* UISearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UISearchBar.swift; sourceTree = "<group>"; };
 		107E24BA22156C11004FAADA /* SearchCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCollectionViewCell.swift; sourceTree = "<group>"; };
 		107E24BC22156D21004FAADA /* SearchPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageViewController.swift; sourceTree = "<group>"; };
@@ -157,7 +158,6 @@
 		108E954D2204A59600C8487D /* SideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
 		108E95932207038F00C8487D /* ProfileEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditViewController.swift; sourceTree = "<group>"; };
 		108E9595220708C900C8487D /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
-		109A4D7621C34E12003A3597 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		10A7F6F821F6B63E003BD53F /* CommentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentModel.swift; sourceTree = "<group>"; };
 		10A7F6FA21F6DC7D003BD53F /* SharedFunction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedFunction.swift; sourceTree = "<group>"; };
 		10C76C7321ABB6DA003F0DA2 /* 1154.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 1154.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -431,8 +431,8 @@
 				1005382521CC9418000C8427 /* extension */,
 				10CE3A8D21BA4204003E8EEB /* Supporting */,
 				10C76C8221ABB6DC003F0DA2 /* Info.plist */,
-				109A4D7621C34E12003A3597 /* GoogleService-Info.plist */,
 				10C76CA621ABCB01003F0DA2 /* RemoteConfigDefaults.plist */,
+				1069658F221BB4B4003602B4 /* GoogleService-Info.plist */,
 				10CE3A8F21BA4222003E8EEB /* Model */,
 				10CE3A8C21BA41E5003E8EEB /* Controller */,
 				10CE3A8E21BA4211003E8EEB /* SupportingClass */,
@@ -714,6 +714,7 @@
 			files = (
 				103452CF21E5A32B00DF0242 /* commentCell.xib in Resources */,
 				103452C721E5A2A000DF0242 /* photoCell.xib in Resources */,
+				10696590221BB4B4003602B4 /* GoogleService-Info.plist in Resources */,
 				107E24D02216AA08004FAADA /* UserTableViewCell.xib in Resources */,
 				10C76C8121ABB6DC003F0DA2 /* LaunchScreen.storyboard in Resources */,
 				107E24CC2216A986004FAADA /* PostTableViewCell.xib in Resources */,
@@ -721,7 +722,6 @@
 				1080DB3B221A690600DE3F53 /* NotificationTableViewCellComment.xib in Resources */,
 				10C76CA721ABCB01003F0DA2 /* RemoteConfigDefaults.plist in Resources */,
 				103452CD21E5A2CC00DF0242 /* contentCell.xib in Resources */,
-				109A4D7721C34E12003A3597 /* GoogleService-Info.plist in Resources */,
 				103452C221E5A16000DF0242 /* titleCell.xib in Resources */,
 				10C76C7E21ABB6DC003F0DA2 /* Assets.xcassets in Resources */,
 				103D022A220AD44B003EF832 /* postCell.xib in Resources */,

@@ -75,6 +75,12 @@ class NotificationViewController: UIViewController, UITableViewDelegate, UITable
     
     func notificationReceive(){
         NotificationManager.receive(mainUserReload: self, selector: #selector(mainUserLoadNotification))
+        NotificationManager.receive(pushNotification: self, selector: #selector(pushNotification))
+    }
+    
+    @objc func pushNotification(){
+        startIndicator()
+        notifiDataLoad()
     }
     
     @objc func mainUserLoadNotification(){
@@ -209,7 +215,12 @@ class NotificationViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func notifiDataLoad(){
-        guard let uid = Auth.auth().currentUser?.uid else {return}
+        guard let uid = Auth.auth().currentUser?.uid
+            else {
+                tableView.reloadData()
+                refreshEnd()
+                return
+        }
         DispatchQueue.global().async {
             Firestore.firestore().collection("users").document(uid).collection("notification").order(by: "date", descending: true).getDocuments(completion: { (snapshot, error) in
                 if error != nil{

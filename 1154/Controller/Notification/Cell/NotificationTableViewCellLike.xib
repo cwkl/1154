@@ -88,6 +88,7 @@
                 </constraints>
             </tableViewCellContentView>
             <connections>
+                <outlet property="borderView" destination="JQm-Lt-vJF" id="Qev-pg-oDY"/>
                 <outlet property="contentLabel" destination="hD3-bn-SAz" id="Tj7-Xf-6Jd"/>
                 <outlet property="dateLabel" destination="66N-6p-vfl" id="Umk-qw-jPX"/>
                 <outlet property="mainView" destination="vy2-bO-rBJ" id="3GJ-Zt-y7y"/>

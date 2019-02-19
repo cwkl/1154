@@ -181,7 +181,8 @@ class ProfileEditViewController: UIViewController, GalleryControllerDelegate, UI
         guard let uid = self.uid,
             let email = self.userModel?.email,
             let startDate = self.userModel?.startDate,
-            let name = self.nameTextField.text else {return}
+            let name = self.nameTextField.text,
+            let fcmToken = UserDefaults.standard.string(forKey: "FCM_TOKEN") else {return}
         
         DispatchQueue.global().async {
             let userModel = UserModel(email: email,
@@ -189,7 +190,8 @@ class ProfileEditViewController: UIViewController, GalleryControllerDelegate, UI
                                       uid: uid,
                                       profileImageUrl: url,
                                       startDate: startDate,
-                                      region: self.country)
+                                      region: self.country,
+                                      fcmToken: fcmToken)
             guard let data = try? FirestoreEncoder().encode(userModel) else {return}
             Firestore.firestore().collection("users").document(uid).updateData(data) { (error) in
                 if error != nil{

@@ -75,5 +75,12 @@ class NotificationManager: NSObject {
         NotificationCenter.default.removeObserver(observer, name: NSNotification.Name(rawValue: N_SIDE_USER_RELOAD), object: nil)
     }
     
+    private static let N_PUSH_NOTIFICATION_CLICK = "N_PUSH_NOTIFICATION_CLICK"
+    static func postPushNotification() { self.post(name: N_PUSH_NOTIFICATION_CLICK, object: nil, userInfo:nil) }
+    static func receive(pushNotification observer:Any, selector:Selector) { receive(name: N_PUSH_NOTIFICATION_CLICK, observer: observer, selector: selector) }
+    static func removepushNotification(observer: Any) {
+        NotificationCenter.default.removeObserver(observer, name: NSNotification.Name(rawValue: N_PUSH_NOTIFICATION_CLICK), object: nil)
+    }
+    
 }
 
