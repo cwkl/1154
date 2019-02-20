@@ -227,8 +227,6 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
         commentProfileImageView.layer.cornerRadius = commentProfileImageView.frame.width / 2
         commentProfileImageView.clipsToBounds = true
         
-        tableView.delegate = self
-        tableView.dataSource = self
         tableView.isUserInteractionEnabled = true
         tableView.rowHeight = UITableView.automaticDimension
         
@@ -432,6 +430,7 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
                     if snapshot.isEmpty{
                         self.refreshControl?.endRefreshing()
                         ActivityIndicator.shared.stop(view: self.tableView)
+                        self.tableView.delegate = self
                         self.tableView.dataSource = self
                         self.tableView.reloadData()
                     }
@@ -510,6 +509,7 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
             
             DispatchQueue.main.async {
                 if index + 1 == self.spanArray.count {
+                    self.tableView.delegate = self
                     self.tableView.dataSource = self
                     self.tableView.reloadData()
                     
@@ -637,7 +637,9 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
                     self.isPost = true
                 }
             }
-            Firestore.firestore().collection("users").document(notificationExistTarget).updateData(["notificationExist" : true])
+            if notificationExistTarget != uid{
+                Firestore.firestore().collection("users").document(notificationExistTarget).updateData(["notificationExist" : true])
+            }
         }
     }
 
@@ -783,8 +785,6 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
                         cell.commentId = commentArray[indexPath.row - 3].id
                         cell.to = commentArray[indexPath.row - 3].to
                         if commentArray[indexPath.row - 3].isSubComment{
-                            cell.profileImageViewWidth.constant = 20
-                            cell.profileImageViewHeight.constant = 20
                             cell.mainViewLeading.constant = +30
                             cell.mentionLabel.isHidden = false
                             if commentArray[indexPath.row - 3].to == ""{
@@ -794,8 +794,6 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
                             }
                             
                         }else{
-                            cell.profileImageViewWidth.constant = 25
-                            cell.profileImageViewHeight.constant = 25
                             cell.mainViewLeading.constant = 0
                             cell.mentionLabel.isHidden = true
                         }
@@ -863,8 +861,6 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
                         cell.commentId = commentArray[indexPath.row - 2].id
                         cell.to = commentArray[indexPath.row - 2].to
                         if commentArray[indexPath.row - 2].isSubComment{
-                            cell.profileImageViewWidth.constant = 20
-                            cell.profileImageViewHeight.constant = 20
                             cell.mainViewLeading.constant = +30
                             cell.mentionLabel.isHidden = false
                             if commentArray[indexPath.row - 2].to == ""{
@@ -873,8 +869,6 @@ extension SubmitContentViewController: UITableViewDelegate, UITableViewDataSourc
                                 cell.mentionLabel.isHidden = true
                             }
                         }else{
-                            cell.profileImageViewWidth.constant = 25
-                            cell.profileImageViewHeight.constant = 25
                             cell.mainViewLeading.constant = 0
                             cell.mentionLabel.isHidden = true
                         }

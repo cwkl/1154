@@ -46,7 +46,13 @@ class CommentCell: UITableViewCell {
     var submitId: String?
     var name: String?
     var indexPath: Int?
-    var isSubComment: Bool?
+    var isSubComment: Bool?{
+        didSet{
+            if let isSubComment = self.isSubComment{
+                profileImageViewRadius(isSubComment: isSubComment)
+            }
+        }
+    }
     var parentId: String?
     var submitUid: String?
     var to: String?{
@@ -98,8 +104,7 @@ class CommentCell: UITableViewCell {
     }
     
     func configureViewOption(){
-        profileImageView.layer.cornerRadius = profileImageView.frame.height / 2
-        profileImageView.layer.masksToBounds = true
+        
 
         if submitUid == commentUid{
             mainView.backgroundColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 1)
@@ -107,6 +112,20 @@ class CommentCell: UITableViewCell {
         }else{
             mainView.backgroundColor = UIColor.white
             background.backgroundColor = UIColor.white
+        }
+    }
+    
+    func profileImageViewRadius(isSubComment: Bool){
+        if isSubComment{
+            self.profileImageViewWidth.constant = 20
+            self.profileImageViewHeight.constant = 20
+            profileImageView.layer.cornerRadius = self.profileImageViewWidth.constant / 2
+            profileImageView.layer.masksToBounds = true
+        }else{
+            self.profileImageViewWidth.constant = 25
+            self.profileImageViewHeight.constant = 25
+            profileImageView.layer.cornerRadius = self.profileImageViewWidth.constant / 2
+            profileImageView.layer.masksToBounds = true
         }
     }
     
