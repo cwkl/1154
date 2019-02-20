@@ -17,4 +17,5 @@ struct UserModel: Codable {
     let startDate: String
     let region: String?
     let fcmToken: String
+    let notificationExist: Bool
 }

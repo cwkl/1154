@@ -308,6 +308,7 @@ class CommentCell: UITableViewCell {
                                                     submitId: submitId)
                 guard let notifiData = try? FirestoreEncoder().encode(notifiModel) else {return}
                 Firestore.firestore().collection("users").document(commentUid).collection("notification").document("\(commentId)\(uid)").setData(notifiData)
+                Firestore.firestore().collection("users").document(commentUid).updateData(["notificationExist" : true])
             }
         }
     }

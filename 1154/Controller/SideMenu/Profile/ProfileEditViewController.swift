@@ -191,7 +191,8 @@ class ProfileEditViewController: UIViewController, GalleryControllerDelegate, UI
                                       profileImageUrl: url,
                                       startDate: startDate,
                                       region: self.country,
-                                      fcmToken: fcmToken)
+                                      fcmToken: fcmToken,
+                                      notificationExist: false)
             guard let data = try? FirestoreEncoder().encode(userModel) else {return}
             Firestore.firestore().collection("users").document(uid).updateData(data) { (error) in
                 if error != nil{

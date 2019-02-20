@@ -174,6 +174,7 @@ class TitleCell: UITableViewCell {
                                                     submitId: submitId)
                 guard let notifiData = try? FirestoreEncoder().encode(notifiModel) else {return}
                 Firestore.firestore().collection("users").document(submitUserUid).collection("notification").document(uid).setData(notifiData)
+                Firestore.firestore().collection("users").document(submitUserUid).updateData(["notificationExist" : true])
             }
         }
     }
