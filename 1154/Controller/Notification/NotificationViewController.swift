@@ -222,6 +222,7 @@ class NotificationViewController: UIViewController, UITableViewDelegate, UITable
                 return
         }
         DispatchQueue.global().async {
+            Firestore.firestore().collection("users").document(uid).updateData(["notificationExist" : false])
             Firestore.firestore().collection("users").document(uid).collection("notification").order(by: "date", descending: true).getDocuments(completion: { (snapshot, error) in
                 if error != nil{
                     

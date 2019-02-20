@@ -138,7 +138,7 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         
             guard let uid = Auth.auth().currentUser?.uid, let fcmToken = UserDefaults.standard.string(forKey: "FCM_TOKEN") else {return}
             
-            let userModel = UserModel(email: email, name: name, uid: uid, profileImageUrl: nil, startDate: SharedFunction.shared.getToday(), region: nil, fcmToken: fcmToken)
+            let userModel = UserModel(email: email, name: name, uid: uid, profileImageUrl: nil, startDate: SharedFunction.shared.getToday(), region: nil, fcmToken: fcmToken, notificationExist: false)
             guard let data = try? FirestoreEncoder().encode(userModel) else {return}
             db.collection("users").document(uid).setData(data, completion: { (err) in
                 if err != nil{

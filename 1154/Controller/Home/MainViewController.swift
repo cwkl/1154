@@ -34,6 +34,7 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
     private var isFirst = true
     private var isIndicator = false
     private var isGuest = false
+    private var badge: UIView?
     
     var isAnimating = false
     
@@ -44,11 +45,14 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
         
         userDateLoad()
         addView()
+        addbadgeView()
         configureViewOption()
         addButtonGesture()
         splashStart()
         notificationReceive()
+        badgeObserver()
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+        
     }
     
     override var prefersStatusBarHidden: Bool{
@@ -223,6 +227,44 @@ class MainViewController: UIViewController, UICollectionViewDataSource, UICollec
         
         pagerView.bar = bar
         pagerView.leftConstraints = leftConstraints
+    }
+    
+    func addbadgeView(){
+        if let tabBarButton = self.tabBarController?.tabBar.subviews[3]{
+            for subView in tabBarButton.subviews {
+                guard let icon = subView as? UIImageView else { continue }
+                let badge = UIView()
+                badge.backgroundColor = .red
+                badge.frame.size.height = 8
+                badge.frame.size.width = 8
+                badge.layer.cornerRadius = badge.frame.height / 2
+                badge.layer.masksToBounds = true
+                icon.addSubview(badge)
+                badge.center.x = icon.center.x + (icon.frame.width / 2)
+                badge.center.y = icon.center.y - (icon.frame.height / 2)
+                self.badge = badge
+                
+                self.badge?.isHidden = true
+                break
+            }
+        }
+    }
+    
+    func badgeObserver(){
+        DispatchQueue.global().async {
+            guard let uid = Auth.auth().currentUser?.uid else {return}
+            Firestore.firestore().collection("users").document(uid).addSnapshotListener({ (snapshot, error) in
+                if error != nil{
+                }else{
+                    guard let snapshot = snapshot?.data(), let data = try? FirestoreDecoder().decode(UserModel.self, from: snapshot) else {return}
+                    if data.notificationExist{
+                        self.badge?.isHidden = false
+                    }else{
+                        self.badge?.isHidden = true
+                    }
+                }
+            })
+        }
     }
     
 

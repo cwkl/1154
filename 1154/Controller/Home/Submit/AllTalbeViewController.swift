@@ -71,6 +71,7 @@ class AllTableViewController : UIViewController, TableViewCellDelegate{
                     if snapshot.count == 0{
                         ActivityIndicator.shared.stop(view: self.tableView)
                         self.refreshControl?.endRefreshing()
+                        self.activityIndicatorStop()
                     }else{
                         for document in snapshot.documents {
                             do{

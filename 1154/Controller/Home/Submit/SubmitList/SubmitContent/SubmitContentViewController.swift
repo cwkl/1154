@@ -565,6 +565,7 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
             let data: [String : Any]?
             let notifiData: [String : Any]?
             var countId: String?
+            var notificationExistTarget = ""
             if !self.isSubComment{
                 let commentId = UUID.init().uuidString
                 countId = commentId
@@ -581,6 +582,7 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
                 name: myName,
                 submitId: id)
                 notifiData = try? FirestoreEncoder().encode(notifiModel)
+                notificationExistTarget = submitUid
             }else{
                 let subCommentId = UUID.init().uuidString
                 countId = subCommentId
@@ -608,6 +610,7 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
                                                         name: myName,
                                                         submitId: id)
                     notifiData = try? FirestoreEncoder().encode(notifiModel)
+                    notificationExistTarget = self.to
                 }
             }
             guard let commentCountId = countId else {return}
@@ -634,6 +637,7 @@ class SubmitContentViewController: UIViewController, PhotoCellDelegate, UITextFi
                     self.isPost = true
                 }
             }
+            Firestore.firestore().collection("users").document(notificationExistTarget).updateData(["notificationExist" : true])
         }
     }
 
