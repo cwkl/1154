@@ -85,6 +85,7 @@ class NotificationViewController: UIViewController, UITableViewDelegate, UITable
     
     @objc func mainUserLoadNotification(){
         userDateLoad()
+        notifiDataLoad()
     }
     
     @objc func barImageButtonEvent(){
