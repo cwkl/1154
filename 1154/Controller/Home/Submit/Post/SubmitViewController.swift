@@ -16,6 +16,8 @@ import Gallery
 import InstantSearchClient
 
 class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, GalleryControllerDelegate, UITextFieldDelegate, UITextViewDelegate {
+    
+    @IBOutlet weak var mainView: UIView!
     @IBOutlet weak var categoryK: UIView!
     @IBOutlet weak var categoryJ: UIView!
     @IBOutlet weak var categoryFree: UIView!
@@ -53,6 +55,7 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
     private var categoryExist = false
     private var titleExist = false
     private var contentExist = false
+    private var isAddIndicator = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -442,9 +445,26 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
             })
         }
     }
+    
+    func activityIndicatorStart(){
+        if !isAddIndicator{
+            self.submitTitle.resignFirstResponder()
+            self.submitContent.resignFirstResponder()
+            self.submitCameraCollectionView.alpha = 0
+            self.mainView.alpha = 0
+            ActivityIndicator.shared.addIndicator(view: self.view)
+            ActivityIndicator.shared.start(view: mainView)
+            isAddIndicator = true
+        }
+    }
+    
+    func activityIndicatorStop(){
+        ActivityIndicator.shared.stop(view: mainView)
+    }
         
     @objc func submitPostEvent() {
         if !isLoading{
+            activityIndicatorStart()
             guard let uid = self.uid,
                 let title = self.submitTitle.text,
                 let content = self.submitContent.text else {return}
@@ -482,6 +502,7 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
                                                     Firestore.firestore().collection("submit").document(id).setData(data, completion: { (err) in
                                                         if err != nil{
                                                         }else{
+                                                            self.activityIndicatorStop()
                                                             self.dismiss(animated: true, completion: nil)
                                                             self.isLoading = false
                                                             
@@ -502,6 +523,7 @@ class SubmitViewController: UIViewController, UICollectionViewDelegate, UICollec
                         Firestore.firestore().collection("submit").document(id).setData(data, completion: { (err) in
                             if err != nil{
                             }else{
+                                self.activityIndicatorStop()
                                 self.dismiss(animated: true, completion: nil)
                                 self.isLoading = false
                                 
